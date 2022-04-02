@@ -1,6 +1,16 @@
 #include "main/precomp.h"
 
-int main(void)
+#include "programoptions/programoptions.h"
+
+int main(int argc, const char* argv[])
 {
-    return 0;
+    // try {
+    //     program_options::parse(argc, argv);
+    // } catch (const std::exception &x) {
+    //     std::cerr << x.what() << '\n';
+    //     std::cerr << "usage: dog [-n|--number] [-E|--show-ends] <input_file> ...\n";
+    //     return EXIT_FAILURE;
+    // }
+
+    return EXIT_SUCCESS;
 }

@@ -161,6 +161,8 @@ endif
 OBJECTS := \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/precomp.o \
+	$(OBJDIR)/commandlineoptions.o \
+	$(OBJDIR)/programoptions.o \
 
 RESOURCES := \
 
@@ -223,6 +225,12 @@ $(OBJDIR)/main.o: source/main/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/precomp.o: source/main/precomp.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/commandlineoptions.o: source/programoptions/commandlineoptions.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/programoptions.o: source/programoptions/programoptions.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
