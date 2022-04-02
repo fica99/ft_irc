@@ -23,9 +23,11 @@ ifeq ($(config),release)
   TARGETDIR = bin/Release-macosx
   TARGET = $(TARGETDIR)/ircserv
   OBJDIR = tmp/Release-macosx
+  PCH = source/main/precomp.h
+  GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DNDEBUG -DRELEASE
-  INCLUDES +=
-  FORCE_INCLUDE +=
+  INCLUDES += -Isource
+  FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++98
@@ -58,9 +60,11 @@ ifeq ($(config),debug)
   TARGETDIR = bin/Debug-macosx
   TARGET = $(TARGETDIR)/ircserv
   OBJDIR = tmp/Debug-macosx
+  PCH = source/main/precomp.h
+  GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DDEBUG
-  INCLUDES +=
-  FORCE_INCLUDE +=
+  INCLUDES += -Isource
+  FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O0 -g
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O0 -g -std=c++98
@@ -93,9 +97,11 @@ ifeq ($(config),profile)
   TARGETDIR = bin/Profile-macosx
   TARGET = $(TARGETDIR)/ircserv
   OBJDIR = tmp/Profile-macosx
+  PCH = source/main/precomp.h
+  GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DNDEBUG -DPFOFILE
-  INCLUDES +=
-  FORCE_INCLUDE +=
+  INCLUDES += -Isource
+  FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++98
@@ -128,9 +134,11 @@ ifeq ($(config),final)
   TARGETDIR = bin/Final-macosx
   TARGET = $(TARGETDIR)/ircserv
   OBJDIR = tmp/Final-macosx
+  PCH = source/main/precomp.h
+  GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DFINAL
-  INCLUDES +=
-  FORCE_INCLUDE +=
+  INCLUDES += -Isource
+  FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++98
@@ -152,6 +160,7 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/main.o \
+	$(OBJDIR)/precomp.o \
 
 RESOURCES := \
 
@@ -210,7 +219,10 @@ else
 $(OBJECTS): | $(OBJDIR)
 endif
 
-$(OBJDIR)/main.o: sources/main.cpp
+$(OBJDIR)/main.o: source/main/main.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/precomp.o: source/main/precomp.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
