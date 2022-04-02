@@ -11,10 +11,18 @@ project "ircserv"
     targetdir ("bin/" .. outputdir)
     objdir ("tmp/" .. outputdir)
     
+    pchheader "source/main/precomp.h"
+    pchsource "source/main/precomp.cpp"
+
+    includedirs
+    {
+        "source",
+    }
+
     files
     {
-        "sources/**.h",
-        "sources/**.cpp"
+        "source/**.h",
+        "source/**.cpp"
     }
 
     filter "configurations:Release"
