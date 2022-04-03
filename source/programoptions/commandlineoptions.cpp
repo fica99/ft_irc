@@ -5,10 +5,27 @@
 namespace ircserv
 {
 
+POP_IMPLEMENT_SIMPLE_SINGLETON(CommandLineOptions);
+
 CommandLineOptions::CommandLineOptions()
 {
-    m_Port = 6668;
-    m_Password = "";
+    POP_IMPLEMENT_SIMPLE_SINGLETON_CONSTRUCTOR();
+    Initialize();
+}
+
+void CommandLineOptions::Initialize()
+{
+}
+
+CommandLineOptions::~CommandLineOptions()
+{
+    Shutdown();
+
+    POP_IMPLEMENT_SIMPLE_SINGLETON_DESTRUCTOR();
+}
+
+void CommandLineOptions::Shutdown()
+{
 }
 
 }

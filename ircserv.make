@@ -161,8 +161,11 @@ endif
 OBJECTS := \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/precomp.o \
+	$(OBJDIR)/commandlineoptionparams.o \
+	$(OBJDIR)/commandlineoptionpasswordparams.o \
+	$(OBJDIR)/commandlineoptionportparams.o \
 	$(OBJDIR)/commandlineoptions.o \
-	$(OBJDIR)/programoptions.o \
+	$(OBJDIR)/commandlineoptionschecker.o \
 
 RESOURCES := \
 
@@ -227,10 +230,19 @@ $(OBJDIR)/main.o: source/main/main.cpp
 $(OBJDIR)/precomp.o: source/main/precomp.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/commandlineoptionparams.o: source/programoptions/commandlineoptionparams.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/commandlineoptionpasswordparams.o: source/programoptions/commandlineoptionpasswordparams.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/commandlineoptionportparams.o: source/programoptions/commandlineoptionportparams.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/commandlineoptions.o: source/programoptions/commandlineoptions.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/programoptions.o: source/programoptions/programoptions.cpp
+$(OBJDIR)/commandlineoptionschecker.o: source/programoptions/commandlineoptionschecker.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
