@@ -33,9 +33,11 @@ bool CommandLineOptionPortParams::IsValid(const char *arg)
     {
         return false;
     }
-    // converter
-    int port = 10;
-    return port > MIN_PORT && port <= MAX_PORT;
+    std::stringstream ss(arg);
+    int port;
+
+    ss >> port;
+    return ss.eof() && port > MIN_PORT && port <= MAX_PORT;
 }
 
 

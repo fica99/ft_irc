@@ -14,7 +14,11 @@ POP_IMPLEMENT_SIMPLE_SINGLETON(CommandLineOptionsChecker);
 
 static void CommandLineCallback_Port(const char *arg)
 {
-    popGetCommandLineOptions().m_Port = 10; // add converter
+    std::stringstream ss(arg);
+    unsigned short int port;
+
+    ss >> port;
+    popGetCommandLineOptions().m_Port = port;
 }
 
 static void CommandLineCallback_Password(const char *arg)
