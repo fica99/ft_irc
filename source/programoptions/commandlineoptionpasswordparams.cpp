@@ -27,7 +27,7 @@ void CommandLineOptionPasswordParams::Shutdown(void)
 
 bool CommandLineOptionPasswordParams::IsValid(const char *arg)
 {
-    if (arg == nullptr)
+    if (arg == NULL)
     {
         return false;
     }

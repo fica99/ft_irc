@@ -29,7 +29,7 @@ void CommandLineOptionPortParams::Shutdown(void)
 
 bool CommandLineOptionPortParams::IsValid(const char *arg)
 {
-    if (arg == nullptr)
+    if (arg == NULL)
     {
         return false;
     }
