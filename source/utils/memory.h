@@ -3,7 +3,7 @@
 namespace ircserv
 {
 
-#define popNew(objectType) new objectType
-#define popDelete(ptr)     delete ptr
+#define New(objectType) new objectType
+#define Delete(ptr)     delete ptr
 
 }

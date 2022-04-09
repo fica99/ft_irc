@@ -25,10 +25,10 @@ int main(int argc, const char* argv[])
     int exitStatus = EXIT_SUCCESS;
     ircserv::Initialize();
     try {
-        ircserv::popGetCommandLineOptionsChecker().Check(argc, argv);
+        ircserv::GetCommandLineOptionsChecker().Check(argc, argv);
     } catch (const std::exception &x) {
         std::cerr << x.what() << '\n';
-        std::cerr << ircserv::popGetCommandLineOptionsChecker().GetUsage() << std::endl;
+        std::cerr << ircserv::GetCommandLineOptionsChecker().GetUsage() << std::endl;
         exitStatus = EXIT_FAILURE;
     }
     ircserv::Shutdown();

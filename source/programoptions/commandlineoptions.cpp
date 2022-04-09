@@ -5,11 +5,11 @@
 namespace ircserv
 {
 
-POP_IMPLEMENT_SIMPLE_SINGLETON(CommandLineOptions);
+IMPLEMENT_SIMPLE_SINGLETON(CommandLineOptions);
 
 CommandLineOptions::CommandLineOptions()
 {
-    POP_IMPLEMENT_SIMPLE_SINGLETON_CONSTRUCTOR();
+    IMPLEMENT_SIMPLE_SINGLETON_CONSTRUCTOR();
     Initialize();
 }
 
@@ -21,7 +21,7 @@ CommandLineOptions::~CommandLineOptions()
 {
     Shutdown();
 
-    POP_IMPLEMENT_SIMPLE_SINGLETON_DESTRUCTOR();
+    IMPLEMENT_SIMPLE_SINGLETON_DESTRUCTOR();
 }
 
 void CommandLineOptions::Shutdown()

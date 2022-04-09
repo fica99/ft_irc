@@ -5,6 +5,6 @@
 namespace ircserv
 {
 
-#define popAssert(condition) assert(condition)
+#define Assert(condition) assert(condition)
 
 }

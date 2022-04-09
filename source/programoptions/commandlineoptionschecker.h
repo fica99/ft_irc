@@ -19,7 +19,7 @@ public:
 private:
     void Initialize(void);
     void Shutdown(void);
-    POP_DECLARE_SIMPLE_SINGLETON(CommandLineOptionsChecker);
+    DECLARE_SIMPLE_SINGLETON(CommandLineOptionsChecker);
 
 private:
     void SetUsage(void);
@@ -36,6 +36,6 @@ private:
     std::string m_Usage;
 };
 
-#define popGetCommandLineOptionsChecker() CommandLineOptionsChecker::GetInstance()
+#define GetCommandLineOptionsChecker() CommandLineOptionsChecker::GetInstance()
 
 }
