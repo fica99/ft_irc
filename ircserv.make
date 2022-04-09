@@ -159,6 +159,9 @@ all: prebuild prelink $(TARGET)
 endif
 
 OBJECTS := \
+	$(OBJDIR)/irccommandtoken.o \
+	$(OBJDIR)/ircprefixtoken.o \
+	$(OBJDIR)/irctoken.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/precomp.o \
 	$(OBJDIR)/commandlineoptionparams.o \
@@ -224,6 +227,15 @@ else
 $(OBJECTS): | $(OBJDIR)
 endif
 
+$(OBJDIR)/irccommandtoken.o: source/ircmessages/tokens/irccommandtoken.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircprefixtoken.o: source/ircmessages/tokens/ircprefixtoken.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irctoken.o: source/ircmessages/tokens/irctoken.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: source/main/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"

@@ -31,6 +31,7 @@ int main(int argc, const char* argv[])
         std::cerr << ircserv::GetCommandLineOptionsChecker().GetUsage() << std::endl;
         exitStatus = EXIT_FAILURE;
     }
+
     ircserv::Shutdown();
     return EXIT_SUCCESS;
 }
