@@ -114,7 +114,7 @@ void CommandLineOptionsChecker::Check(int argc, const char *argv[])
 
 bool CommandLineOptionsChecker::IsValid(const char *argv[], size_t& i, CommandLineOptionParams& params)
 {
-    if (argv[i] == nullptr)
+    if (argv[i] == NULL)
     {
         return false;
     }
@@ -145,7 +145,7 @@ bool CommandLineOptionsChecker::IsValid(const char *argv[], size_t& i, CommandLi
         }
     }
     
-    if (argv[i] == nullptr)
+    if (argv[i] == NULL)
     {
         throw std::invalid_argument("Missing argument to flag");
     }
