@@ -11,7 +11,7 @@ class CommandLineOptions
 public:
     CommandLineOptions();
     virtual ~CommandLineOptions();
-    POP_DECLARE_SIMPLE_SINGLETON(CommandLineOptions);
+    DECLARE_SIMPLE_SINGLETON(CommandLineOptions);
 private:
     void Initialize(void);
     void Shutdown(void);
@@ -21,7 +21,7 @@ public:
     std::string         m_Password;
 };
 
-#define popGetCommandLineOptions() CommandLineOptions::GetInstance()
+#define GetCommandLineOptions() CommandLineOptions::GetInstance()
 
 
 }

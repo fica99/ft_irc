@@ -10,7 +10,7 @@
 namespace ircserv
 {
 
-POP_IMPLEMENT_SIMPLE_SINGLETON(CommandLineOptionsChecker);
+IMPLEMENT_SIMPLE_SINGLETON(CommandLineOptionsChecker);
 
 static void CommandLineCallback_Port(const char *arg)
 {
@@ -18,25 +18,25 @@ static void CommandLineCallback_Port(const char *arg)
     unsigned short int port;
 
     ss >> port;
-    popGetCommandLineOptions().m_Port = port;
+    GetCommandLineOptions().m_Port = port;
 }
 
 static void CommandLineCallback_Password(const char *arg)
 {
-    popGetCommandLineOptions().m_Password = arg;
+    GetCommandLineOptions().m_Password = arg;
 }
 
 CommandLineOptionsChecker::CommandLineOptionsChecker()
 {
-    POP_IMPLEMENT_SIMPLE_SINGLETON_CONSTRUCTOR();
+    IMPLEMENT_SIMPLE_SINGLETON_CONSTRUCTOR();
 
     Initialize();
 }
 
 void CommandLineOptionsChecker::Initialize(void)
 {
-    m_ParamsCallbacks.push_back(std::make_pair(popNew(CommandLineOptionPortParams)(), CommandLineCallback_Port));
-    m_ParamsCallbacks.push_back(std::make_pair(popNew(CommandLineOptionPasswordParams)(), CommandLineCallback_Password));
+    m_ParamsCallbacks.push_back(std::make_pair(New(CommandLineOptionPortParams)(), CommandLineCallback_Port));
+    m_ParamsCallbacks.push_back(std::make_pair(New(CommandLineOptionPasswordParams)(), CommandLineCallback_Password));
 
     SetUsage();
 }
@@ -45,14 +45,14 @@ CommandLineOptionsChecker::~CommandLineOptionsChecker()
 {
     Shutdown();
 
-    POP_IMPLEMENT_SIMPLE_SINGLETON_DESTRUCTOR();
+    IMPLEMENT_SIMPLE_SINGLETON_DESTRUCTOR();
 }
 
 void CommandLineOptionsChecker::Shutdown(void)
 {
     for (size_t i = 0; i < m_ParamsCallbacks.size(); ++i)
     {
-        popDelete(m_ParamsCallbacks[i].first);
+        Delete(m_ParamsCallbacks[i].first);
     }
 }
 
