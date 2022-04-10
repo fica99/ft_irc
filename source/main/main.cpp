@@ -2,6 +2,7 @@
 
 #include "programoptions/commandlineoptionschecker.h"
 #include "programoptions/commandlineoptions.h"
+#include "ircmessages/lexer/irclexer.h"
 
 namespace ircserv
 {
@@ -10,12 +11,23 @@ static void Initialize(void)
 {
     CommandLineOptionsChecker::CreateSingleton();
     CommandLineOptions::CreateSingleton();
+    IRCLexer::CreateSingleton();
+    IRCLexerParams params =
+    {
+        .prefix = ":",
+        .msgDelim = "\r\n",
+        .maxMsgLength = 512,
+        .tokensDelim = " ",
+        .blockDelim = ":"
+    };
+    GetIRCLexer().SetLexerParams(params);
 }
 
 static void Shutdown(void)
 {
-    CommandLineOptionsChecker::DestroySingleton();
+    IRCLexer::DestroySingleton();
     CommandLineOptions::DestroySingleton();
+    CommandLineOptionsChecker::DestroySingleton();
 }
 
 }
@@ -24,9 +36,12 @@ int main(int argc, const char* argv[])
 {
     int exitStatus = EXIT_SUCCESS;
     ircserv::Initialize();
-    try {
+    try
+    {
         ircserv::GetCommandLineOptionsChecker().Check(argc, argv);
-    } catch (const std::exception &x) {
+    } 
+    catch (const std::exception &x)
+    {
         std::cerr << x.what() << '\n';
         std::cerr << ircserv::GetCommandLineOptionsChecker().GetUsage() << std::endl;
         exitStatus = EXIT_FAILURE;

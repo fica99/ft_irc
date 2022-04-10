@@ -14,7 +14,7 @@ IRCCommandToken::IRCCommandToken(const std::string& rawStr)
     bool result = EnumString<Enum_IRCCommands>::To(m_CommandEnum, rawStr);
     if (!result)
     {
-        // send error invalid command
+        throw std::invalid_argument("Invalid command token: IRCCommandToken!");
     }
 }
 
