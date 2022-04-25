@@ -17,8 +17,8 @@ private:
     void Shutdown(void);
 
 public:
-    unsigned short int  m_Port;
-    std::string         m_Password;
+    unsigned short int  Port;
+    std::string         Password;
 };
 
 #define GetCommandLineOptions() CommandLineOptions::GetInstance()

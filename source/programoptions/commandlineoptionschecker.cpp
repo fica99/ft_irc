@@ -18,12 +18,12 @@ static void CommandLineCallback_Port(const char *arg)
     unsigned short int port;
 
     ss >> port;
-    GetCommandLineOptions().m_Port = port;
+    GetCommandLineOptions().Port = port;
 }
 
 static void CommandLineCallback_Password(const char *arg)
 {
-    GetCommandLineOptions().m_Password = arg;
+    GetCommandLineOptions().Password = arg;
 }
 
 CommandLineOptionsChecker::CommandLineOptionsChecker()
