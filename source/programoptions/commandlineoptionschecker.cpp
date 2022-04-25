@@ -107,7 +107,7 @@ void CommandLineOptionsChecker::Check(int argc, const char *argv[])
         ParamsCallback& paramsCallback = m_ParamsCallbacks[j];
         if (!paramsCallback.first->IsOptional())
         {
-            throw std::invalid_argument("Missing argument");
+            throw std::invalid_argument("Missing argument: " + paramsCallback.first->GetValueName());
         }
     }
 }
@@ -132,7 +132,7 @@ bool CommandLineOptionsChecker::IsValid(const char *argv[], size_t& i, CommandLi
         {
             if (argv[i] != params.GetFlag())
             {
-                throw std::invalid_argument("Invalid flag");
+                throw std::invalid_argument(std::string("Invalid flag: ") + argv[i]);
             }
         }
         ++i;
@@ -141,18 +141,18 @@ bool CommandLineOptionsChecker::IsValid(const char *argv[], size_t& i, CommandLi
     {
         if (!params.IsOptional() && params.GetFlag() != "")
         {
-            throw std::invalid_argument("Missing flag with argument");
+            throw std::invalid_argument("Missing flag with argument: " + params.GetFlag() + " " + params.GetValueName());
         }
     }
     
     if (argv[i] == nullptr)
     {
-        throw std::invalid_argument("Missing argument to flag");
+        throw std::invalid_argument("Missing argument to flag: " + params.GetFlag() + " " + params.GetValueName());
     }
 
     if (!params.IsValid(argv[i]))
     {
-        throw std::invalid_argument("Invalid argument");
+        throw std::invalid_argument(std::string("Invalid argument: ") + argv[i]);
     }
     return true;
 }

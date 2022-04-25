@@ -22,9 +22,7 @@ public:
     virtual bool IsValid(const char *arg) = 0;
     inline bool IsOptional(void) const { return m_IsOptional; }
     inline const std::string& GetValueName(void) const { return m_ValueName; }
-    inline std::string& GetValueName(void) { return m_ValueName; }
     inline const std::string& GetFlag(void) const { return m_Flag; }
-    inline std::string& GetFlag(void) { return m_Flag; }
 
 protected:
     bool        m_IsOptional;
