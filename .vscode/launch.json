@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Debug",
             "program": "${workspaceFolder}/bin/Debug-macosx/ircserv",
-            "args": ["100", "100"],
+            "args": ["p", "100"],
             "cwd": "${workspaceFolder}"
         }
     ]

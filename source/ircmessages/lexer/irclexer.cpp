@@ -43,28 +43,42 @@ void IRCLexer::Shutdown(void)
     IRCTokensFactory::DestroySingleton();
 }
 
-std::vector<IRCToken*> IRCLexer::TokenizeNextMsg(std::istringstream& ss)
+bool IRCLexer::TokenizeNextMsg(std::istringstream& ss, std::vector<IRCToken*> tokens)
 {
-    std::vector<IRCToken*> tokens;
     std::string msg;
     IRCToken* token;
 
-    msg = ReadNextMsg(ss);
-    token = GetPrefixToken(msg);
-    if (token != NULL)
+    if (!ss.eof())
     {
-        tokens.push_back(token);
-    }
+        msg = ReadNextMsg(ss);
+        try
+        {
+            token = GetPrefixToken(msg);
+            tokens.push_back(token);
+        }
+        catch (const std::invalid_argument &x)
+        {
+        }
 
-    token = GetCommandToken(msg);
-    tokens.push_back(token);
+        try
+        {
+            token = GetCommandToken(msg);
+            tokens.push_back(token);
+        }
+        catch (const std::invalid_argument &x)
+        {
+            // setup error response
+            return false;
+        }
 
-    while (!msg.empty())
-    {
-        token = GetArgumentToken(msg);
-        tokens.push_back(token);
+        while (!msg.empty())
+        {
+            token = GetArgumentToken(msg);
+            tokens.push_back(token);
+        }
+        return true;
     }
-    return tokens;
+    return false;
 }
 
 std::string IRCLexer::ReadNextMsg(std::istringstream& ss)
@@ -102,14 +116,7 @@ IRCToken* IRCLexer::GetPrefixToken(std::string& msg)
     size_t pos = 0;
 
     pos = msg.find(m_LexerParams.tokensDelim);
-    try
-    {
-        token = GetIRCTokensFactory().CreatePrefixToken(msg.substr(0, pos), m_LexerParams.prefix);
-    }
-    catch (const std::invalid_argument &x)
-    {
-        token = NULL;
-    }
+    token = GetIRCTokensFactory().CreatePrefixToken(msg.substr(0, pos), m_LexerParams.prefix);
     msg.erase(0, msg.find_first_not_of(m_LexerParams.tokensDelim, pos));
     return token;
 }

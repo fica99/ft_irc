@@ -17,7 +17,7 @@ IRCPrefixToken::IRCPrefixToken(const std::string& rawStr, const std::string& pre
     }
     else
     {
-        throw std::invalid_argument("Invalid prefix token: IRCPrefixToken!");
+        throw std::invalid_argument("Invalid prefix token: " + rawStr);
     }
 }
 

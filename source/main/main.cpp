@@ -11,6 +11,8 @@ static void Initialize(void)
 {
     CommandLineOptionsChecker::CreateSingleton();
     CommandLineOptions::CreateSingleton();
+
+
     IRCLexer::CreateSingleton();
     IRCLexerParams params =
     {
@@ -26,6 +28,8 @@ static void Initialize(void)
 static void Shutdown(void)
 {
     IRCLexer::DestroySingleton();
+
+
     CommandLineOptions::DestroySingleton();
     CommandLineOptionsChecker::DestroySingleton();
 }

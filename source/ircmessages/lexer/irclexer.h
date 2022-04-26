@@ -30,7 +30,7 @@ private:
     DECLARE_SIMPLE_SINGLETON(IRCLexer);
 
 public:
-    std::vector<IRCToken*> TokenizeNextMsg(std::istringstream& ss);
+    bool TokenizeNextMsg(std::istringstream& ss, std::vector<IRCToken*> tokens);
 private:
     std::string ReadNextMsg(std::istringstream& ss);
     IRCToken* GetPrefixToken(std::string& msg);
