@@ -22,11 +22,9 @@ void IRCLexer::Initialize(void)
 
     IRCLexerParams params =
     {
-        .prefix = ":",
-        .msgDelim = "\r\n",
-        .maxMsgLength = 512,
-        .tokensDelim = " ",
-        .blockDelim = ":"
+        .Prefix = ":",
+        .TokensDelim = " ",
+        .BlockDelim = ":"
     };
     SetLexerParams(params);
 }
@@ -43,71 +41,27 @@ void IRCLexer::Shutdown(void)
     IRCTokensFactory::DestroySingleton();
 }
 
-bool IRCLexer::TokenizeNextMsg(std::istringstream& ss, std::vector<IRCToken*> tokens)
+std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
 {
-    std::string msg;
+    std::vector<IRCToken*> tokens;
     IRCToken* token;
+    std::string msg = line;
 
-    if (!ss.eof())
+    token = GetPrefixToken(msg);
+    if (token != NULL)
     {
-        msg = ReadNextMsg(ss);
-        try
-        {
-            token = GetPrefixToken(msg);
-            tokens.push_back(token);
-        }
-        catch (const std::invalid_argument &x)
-        {
-        }
-
-        try
-        {
-            token = GetCommandToken(msg);
-            tokens.push_back(token);
-        }
-        catch (const std::invalid_argument &x)
-        {
-            // setup error response
-            return false;
-        }
-
-        while (!msg.empty())
-        {
-            token = GetArgumentToken(msg);
-            tokens.push_back(token);
-        }
-        return true;
+        tokens.push_back(token);
     }
-    return false;
-}
 
-std::string IRCLexer::ReadNextMsg(std::istringstream& ss)
-{
-    std::string msg;
-    size_t readedSymbCounter;
+    token = GetCommandToken(msg);
+    tokens.push_back(token);
 
-    readedSymbCounter = 0;
-    msg.reserve(m_LexerParams.maxMsgLength);
-    while (readedSymbCounter < m_LexerParams.maxMsgLength)
+    while (!msg.empty())
     {
-        ss.getline(&(msg[readedSymbCounter]), m_LexerParams.maxMsgLength - readedSymbCounter, m_LexerParams.msgDelim[m_LexerParams.msgDelim.size() - 1]);
-        readedSymbCounter += ss.gcount();
-        if (readedSymbCounter < m_LexerParams.msgDelim.size())
-        {
-            continue;
-        }
-        if (!msg.compare(
-            readedSymbCounter - m_LexerParams.msgDelim.size(),
-            readedSymbCounter, m_LexerParams.msgDelim))
-        {
-            break;
-        }
-        else
-        {
-            msg.push_back(m_LexerParams.msgDelim[m_LexerParams.msgDelim.size() - 1]);
-        }
+        token = GetArgumentToken(msg);
+        tokens.push_back(token);
     }
-    return msg;
+    return tokens;
 }
 
 IRCToken* IRCLexer::GetPrefixToken(std::string& msg)
@@ -115,9 +69,12 @@ IRCToken* IRCLexer::GetPrefixToken(std::string& msg)
     IRCToken* token = NULL;
     size_t pos = 0;
 
-    pos = msg.find(m_LexerParams.tokensDelim);
-    token = GetIRCTokensFactory().CreatePrefixToken(msg.substr(0, pos), m_LexerParams.prefix);
-    msg.erase(0, msg.find_first_not_of(m_LexerParams.tokensDelim, pos));
+    pos = msg.find(m_LexerParams.TokensDelim);
+    if (!msg.compare(0, m_LexerParams.Prefix.size(), m_LexerParams.Prefix))
+    {
+        token = GetIRCTokensFactory().CreatePrefixToken(msg.substr(0, pos), m_LexerParams.Prefix);
+        msg.erase(0, msg.find_first_not_of(m_LexerParams.TokensDelim, pos));
+    }
     return token;
 }
 
@@ -126,9 +83,9 @@ IRCToken* IRCLexer::GetCommandToken(std::string& msg)
     IRCToken* token = NULL;
     size_t pos = 0;
 
-    pos = msg.find(m_LexerParams.tokensDelim);
+    pos = msg.find(m_LexerParams.TokensDelim);
     token = GetIRCTokensFactory().CreateCommandToken(msg.substr(0, pos));
-    msg.erase(0, msg.find_first_not_of(m_LexerParams.tokensDelim, pos));
+    msg.erase(0, msg.find_first_not_of(m_LexerParams.TokensDelim, pos));
     return token;
 }
 
@@ -137,17 +94,17 @@ IRCToken* IRCLexer::GetArgumentToken(std::string& msg)
     IRCToken* token = NULL;
     size_t pos = 0;
 
-    if (!msg.compare(0, m_LexerParams.blockDelim.size(), m_LexerParams.blockDelim))
+    if (!msg.compare(0, m_LexerParams.BlockDelim.size(), m_LexerParams.BlockDelim))
     {
-        msg.erase(0);
+        msg.erase(0, m_LexerParams.BlockDelim.size());
         pos = msg.size();
     }
     else
     {
-        pos = msg.find(m_LexerParams.tokensDelim);
+        pos = msg.find(m_LexerParams.TokensDelim);
     }
     token = GetIRCTokensFactory().CreateToken(msg.substr(0, pos));
-    msg.erase(0, msg.find_first_not_of(m_LexerParams.tokensDelim, pos));
+    msg.erase(0, msg.find_first_not_of(m_LexerParams.TokensDelim, pos));
     return token;
 }
 
@@ -160,15 +117,7 @@ void IRCLexer::SetLexerParams(const IRCLexerParams& params)
 
 void IRCLexer::ValidateLexerParams(const IRCLexerParams& params)
 {
-    if (params.msgDelim.empty())
-    {
-        throw std::invalid_argument("Invalid delimeter between messages!");
-    }
-    if (params.maxMsgLength == 0)
-    {
-        throw std::invalid_argument("Invalid max message length!");
-    }
-    if (params.tokensDelim.empty())
+    if (params.TokensDelim.empty())
     {
         throw std::invalid_argument("Invalid delimeter between tokens!");
     }

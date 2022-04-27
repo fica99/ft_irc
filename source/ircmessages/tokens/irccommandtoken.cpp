@@ -11,12 +11,7 @@ IRCCommandToken::IRCCommandToken(const std::string& rawStr)
 {
     Initialize();
 
-    bool result = EnumString<Enum_IRCCommands>::To(m_CommandEnum, rawStr);
-    // add support for commands in number
-    if (!result)
-    {
-        throw std::invalid_argument("Invalid command token: " + rawStr);
-    }
+    EnumString<Enum_IRCCommands>::To(m_CommandEnum, rawStr);
 }
 
 void IRCCommandToken::Initialize(void)
