@@ -6,7 +6,7 @@ namespace ircserv
 {
 
 CommandLineOptionPasswordParams::CommandLineOptionPasswordParams()
-    : CommandLineOptionParams(false, "password", "")
+    : CommandLineOptionParams("password")
 {
     Initialize();
 }
@@ -27,7 +27,7 @@ void CommandLineOptionPasswordParams::Shutdown(void)
 
 bool CommandLineOptionPasswordParams::IsValid(const char *arg)
 {
-    if (arg == nullptr)
+    if (arg == NULL)
     {
         return false;
     }
