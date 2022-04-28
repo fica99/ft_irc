@@ -31,4 +31,12 @@ void IRCTokensFactory::Shutdown(void)
 {
 }
 
+void IRCTokensFactory::DestroyToken(IRCToken* token)
+{ 
+    if (token != NULL)
+    {
+        Delete(token);
+    }
+}
+
 }

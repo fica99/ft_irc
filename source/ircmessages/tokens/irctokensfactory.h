@@ -31,6 +31,8 @@ public:
     ) { return New(IRCPrefixToken)(rawStr, prefix); }
 
     inline IRCToken* CreateCommandToken(const std::string& rawStr) { return New(IRCCommandToken)(rawStr); }
+
+    void DestroyToken(IRCToken* token);
 };
 
 #define GetIRCTokensFactory() IRCTokensFactory::GetInstance()

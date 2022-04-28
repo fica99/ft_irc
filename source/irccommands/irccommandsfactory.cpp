@@ -5,8 +5,6 @@
 #include "irccommands/ircpasscommand.h"
 #include "irccommands/ircnickcommand.h"
 
-#include "utils/memory.h"
-
 namespace ircserv
 {
 
@@ -54,6 +52,14 @@ IRCCommand* IRCCommandsFactory::CreateCommand(Enum_IRCCommands commandType,
     command->SetPrefix(prefix);
     command->SetArgs(args);
     return command;
+}
+
+void IRCCommandsFactory::DestroyCommand(IRCCommand* command)
+{ 
+    if (command != NULL)
+    {
+        Delete(command);
+    }
 }
 
 }
