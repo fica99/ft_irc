@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "utils/singleton.h"
-#include "utils/memory.h"
 #include "irccommands/irccommand.h"
 #include "irccommands/irccommands.h"
 

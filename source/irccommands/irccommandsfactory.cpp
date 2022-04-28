@@ -2,6 +2,7 @@
 
 #include "irccommands/irccommandsfactory.h"
 
+#include "utils/memory.h"
 #include "irccommands/ircpasscommand.h"
 #include "irccommands/ircnickcommand.h"
 
