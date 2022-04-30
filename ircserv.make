@@ -159,6 +159,16 @@ all: prebuild prelink $(TARGET)
 endif
 
 OBJECTS := \
+	$(OBJDIR)/irccommand.o \
+	$(OBJDIR)/irccommandsfactory.o \
+	$(OBJDIR)/ircnickcommand.o \
+	$(OBJDIR)/ircpasscommand.o \
+	$(OBJDIR)/irclexer.o \
+	$(OBJDIR)/ircparser.o \
+	$(OBJDIR)/irccommandtoken.o \
+	$(OBJDIR)/ircprefixtoken.o \
+	$(OBJDIR)/irctoken.o \
+	$(OBJDIR)/irctokensfactory.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/precomp.o \
 	$(OBJDIR)/commandlineoptionparams.o \
@@ -224,6 +234,36 @@ else
 $(OBJECTS): | $(OBJDIR)
 endif
 
+$(OBJDIR)/irccommand.o: source/irccommands/irccommand.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irccommandsfactory.o: source/irccommands/irccommandsfactory.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircnickcommand.o: source/irccommands/ircnickcommand.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircpasscommand.o: source/irccommands/ircpasscommand.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irclexer.o: source/ircmessages/lexer/irclexer.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircparser.o: source/ircmessages/parser/ircparser.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irccommandtoken.o: source/ircmessages/tokens/irccommandtoken.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircprefixtoken.o: source/ircmessages/tokens/ircprefixtoken.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irctoken.o: source/ircmessages/tokens/irctoken.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irctokensfactory.o: source/ircmessages/tokens/irctokensfactory.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: source/main/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"

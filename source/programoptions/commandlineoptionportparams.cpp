@@ -6,8 +6,8 @@ namespace ircserv
 {
 
 CommandLineOptionPortParams::CommandLineOptionPortParams()
-    : CommandLineOptionParams(false, "port", "")
-    , MIN_PORT(std::numeric_limits<unsigned short int>::min() + 1)
+    : CommandLineOptionParams("port")
+    , MIN_PORT(std::numeric_limits<unsigned short int>::min())
     , MAX_PORT(std::numeric_limits<unsigned short int>::max())
 {
     Initialize();
@@ -29,15 +29,15 @@ void CommandLineOptionPortParams::Shutdown(void)
 
 bool CommandLineOptionPortParams::IsValid(const char *arg)
 {
-    if (arg == NULL)
+    if (arg == NULL || !arg[0])
     {
         return false;
     }
-    std::stringstream ss(arg);
+    std::istringstream ss(arg);
     int port;
 
     ss >> port;
-    return ss.eof() && port > MIN_PORT && port <= MAX_PORT;
+    return ss.eof() && port >= MIN_PORT && port <= MAX_PORT;
 }
 
 

@@ -5,13 +5,8 @@
 namespace ircserv
 {
 
-CommandLineOptionParams::CommandLineOptionParams(
-    bool isOptional,
-    const std::string& valueName,
-    const std::string& flag
-    ) : m_IsOptional(isOptional)
-      , m_ValueName(valueName)
-      , m_Flag(flag)
+CommandLineOptionParams::CommandLineOptionParams(const std::string& valueName)
+    : m_ValueName(valueName)
 {
     Initialize();
 }

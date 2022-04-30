@@ -1,7 +1,5 @@
 #pragma once
 
-#include <limits>
-
 #include "programoptions/commandlineoptionparams.h"
 
 namespace ircserv

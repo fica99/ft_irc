@@ -23,17 +23,16 @@ private:
 
 private:
     void SetUsage(void);
-public:
-    inline const std::string& GetUsage(void) const { return m_Usage; }
 
 public:
     void Check(int argc, const char *argv[]);
-private:
-    bool IsValid(const char *argv[], size_t& i, CommandLineOptionParams& params);
+
+public:
+    inline static const std::string& GetUsage(void) { return m_Usage; }
 
 private:
     std::vector<ParamsCallback> m_ParamsCallbacks;
-    std::string m_Usage;
+    static std::string m_Usage;
 };
 
 #define GetCommandLineOptionsChecker() CommandLineOptionsChecker::GetInstance()

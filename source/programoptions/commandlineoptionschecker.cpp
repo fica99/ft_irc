@@ -11,19 +11,20 @@ namespace ircserv
 {
 
 IMPLEMENT_SIMPLE_SINGLETON(CommandLineOptionsChecker);
+std::string CommandLineOptionsChecker::m_Usage;
 
 static void CommandLineCallback_Port(const char *arg)
 {
-    std::stringstream ss(arg);
+    std::istringstream ss(arg);
     unsigned short int port;
 
     ss >> port;
-    GetCommandLineOptions().m_Port = port;
+    GetCommandLineOptions().SetPort(port);
 }
 
 static void CommandLineCallback_Password(const char *arg)
 {
-    GetCommandLineOptions().m_Password = arg;
+    GetCommandLineOptions().SetPassword(arg);
 }
 
 CommandLineOptionsChecker::CommandLineOptionsChecker()
@@ -63,98 +64,29 @@ void CommandLineOptionsChecker::SetUsage(void)
     {
         m_Usage += " ";
         CommandLineOptionParams& params = *(m_ParamsCallbacks[i].first);
-        if (params.IsOptional())
-        {
-            m_Usage += "[";
-            if (params.GetFlag() != "")
-            {
-                m_Usage += params.GetFlag() + " ";
-            }
-            m_Usage += params.GetValueName();
-            m_Usage += "]";
-        }
-        else
-        {
-            m_Usage += "<";
-            if (params.GetFlag() != "")
-            {
-                m_Usage += params.GetFlag() + " ";
-            }
-            m_Usage += params.GetValueName();
-            m_Usage += ">";
-        }
+        m_Usage += params.GetValueName();
     }
 }
 
 void CommandLineOptionsChecker::Check(int argc, const char *argv[])
 {
-    size_t j = 0;
+    if (argc - 1 != m_ParamsCallbacks.size())
+    {
+        throw std::invalid_argument("Expected other number of commandline arguments");
+    }
     for (size_t i = 1; i < argc; ++i)
     {
-        if (j >= m_ParamsCallbacks.size())
-        {
-            throw std::invalid_argument("More arguments than expected");
-        }
-        ParamsCallback& paramsCallback = m_ParamsCallbacks[j];
-        if (IsValid(argv, i, *(paramsCallback.first)))
+        ParamsCallback& paramsCallback = m_ParamsCallbacks[i - 1];
+        CommandLineOptionParams* params = paramsCallback.first;
+        if (params && params->IsValid(argv[i]))
         {
             paramsCallback.second(argv[i]);
         }
-        ++j;
-    }
-    for (; j < m_ParamsCallbacks.size(); ++j)
-    {
-        ParamsCallback& paramsCallback = m_ParamsCallbacks[j];
-        if (!paramsCallback.first->IsOptional())
-        {
-            throw std::invalid_argument("Missing argument");
-        }
-    }
-}
-
-bool CommandLineOptionsChecker::IsValid(const char *argv[], size_t& i, CommandLineOptionParams& params)
-{
-    if (argv[i] == NULL)
-    {
-        return false;
-    }
-
-    if (argv[i][0] == '-')
-    {
-        if (params.IsOptional())
-        {
-            if (argv[i] != params.GetFlag())
-            {
-                return false;
-            }
-        }
         else
         {
-            if (argv[i] != params.GetFlag())
-            {
-                throw std::invalid_argument("Invalid flag");
-            }
-        }
-        ++i;
-    }
-    else
-    {
-        if (!params.IsOptional() && params.GetFlag() != "")
-        {
-            throw std::invalid_argument("Missing flag with argument");
+            throw std::invalid_argument(std::string("Invalid argument: ") + argv[i]);
         }
     }
-    
-    if (argv[i] == NULL)
-    {
-        throw std::invalid_argument("Missing argument to flag");
-    }
-
-    if (!params.IsValid(argv[i]))
-    {
-        throw std::invalid_argument("Invalid argument");
-    }
-    return true;
 }
 
 }

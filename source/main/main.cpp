@@ -14,9 +14,10 @@ static void Initialize(void)
 
 static void Shutdown(void)
 {
-    CommandLineOptionsChecker::DestroySingleton();
     CommandLineOptions::DestroySingleton();
+    CommandLineOptionsChecker::DestroySingleton();
 }
+
 
 }
 
@@ -24,9 +25,12 @@ int main(int argc, const char* argv[])
 {
     int exitStatus = EXIT_SUCCESS;
     ircserv::Initialize();
-    try {
+    try
+    {
         ircserv::GetCommandLineOptionsChecker().Check(argc, argv);
-    } catch (const std::exception &x) {
+    } 
+    catch (const std::exception &x)
+    {
         std::cerr << x.what() << '\n';
         std::cerr << ircserv::GetCommandLineOptionsChecker().GetUsage() << std::endl;
         exitStatus = EXIT_FAILURE;
