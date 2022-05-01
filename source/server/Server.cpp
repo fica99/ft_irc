@@ -42,9 +42,14 @@ void Server::recv_from_client() {
     int i = 0;
     static char buf[RECV_BUF + 1] = {0};
 
+    if (ready < 0)
+        perror("poll");
     while (ready--) {
         if (userpfd[i].revents == POLLIN) {
-            recv(userpfd[i].fd, buf, RECV_BUF, 0);
+            int read = recv(userpfd[i].fd, buf, RECV_BUF, 0);
+            if (read == 0) {
+                userpfd.erase(userpfd.begin() + i);
+            }
             std::cout << buf << std::endl;
             userpfd[i].revents = 0;
         }
