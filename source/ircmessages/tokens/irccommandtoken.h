@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include "irccommands/irccommands.h"
 #include "ircmessages/tokens/irctoken.h"
 
 namespace ircserv
@@ -11,17 +10,18 @@ namespace ircserv
 class IRCCommandToken : public IRCToken
 {
 public:
-    IRCCommandToken(const std::string& rawStr);
+    IRCCommandToken();
     virtual ~IRCCommandToken();
 private:
     void Initialize(void);
     void Shutdown(void);
 
 public:
-    inline Enum_IRCCommands GetCommandEnum(void) const { return m_CommandEnum; }
-
+    inline void SetCommand(const std::string& command) { m_Command = command; }
+    inline void SetCommandNumber(unsigned short int commandNumber) { m_CommandNumber = commandNumber; }
 private:
-    Enum_IRCCommands m_CommandEnum;
+    std::string m_Command;
+    unsigned short int m_CommandNumber;
 };
 
 }

@@ -2,6 +2,10 @@
 
 #include "ircmessages/tokens/irctokensfactory.h"
 
+#include "ircmessages/tokens/ircargtoken.h"
+#include "ircmessages/tokens/irccommandtoken.h"
+#include "ircmessages/tokens/ircprefixtoken.h"
+
 namespace ircserv
 {
 
@@ -18,8 +22,6 @@ void IRCTokensFactory::Initialize(void)
 {
 }
 
-
-
 IRCTokensFactory::~IRCTokensFactory()
 {
     Shutdown();
@@ -30,6 +32,28 @@ IRCTokensFactory::~IRCTokensFactory()
 void IRCTokensFactory::Shutdown(void)
 {
 }
+
+IRCToken* IRCTokensFactory::CreateToken(Enum_IRCTokens tokenType)
+{
+    IRCToken* token = NULL;
+    switch (tokenType)
+    {
+        case Enum_IRCTokens_Prefix:
+            command = New(IRCPrefixToken)();
+            break;
+        case Enum_IRCTokens_Command:
+            command = New(IRCCommandToken)();
+            break;
+        case Enum_IRCTokens_Arg:
+            command = New(IRCArgToken)();
+            break;
+        default:
+            token = NULL;
+            break;
+    }
+    return token;
+}
+
 
 void IRCTokensFactory::DestroyToken(IRCToken* token)
 { 

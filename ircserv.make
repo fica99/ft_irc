@@ -165,6 +165,7 @@ OBJECTS := \
 	$(OBJDIR)/ircpasscommand.o \
 	$(OBJDIR)/irclexer.o \
 	$(OBJDIR)/ircparser.o \
+	$(OBJDIR)/ircargtoken.o \
 	$(OBJDIR)/irccommandtoken.o \
 	$(OBJDIR)/ircprefixtoken.o \
 	$(OBJDIR)/irctoken.o \
@@ -253,6 +254,9 @@ $(OBJDIR)/irclexer.o: source/ircmessages/lexer/irclexer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircparser.o: source/ircmessages/parser/ircparser.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircargtoken.o: source/ircmessages/tokens/ircargtoken.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irccommandtoken.o: source/ircmessages/tokens/irccommandtoken.cpp
