@@ -25,7 +25,7 @@ private:
 
 public:
     IRCCommand* CreateCommand(const std::vector<IRCToken*>& tokens);
-
+    void DestroyCommand(IRCCommand* command);
 private:
     Enum_IRCCommands GetCommandEnum(IRCCommandToken *commandToken);
     std::vector<std::string> GetArgs(const std::vector<IRCToken*>& tokens);

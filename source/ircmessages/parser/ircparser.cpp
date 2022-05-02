@@ -71,6 +71,14 @@ IRCCommand* IRCParser::CreateCommand(const std::vector<IRCToken*>& tokens)
     return command;
 }
 
+void IRCParser::DestroyCommand(IRCCommand* command)
+{
+    if (command != NULL)
+    {
+        GetIRCCommandsFactory().DestroyCommand(command);
+    }
+}
+
 Enum_IRCCommands IRCParser::GetCommandEnum(IRCCommandToken *commandToken)
 {
     Enum_IRCCommands commandEnum = Enum_IRCCommands_Unknown;

@@ -44,18 +44,12 @@ void IRCLexer::Shutdown(void)
 std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
 {
     std::vector<IRCToken*> tokens;
-    IRCToken* token;
     std::string msg = line;
 
     if (!msg.empty() && msg[0] == ':')
     {
         msg.erase(0, 1);
         tokens.push_back(GetPrefixToken(msg));
-        if (msg.empty() || msg[0] != ' ')
-        {
-            DestroyTokens(tokens);
-            return tokens;
-        }
         msg.erase(0, msg.find_first_not_of(' '));
     }
 
@@ -63,15 +57,10 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
 
     while (msg.size() > 2)
     {
-        token = GetArgToken(msg);
-        if (token != NULL)
+        tokens.push_back(GetArgToken(msg));
+        if (tokens.back() == NULL)
         {
-            tokens.push_back(token);
-        }
-        else
-        {
-            DestroyTokens(tokens);
-            return tokens;
+            break;
         }
     }
     if (msg.size() != 2 || msg.compare(msg.size() - 2, 2, "\r\n"))
@@ -167,7 +156,6 @@ IRCToken* IRCLexer::GetCommandToken(std::string& msg)
     pos = msg.find_first_not_of(LETTERS_ASCII);
     if (pos != 0)
     {
-        pos = msg.find_first_not_of(LETTERS_ASCII);
         command = msg.substr(0, pos);
         msg.erase(0, pos);
     }
@@ -209,9 +197,10 @@ IRCToken* IRCLexer::GetArgToken(std::string& msg)
         }
         else
         {
-            pos = msg.find_first_of("\r\n\0 ");
+            pos = msg.find_first_of(" \r\n\0");
             arg = msg.substr(0, pos);
         }
+        msg.erase(0, pos);
     }
     token = dynamic_cast<IRCArgToken*>(GetIRCTokensFactory().CreateToken(Enum_IRCTokens_Arg));
     if (token != NULL)
