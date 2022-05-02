@@ -23,7 +23,6 @@ private:
 
 public:
     IRCToken* CreateToken(Enum_IRCTokens tokenType);
-
     void DestroyToken(IRCToken* token);
 };
 

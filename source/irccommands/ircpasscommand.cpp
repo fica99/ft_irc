@@ -15,7 +15,6 @@ IRCPassCommand::IRCPassCommand()
 
 void IRCPassCommand::Initialize(void)
 {
-    SetCommandType(Enum_IRCCommands_Pass);
 }
 
 IRCPassCommand::~IRCPassCommand()

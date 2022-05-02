@@ -6,6 +6,8 @@
 #include "utils/singleton.h"
 
 #include "irccommands/irccommand.h"
+#include "irccommands/irccommands.h"
+#include "ircmessages/tokens/irccommandtoken.h"
 #include "ircmessages/tokens/irctoken.h"
 
 namespace ircserv
@@ -23,10 +25,11 @@ private:
 
 public:
     IRCCommand* CreateCommand(const std::vector<IRCToken*>& tokens);
+
 private:
-    const std::string& GetPrefix(IRCToken* token); 
-    Enum_IRCCommands GetCommand(IRCToken* token);
+    Enum_IRCCommands GetCommandEnum(IRCCommandToken *commandToken);
     std::vector<std::string> GetArgs(const std::vector<IRCToken*>& tokens);
+
 };
 
 #define GetIRCParser() IRCParser::GetInstance()

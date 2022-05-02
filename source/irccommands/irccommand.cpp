@@ -5,7 +5,7 @@
 namespace ircserv
 {
 
-IRCCommand::IRCCommand() : m_CommandType(Enum_IRCCommands_Unknown)
+IRCCommand::IRCCommand()
 {
     Initialize();
 }
@@ -21,11 +21,6 @@ IRCCommand::~IRCCommand()
 
 void IRCCommand::Shutdown(void)
 {
-}
-
-bool IRCCommand::ProcessCommand(/*serverclass */)
-{
-    return true;
 }
 
 }

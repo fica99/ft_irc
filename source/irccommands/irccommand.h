@@ -18,19 +18,19 @@ private:
     void Shutdown(void);
 
 public:
-    virtual bool ProcessCommand(/*serverclass */);
+    virtual bool ProcessCommand(/*serverclass */) = 0;
 
 public:
-    inline void SetCommandType(Enum_IRCCommands commandType) { m_CommandType = commandType; }
-    inline Enum_IRCCommands GetCommandType(void) const { return m_CommandType; }
-    inline void SetPrefix(const std::string& prefix) { m_Prefix = prefix; }
-    inline const std::string& GetPrefix(void) const { return m_Prefix; }
+    inline void SetNick(const std::string& nick) { m_Nick = nick; }
+    inline void SetUser(const std::string& user) { m_User = user; }
+    inline void SetHost(const std::string& host) { m_Host = host; }
     inline void SetArgs(const std::vector<std::string>& args) { m_Args = args; }
     inline const std::vector<std::string>& GetArgs(void) const { return m_Args; }
 
 protected: 
-    Enum_IRCCommands m_CommandType;
-    std::string m_Prefix;
+    std::string m_Nick;
+    std::string m_User;
+    std::string m_Host;
     std::vector<std::string> m_Args;
 };
 

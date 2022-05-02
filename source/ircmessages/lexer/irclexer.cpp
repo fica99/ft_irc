@@ -14,10 +14,10 @@ namespace ircserv
 IMPLEMENT_SIMPLE_SINGLETON(IRCLexer);
 
 IRCLexer::IRCLexer()
-    : LETTERS("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
-    , DIGITS("0123456789")
-    , SPECIAL("-[]\\`/^{}")
-    , WHITE(" \a\0\r\n,")
+    : LETTERS_ASCII("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+    , DIGITS_ASCII("0123456789")
+    , SPECIAL_ASCII("-[]\\`/^{}")
+    , WHITE_ASCII(" \a\0\r\n,")
 {
     IMPLEMENT_SIMPLE_SINGLETON_CONSTRUCTOR();
 
@@ -46,7 +46,6 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
     std::vector<IRCToken*> tokens;
     IRCToken* token;
     std::string msg = line;
-    size_t pos;
 
     if (!msg.empty() && msg[0] == ':')
     {
@@ -57,14 +56,14 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
             DestroyTokens(tokens);
             return tokens;
         }
-        msg.erase(0, msg.find_first_not_of(' ', pos));
+        msg.erase(0, msg.find_first_not_of(' '));
     }
 
     tokens.push_back(GetCommandToken(msg));
 
     while (msg.size() > 2)
     {
-        token = GetArgumentToken(msg);
+        token = GetArgToken(msg);
         if (token != NULL)
         {
             tokens.push_back(token);
@@ -82,7 +81,7 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
     return tokens;
 }
 
-void DestroyTokens(std::vector<IRCToken*>& tokens)
+void IRCLexer::DestroyTokens(std::vector<IRCToken*>& tokens)
 {
     for (size_t i = 0; i < tokens.size(); ++i)
     {
@@ -129,7 +128,7 @@ std::string IRCLexer::GetNick(std::string& msg)
     std::string nick;
     size_t pos;
 
-    pos = msg.find_first_not_of(LETTERS + DIGITS + SPECIAL);
+    pos = msg.find_first_not_of(LETTERS_ASCII + DIGITS_ASCII + SPECIAL_ASCII);
     nick = msg.substr(0, pos);
     msg.erase(0, pos);
     return nick;
@@ -140,8 +139,7 @@ std::string IRCLexer::GetUser(std::string& msg)
     std::string user;
     size_t pos;
 
-
-    pos = msg.find_first_of(WHITE + "@");
+    pos = msg.find_first_of(WHITE_ASCII + "@");
     user = msg.substr(0, pos);
     msg.erase(0, pos);
     return user;
@@ -166,16 +164,16 @@ IRCToken* IRCLexer::GetCommandToken(std::string& msg)
     std::string command;
     unsigned short int commandNumber = 0;
 
-    pos = msg.find_first_not_of(LETTERS);
+    pos = msg.find_first_not_of(LETTERS_ASCII);
     if (pos != 0)
     {
-        pos = msg.find_first_not_of(LETTERS);
+        pos = msg.find_first_not_of(LETTERS_ASCII);
         command = msg.substr(0, pos);
         msg.erase(0, pos);
     }
-    else if (msg.size() >= 3 && DIGITS.find(msg[0]) != DIGITS.npos
-            && DIGITS.find(msg[1]) != DIGITS.npos
-            && DIGITS.find(msg[2]) != DIGITS.npos)
+    else if (msg.size() >= 3 && DIGITS_ASCII.find(msg[0]) != DIGITS_ASCII.npos
+            && DIGITS_ASCII.find(msg[1]) != DIGITS_ASCII.npos
+            && DIGITS_ASCII.find(msg[2]) != DIGITS_ASCII.npos)
     {
         commandNumber = atoi(msg.substr(0, 3).c_str());
         msg.erase(0, 3);
@@ -189,7 +187,7 @@ IRCToken* IRCLexer::GetCommandToken(std::string& msg)
     return token;
 }
 
-IRCToken* IRCLexer::GetArgumentToken(std::string& msg)
+IRCToken* IRCLexer::GetArgToken(std::string& msg)
 {
     IRCArgToken* token;
     size_t pos;

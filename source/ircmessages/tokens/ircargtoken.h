@@ -20,6 +20,7 @@ public:
 
 public:
     inline void SetArg(const std::string& arg) { m_Arg = arg; }
+    inline const std::string& GetArg(void) const { return m_Arg; }
 private:
     std::string m_Arg;
 };

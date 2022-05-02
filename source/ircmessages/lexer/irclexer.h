@@ -29,12 +29,12 @@ private:
     std::string GetHost(std::string& msg);
 
     IRCToken* GetCommandToken(std::string& msg);
-    IRCToken* GetArgumentToken(std::string& msg);
+    IRCToken* GetArgToken(std::string& msg);
 private:
-    const std::string LETTERS;
-    const std::string DIGITS;
-    const std::string SPECIAL;
-    const std::string WHITE;
+    const std::string LETTERS_ASCII;
+    const std::string DIGITS_ASCII;
+    const std::string SPECIAL_ASCII;
+    const std::string WHITE_ASCII;
 
 };
 

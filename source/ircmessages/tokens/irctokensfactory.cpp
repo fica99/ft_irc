@@ -39,13 +39,13 @@ IRCToken* IRCTokensFactory::CreateToken(Enum_IRCTokens tokenType)
     switch (tokenType)
     {
         case Enum_IRCTokens_Prefix:
-            command = New(IRCPrefixToken)();
+            token = New(IRCPrefixToken)();
             break;
         case Enum_IRCTokens_Command:
-            command = New(IRCCommandToken)();
+            token = New(IRCCommandToken)();
             break;
         case Enum_IRCTokens_Arg:
-            command = New(IRCArgToken)();
+            token = New(IRCArgToken)();
             break;
         default:
             token = NULL;

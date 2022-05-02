@@ -15,7 +15,6 @@ IRCNickCommand::IRCNickCommand()
 
 void IRCNickCommand::Initialize(void)
 {
-    SetCommandType(Enum_IRCCommands_Nick);
 }
 
 IRCNickCommand::~IRCNickCommand()
