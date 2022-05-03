@@ -5,20 +5,9 @@
 namespace ircserv
 {
 
-IRCPrefixToken::IRCPrefixToken(const std::string& rawStr, const std::string& prefix)
-    : IRCToken(rawStr)
-    , m_Prefix(prefix)
+IRCPrefixToken::IRCPrefixToken()
 {
     Initialize();
-
-    if (!rawStr.compare(0, prefix.size(), prefix))
-    {
-        m_ProcessedStr = rawStr.substr(prefix.size());
-    }
-    else
-    {
-        throw std::invalid_argument("Invalid prefix token: " + rawStr);
-    }
 }
 
 void IRCPrefixToken::Initialize(void)
@@ -34,5 +23,6 @@ IRCPrefixToken::~IRCPrefixToken()
 void IRCPrefixToken::Shutdown(void)
 {
 }
+
 
 }

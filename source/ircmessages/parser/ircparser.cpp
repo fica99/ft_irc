@@ -2,9 +2,9 @@
 
 #include "ircmessages/parser/ircparser.h"
 
+#include "ircmessages/tokens/ircargtoken.h"
 #include "irccommands/irccommandsfactory.h"
 #include "ircmessages/tokens/ircprefixtoken.h"
-#include "ircmessages/tokens/irccommandtoken.h"
 
 namespace ircserv
 {
@@ -38,61 +38,76 @@ void IRCParser::Shutdown(void)
 IRCCommand* IRCParser::CreateCommand(const std::vector<IRCToken*>& tokens)
 {
     IRCCommand* command = NULL;
-    if (tokens.empty())
+    IRCPrefixToken* prefixToken = NULL;
+    IRCCommandToken* commandToken = NULL;
+    size_t i = 0;
+
+    if (!tokens.empty())
     {
-        command = GetIRCCommandsFactory().CreateCommand();
-    }
-    else
-    {
-        const std::string& prefix = GetPrefix(tokens[0]);
-        if (tokens.size() == 1)
+        prefixToken = dynamic_cast<IRCPrefixToken*>(tokens[i]);
+        if (prefixToken != NULL)
         {
-            command = GetIRCCommandsFactory().CreateCommand(Enum_IRCCommands_Unknown, prefix);
+            ++i;
         }
-        else
+
+        if (tokens.size() > i)
         {
-            command = GetIRCCommandsFactory().CreateCommand(
-                GetCommand(tokens[1]),
-                prefix,
-                GetArgs(std::vector<IRCToken*>(tokens.begin() + 2, tokens.end()))
-            );
+            commandToken = dynamic_cast<IRCCommandToken*>(tokens[i++]);
+
+            command = GetIRCCommandsFactory().CreateCommand(GetCommandEnum(commandToken));
+            if (command != NULL)
+            {
+                if (prefixToken != NULL)
+                {
+                    command->SetNick(prefixToken->GetNick());
+                    command->SetUser(prefixToken->GetUser());
+                    command->SetHost(prefixToken->GetHost());
+                }
+                command->SetArgs(GetArgs(std::vector<IRCToken*>(tokens.begin() + i, tokens.end())));
+            }
         }
+
     }
     return command;
 }
 
-const std::string& IRCParser::GetPrefix(IRCToken* token)
+void IRCParser::DestroyCommand(IRCCommand* command)
 {
-    static const std::string empty = "";
-
-    if (token == NULL || !dynamic_cast<IRCPrefixToken*>(token))
+    if (command != NULL)
     {
-        return empty;
+        GetIRCCommandsFactory().DestroyCommand(command);
     }
-    IRCPrefixToken* prefixToken = dynamic_cast<IRCPrefixToken*>(token);
-    return prefixToken->GetProcessedStr();
 }
 
-Enum_IRCCommands IRCParser::GetCommand(IRCToken* token)
+Enum_IRCCommands IRCParser::GetCommandEnum(IRCCommandToken *commandToken)
 {
-    if (token == NULL || !dynamic_cast<IRCCommandToken*>(token))
+    Enum_IRCCommands commandEnum = Enum_IRCCommands_Unknown;
+
+    if (commandToken != NULL)
     {
-        return Enum_IRCCommands_Unknown;
+        if (!EnumString<Enum_IRCCommands>::To(commandEnum, commandToken->GetCommand()))
+        {
+            commandEnum = static_cast<Enum_IRCCommands>(commandToken->GetCommandNumber());
+        }
     }
-    IRCCommandToken* commandToken = dynamic_cast<IRCCommandToken*>(token);
-    return commandToken->GetCommandEnum();
+    return commandEnum;
 }
 
 std::vector<std::string> IRCParser::GetArgs(const std::vector<IRCToken*>& tokens)
 {
     std::vector<std::string> args;
+    IRCArgToken* argToken;
+
     for (size_t i = 0; i < tokens.size(); ++i)
     {
-        args.push_back(tokens[i]->GetRawStr());
+        argToken = dynamic_cast<IRCArgToken*>(tokens[i]);
+        if (argToken != NULL)
+        {
+            args.push_back(argToken->GetArg());
+        }
     }
     return args;
 }
-
 
 
 }

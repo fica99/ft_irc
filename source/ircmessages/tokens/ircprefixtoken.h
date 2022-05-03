@@ -10,19 +10,24 @@ namespace ircserv
 class IRCPrefixToken : public IRCToken
 {
 public:
-    IRCPrefixToken(const std::string& rawStr, const std::string& prefix = ":");
+    IRCPrefixToken();
     virtual ~IRCPrefixToken();
 private:
     void Initialize(void);
     void Shutdown(void);
 
 public:
-    inline const std::string& GetPrefix(void) const { return m_Prefix; }
-    inline const std::string& GetProcessedStr(void) const { return m_ProcessedStr; }
+    inline void SetNick(const std::string& nick) { m_Nick = nick; }
+    inline const std::string& GetNick(void) const { return m_Nick; }
+    inline void SetUser(const std::string& user) { m_User = user; }
+    inline const std::string& GetUser(void) const { return m_User; }
+    inline void SetHost(const std::string& host) { m_Host = host; }
+    inline const std::string& GetHost(void) const { return m_Host; }
 
 private:
-    std::string m_Prefix;
-    std::string m_ProcessedStr;
+    std::string m_Nick;
+    std::string m_User;
+    std::string m_Host;
 };
 
 }

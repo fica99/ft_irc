@@ -5,7 +5,7 @@
 namespace ircserv
 {
 
-IRCToken::IRCToken(const std::string& rawStr) : m_RawStr(rawStr)
+IRCToken::IRCToken()
 {
     Initialize();
 }

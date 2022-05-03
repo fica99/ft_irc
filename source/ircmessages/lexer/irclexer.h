@@ -9,13 +9,6 @@
 namespace ircserv
 {
 
-struct IRCLexerParams
-{
-    std::string     Prefix; // prefix for first part of message
-    std::string     TokensDelim; // delimeter between parts of messages
-    std::string     BlockDelim; // blocker for delimeter used for last long argument with spaces
-};
-
 class IRCLexer
 {
 public:
@@ -28,21 +21,21 @@ private:
 
 public:
     std::vector<IRCToken*> Tokenize(const std::string& line);
+    void DestroyTokens(std::vector<IRCToken*>& tokens);
 private:
     IRCToken* GetPrefixToken(std::string& msg);
+    std::string GetNick(std::string& msg);
+    std::string GetUser(std::string& msg);
+    std::string GetHost(std::string& msg);
+
     IRCToken* GetCommandToken(std::string& msg);
-    IRCToken* GetArgumentToken(std::string& msg);
-
-public:
-    void SetLexerParams(const IRCLexerParams& params);
+    IRCToken* GetArgToken(std::string& msg);
 private:
-    void ValidateLexerParams(const IRCLexerParams& params);
+    const std::string LETTERS_ASCII;
+    const std::string DIGITS_ASCII;
+    const std::string SPECIAL_ASCII;
+    const std::string WHITE_ASCII;
 
-public:
-    inline const IRCLexerParams& GetLexerParams(void) const { return m_LexerParams; }
-
-private:
-    IRCLexerParams m_LexerParams;
 };
 
 #define GetIRCLexer() IRCLexer::GetInstance()

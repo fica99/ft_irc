@@ -33,9 +33,7 @@ void IRCCommandsFactory::Shutdown(void)
 {
 }
 
-IRCCommand* IRCCommandsFactory::CreateCommand(Enum_IRCCommands commandType,
-                            const std::string& prefix,
-                            const std::vector<std::string>& args)
+IRCCommand* IRCCommandsFactory::CreateCommand(Enum_IRCCommands commandType)
 {
     IRCCommand* command = NULL;
     switch (commandType)
@@ -47,11 +45,9 @@ IRCCommand* IRCCommandsFactory::CreateCommand(Enum_IRCCommands commandType,
             command = New(IRCNickCommand)();
             break;
         default:
-            command = New(IRCCommand)();
+            command = NULL;
             break;
     }
-    command->SetPrefix(prefix);
-    command->SetArgs(args);
     return command;
 }
 

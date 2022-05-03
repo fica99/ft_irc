@@ -5,13 +5,9 @@
 namespace ircserv
 {
 
-IRCCommandToken::IRCCommandToken(const std::string& rawStr)
-    : IRCToken(rawStr)
-    , m_CommandEnum(Enum_IRCCommands_Unknown)
+IRCCommandToken::IRCCommandToken() : m_CommandNumber(0)
 {
     Initialize();
-
-    EnumString<Enum_IRCCommands>::To(m_CommandEnum, rawStr);
 }
 
 void IRCCommandToken::Initialize(void)

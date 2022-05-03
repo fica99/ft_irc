@@ -21,9 +21,7 @@ private:
     DECLARE_SIMPLE_SINGLETON(IRCCommandsFactory);
 
 public:
-    IRCCommand* CreateCommand(Enum_IRCCommands commandType = Enum_IRCCommands_Unknown,
-                            const std::string& prefix = "",
-                            const std::vector<std::string>& args = std::vector<std::string>());
+    IRCCommand* CreateCommand(Enum_IRCCommands commandType = Enum_IRCCommands_Unknown);
     void DestroyCommand(IRCCommand* command);
 };
 
