@@ -5,6 +5,7 @@
 #include "utils/memory.h"
 #include "irccommands/ircpasscommand.h"
 #include "irccommands/ircnickcommand.h"
+#include "ircresponses/ircresponsesfactory.h"
 
 namespace ircserv
 {
@@ -20,6 +21,7 @@ IRCCommandsFactory::IRCCommandsFactory()
 
 void IRCCommandsFactory::Initialize(void)
 {
+    IRCResponsesFactory::CreateSingleton();
 }
 
 IRCCommandsFactory::~IRCCommandsFactory()
@@ -31,6 +33,7 @@ IRCCommandsFactory::~IRCCommandsFactory()
 
 void IRCCommandsFactory::Shutdown(void)
 {
+    IRCResponsesFactory::DestroySingleton();
 }
 
 IRCCommand* IRCCommandsFactory::CreateCommand(Enum_IRCCommands commandType)
