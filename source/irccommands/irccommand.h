@@ -11,7 +11,7 @@ namespace ircserv
 class IRCCommand
 {
 public:
-    IRCCommand(Enum_IRCCommands commandEnum);
+    IRCCommand(Enum_IRCCommands commandEnum = Enum_IRCCommands_Unknown);
     virtual ~IRCCommand();
 private:
     void Initialize(void);

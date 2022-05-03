@@ -29,7 +29,8 @@ std::string IRCResponseERR_NEEDMOREPARAMS::GetResponse(void) const
 {
     std::string response;
     
-    response += EnumString<Enum_IRCCResponses>::From(GetResponseEnum());
+    response += GetPrefix();
+    response += " " + EnumString<Enum_IRCCResponses>::From(GetResponseEnum());
     response += " " + m_Command + " :Not enough parameters";
     return response;
 }
