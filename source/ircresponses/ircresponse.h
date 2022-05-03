@@ -10,24 +10,24 @@ namespace ircserv
 class IRCResponse
 {
 public:
-    IRCResponse(Enum_IRCCResponses responseType = Enum_IRCResponses_Unknown,
-            const std::string& prefix = "",
-            const std::string& delimeter = " ");
+    IRCResponse(Enum_IRCCResponses responseEnum);
     virtual ~IRCResponse();
 private:
     void Initialize(void);
     void Shutdown(void);
 
 public:
-    const std::string& GetResponse() const { return m_Response; }
+    virtual std::string GetResponse(void) const = 0;
+
+public:
+    inline void SetPrefix(const std::string& prefix) { m_Prefix = prefix; }
+
 protected:
-    virtual void InitResponse(void) = 0;
+    inline Enum_IRCCResponses GetResponseEnum(void) const { return m_ResponseEnum; }
 
 protected: 
-    const Enum_IRCCResponses m_ResponseType;
-    const std::string m_Prefix;
-    const std::string m_Delimeter;
-    std::string m_Response;
+    std::string m_Prefix;
+    Enum_IRCCResponses m_ResponseEnum;
 };
 
 }

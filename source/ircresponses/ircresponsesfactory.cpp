@@ -3,7 +3,8 @@
 #include "ircresponses/ircresponsesfactory.h"
 
 #include "utils/memory.h"
-#include "ircresponses/ircresponserpl_welcome.h"
+#include "ircresponses/ircresponseerr_needmoreparams.h"
+#include "ircresponses/ircresponseerr_nonicknamegiven.h"
 
 namespace ircserv
 {
@@ -32,16 +33,16 @@ void IRCResponsesFactory::Shutdown(void)
 {
 }
 
-IRCResponse* IRCResponsesFactory::CreateResponse(
-    Enum_IRCCResponses responseType,
-    const std::string& prefix,
-    const std::string& delimeter)
+IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCCResponses responseType)
 {
     IRCResponse* response = NULL;
     switch (responseType)
     {
-        case Enum_IRCResponses_RPL_WELCOME:
-            response = New(IRCResponseRPL_WELCOME)(prefix, delimeter);
+        case Enum_IRCResponses_ERR_NEEDMOREPARAMS:
+            response = New(IRCResponseERR_NEEDMOREPARAMS)();
+            break;
+        case Enum_IRCResponses_ERR_NONICKNAMEGIVEN:
+            response = New(IRCResponseERR_NONICKNAMEGIVEN)();
             break;
         default:
             response = NULL;

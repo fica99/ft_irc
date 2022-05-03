@@ -16,6 +16,10 @@ private:
 
 public:
     bool ProcessCommand(/*serverclass */);
+
+private:
+    bool ValidateArgs(/*serverclass */);
+
 };
 
 }

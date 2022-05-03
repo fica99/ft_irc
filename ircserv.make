@@ -171,7 +171,8 @@ OBJECTS := \
 	$(OBJDIR)/irctoken.o \
 	$(OBJDIR)/irctokensfactory.o \
 	$(OBJDIR)/ircresponse.o \
-	$(OBJDIR)/ircresponserpl_welcome.o \
+	$(OBJDIR)/ircresponseerr_needmoreparams.o \
+	$(OBJDIR)/ircresponseerr_nonicknamegiven.o \
 	$(OBJDIR)/ircresponsesfactory.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/precomp.o \
@@ -274,7 +275,10 @@ $(OBJDIR)/irctokensfactory.o: source/ircmessages/tokens/irctokensfactory.cpp
 $(OBJDIR)/ircresponse.o: source/ircresponses/ircresponse.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponserpl_welcome.o: source/ircresponses/ircresponserpl_welcome.cpp
+$(OBJDIR)/ircresponseerr_needmoreparams.o: source/ircresponses/ircresponseerr_needmoreparams.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_nonicknamegiven.o: source/ircresponses/ircresponseerr_nonicknamegiven.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponsesfactory.o: source/ircresponses/ircresponsesfactory.cpp
