@@ -163,6 +163,7 @@ OBJECTS := \
 	$(OBJDIR)/irccommandsfactory.o \
 	$(OBJDIR)/ircinvitecommand.o \
 	$(OBJDIR)/ircjoincommand.o \
+	$(OBJDIR)/irckickcommand.o \
 	$(OBJDIR)/irclistcommand.o \
 	$(OBJDIR)/ircmodecommand.o \
 	$(OBJDIR)/ircnamescommand.o \
@@ -259,6 +260,9 @@ $(OBJDIR)/ircinvitecommand.o: source/irccommands/ircinvitecommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircjoincommand.o: source/irccommands/ircjoincommand.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irckickcommand.o: source/irccommands/irckickcommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irclistcommand.o: source/irccommands/irclistcommand.cpp

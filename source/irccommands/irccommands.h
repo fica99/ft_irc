@@ -19,7 +19,8 @@ enum Enum_IRCCommands
     Enum_IRCCommands_Topic,
     Enum_IRCCommands_Names,
     Enum_IRCCommands_List,
-    Enum_IRCCommands_Invite
+    Enum_IRCCommands_Invite,
+    Enum_IRCCommands_Kick
 };
 
 Begin_Enum_String(Enum_IRCCommands)
@@ -36,6 +37,7 @@ Begin_Enum_String(Enum_IRCCommands)
     Enum_String(Enum_IRCCommands_Names, "NAMES");
     Enum_String(Enum_IRCCommands_List, "LIST");
     Enum_String(Enum_IRCCommands_Invite, "INVITE");
+    Enum_String(Enum_IRCCommands_Kick, "KICK");
 }
 End_Enum_String;
 
