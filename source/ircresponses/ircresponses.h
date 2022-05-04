@@ -21,6 +21,7 @@ enum Enum_IRCCResponses
     Enum_IRCResponses_ERR_CHANNELISFULL = 471,
     Enum_IRCResponses_ERR_INVITEONLYCHAN = 473,
     Enum_IRCResponses_ERR_BANNEDFROMCHAN = 474,
+    Enum_IRCResponses_ERR_BADCHANNELKEY = 475,
     Enum_IRCResponses_ERR_NOOPERHOST = 491
 };
 
@@ -39,6 +40,7 @@ Begin_Enum_String(Enum_IRCCResponses)
     Enum_String(Enum_IRCResponses_ERR_CHANNELISFULL, "471");
     Enum_String(Enum_IRCResponses_ERR_INVITEONLYCHAN, "473");
     Enum_String(Enum_IRCResponses_ERR_BANNEDFROMCHAN, "474");
+    Enum_String(Enum_IRCResponses_ERR_BADCHANNELKEY, "475");
     Enum_String(Enum_IRCResponses_ERR_NOOPERHOST, "491");
 }
 End_Enum_String;

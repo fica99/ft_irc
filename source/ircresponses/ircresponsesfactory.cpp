@@ -4,6 +4,7 @@
 
 #include "utils/memory.h"
 #include "ircresponses/ircresponseerr_alreadyregistered.h"
+#include "ircresponses/ircresponseerr_badchannelkey.h"
 #include "ircresponses/ircresponseerr_bannedfromchan.h"
 #include "ircresponses/ircresponseerr_channelisfull.h"
 #include "ircresponses/ircresponseerr_erroneusnickname.h"
@@ -52,6 +53,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCCResponses responseType
     {
         case Enum_IRCResponses_ERR_ALREADYREGISTRED:
             response = New(IRCResponseERR_ALREADYREGISTERED)();
+            break;
+        case Enum_IRCResponses_ERR_BADCHANNELKEY:
+            response = New(IRCResponseERR_BADCHANNELKEY)();
             break;
         case Enum_IRCResponses_ERR_BANNEDFROMCHAN:
             response = New(IRCResponseERR_BANNEDFROMCHAN)();
