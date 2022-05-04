@@ -9,6 +9,7 @@
 #include "ircresponses/ircresponseerr_nickcollision.h"
 #include "ircresponses/ircresponseerr_nicknameinuse.h"
 #include "ircresponses/ircresponseerr_nonicknamegiven.h"
+#include "ircresponses/ircresponseerr_nooperhost.h"
 
 namespace ircserv
 {
@@ -59,6 +60,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCCResponses responseType
             break;
         case Enum_IRCResponses_ERR_NONICKNAMEGIVEN:
             response = New(IRCResponseERR_NONICKNAMEGIVEN)();
+            break;
+        case Enum_IRCResponses_ERR_NOOPERHOST:
+            response = New(IRCResponseERR_NOOPERHOST)();
             break;
         default:
             response = NULL;

@@ -188,6 +188,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponseerr_nickcollision.o \
 	$(OBJDIR)/ircresponseerr_nicknameinuse.o \
 	$(OBJDIR)/ircresponseerr_nonicknamegiven.o \
+	$(OBJDIR)/ircresponseerr_nooperhost.o \
 	$(OBJDIR)/ircresponsesfactory.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/precomp.o \
@@ -339,6 +340,9 @@ $(OBJDIR)/ircresponseerr_nicknameinuse.o: source/ircresponses/ircresponseerr_nic
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_nonicknamegiven.o: source/ircresponses/ircresponseerr_nonicknamegiven.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_nooperhost.o: source/ircresponses/ircresponseerr_nooperhost.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponsesfactory.o: source/ircresponses/ircresponsesfactory.cpp
