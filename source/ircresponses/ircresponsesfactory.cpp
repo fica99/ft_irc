@@ -4,6 +4,7 @@
 
 #include "utils/memory.h"
 #include "ircresponses/ircresponseerr_alreadyregistered.h"
+#include "ircresponses/ircresponseerr_channelisfull.h"
 #include "ircresponses/ircresponseerr_erroneusnickname.h"
 #include "ircresponses/ircresponseerr_inviteonlychan.h"
 #include "ircresponses/ircresponseerr_needmoreparams.h"
@@ -48,6 +49,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCCResponses responseType
     {
         case Enum_IRCResponses_ERR_ALREADYREGISTRED:
             response = New(IRCResponseERR_ALREADYREGISTERED)();
+            break;
+        case Enum_IRCResponses_ERR_CHANNELISFULL:
+            response = New(IRCResponseERR_CHANNELISFULL)();
             break;
         case Enum_IRCResponses_ERR_ERRONEUSNICKNAME:
             response = New(IRCResponseERR_ERRONEUSNICKNAME)();
