@@ -16,7 +16,8 @@ enum Enum_IRCCommands
     Enum_IRCCommands_Join,
     Enum_IRCCommands_Part,
     Enum_IRCCommands_Mode,
-    Enum_IRCCommands_Topic
+    Enum_IRCCommands_Topic,
+    Enum_IRCCommands_Names
 };
 
 Begin_Enum_String(Enum_IRCCommands)
@@ -30,6 +31,7 @@ Begin_Enum_String(Enum_IRCCommands)
     Enum_String(Enum_IRCCommands_Part, "PART");
     Enum_String(Enum_IRCCommands_Mode, "MODE");
     Enum_String(Enum_IRCCommands_Topic, "TOPIC");
+    Enum_String(Enum_IRCCommands_Names, "NAMES");
 }
 End_Enum_String;
 
