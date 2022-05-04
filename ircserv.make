@@ -184,6 +184,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponse.o \
 	$(OBJDIR)/ircresponseerr_alreadyregistered.o \
 	$(OBJDIR)/ircresponseerr_erroneusnickname.o \
+	$(OBJDIR)/ircresponseerr_inviteonlychan.o \
 	$(OBJDIR)/ircresponseerr_needmoreparams.o \
 	$(OBJDIR)/ircresponseerr_nickcollision.o \
 	$(OBJDIR)/ircresponseerr_nicknameinuse.o \
@@ -330,6 +331,9 @@ $(OBJDIR)/ircresponseerr_alreadyregistered.o: source/ircresponses/ircresponseerr
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_erroneusnickname.o: source/ircresponses/ircresponseerr_erroneusnickname.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_inviteonlychan.o: source/ircresponses/ircresponseerr_inviteonlychan.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_needmoreparams.o: source/ircresponses/ircresponseerr_needmoreparams.cpp

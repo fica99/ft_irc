@@ -5,6 +5,7 @@
 #include "utils/memory.h"
 #include "ircresponses/ircresponseerr_alreadyregistered.h"
 #include "ircresponses/ircresponseerr_erroneusnickname.h"
+#include "ircresponses/ircresponseerr_inviteonlychan.h"
 #include "ircresponses/ircresponseerr_needmoreparams.h"
 #include "ircresponses/ircresponseerr_nickcollision.h"
 #include "ircresponses/ircresponseerr_nicknameinuse.h"
@@ -50,6 +51,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCCResponses responseType
             break;
         case Enum_IRCResponses_ERR_ERRONEUSNICKNAME:
             response = New(IRCResponseERR_ERRONEUSNICKNAME)();
+            break;
+        case Enum_IRCResponses_ERR_INVITEONLYCHAN:
+            response = New(IRCResponseERR_INVITEONLYCHAN)();
             break;
         case Enum_IRCResponses_ERR_NEEDMOREPARAMS:
             response = New(IRCResponseERR_NEEDMOREPARAMS)();
