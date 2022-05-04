@@ -168,6 +168,7 @@ OBJECTS := \
 	$(OBJDIR)/ircmodecommand.o \
 	$(OBJDIR)/ircnamescommand.o \
 	$(OBJDIR)/ircnickcommand.o \
+	$(OBJDIR)/ircnoticecommand.o \
 	$(OBJDIR)/ircopercommand.o \
 	$(OBJDIR)/ircpartcommand.o \
 	$(OBJDIR)/ircpasscommand.o \
@@ -278,6 +279,9 @@ $(OBJDIR)/ircnamescommand.o: source/irccommands/ircnamescommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircnickcommand.o: source/irccommands/ircnickcommand.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircnoticecommand.o: source/irccommands/ircnoticecommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircopercommand.o: source/irccommands/ircopercommand.cpp
