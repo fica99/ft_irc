@@ -11,6 +11,7 @@
 #include "ircresponses/ircresponseerr_nonicknamegiven.h"
 #include "ircresponses/ircresponseerr_nooperhost.h"
 #include "ircresponses/ircresponseerr_passwdmismatch.h"
+#include "ircresponses/ircresponserpl_youreoper.h"
 
 namespace ircserv
 {
@@ -67,6 +68,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCCResponses responseType
             break;
         case Enum_IRCResponses_ERR_PASSWDMISMATCH:
             response = New(IRCResponseERR_PASSWDMISMATCH)();
+            break;
+        case Enum_IRCResponses_RPL_YOUREOPER:
+            response = New(IRCResponseRPL_YOUREOPER)();
             break;
         default:
             response = NULL;

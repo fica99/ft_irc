@@ -190,6 +190,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponseerr_nonicknamegiven.o \
 	$(OBJDIR)/ircresponseerr_nooperhost.o \
 	$(OBJDIR)/ircresponseerr_passwdmismatch.o \
+	$(OBJDIR)/ircresponserpl_youreoper.o \
 	$(OBJDIR)/ircresponsesfactory.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/precomp.o \
@@ -347,6 +348,9 @@ $(OBJDIR)/ircresponseerr_nooperhost.o: source/ircresponses/ircresponseerr_nooper
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_passwdmismatch.o: source/ircresponses/ircresponseerr_passwdmismatch.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_youreoper.o: source/ircresponses/ircresponserpl_youreoper.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponsesfactory.o: source/ircresponses/ircresponsesfactory.cpp
