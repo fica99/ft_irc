@@ -161,6 +161,7 @@ endif
 OBJECTS := \
 	$(OBJDIR)/irccommand.o \
 	$(OBJDIR)/irccommandsfactory.o \
+	$(OBJDIR)/ircinvitecommand.o \
 	$(OBJDIR)/ircjoincommand.o \
 	$(OBJDIR)/irclistcommand.o \
 	$(OBJDIR)/ircmodecommand.o \
@@ -252,6 +253,9 @@ $(OBJDIR)/irccommand.o: source/irccommands/irccommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irccommandsfactory.o: source/irccommands/irccommandsfactory.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircinvitecommand.o: source/irccommands/ircinvitecommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircjoincommand.o: source/irccommands/ircjoincommand.cpp
