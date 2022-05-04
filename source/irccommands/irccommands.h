@@ -13,7 +13,8 @@ enum Enum_IRCCommands
     Enum_IRCCommands_User,
     Enum_IRCCommands_Oper,
     Enum_IRCCommands_Quit,
-    Enum_IRCCommands_Join
+    Enum_IRCCommands_Join,
+    Enum_IRCCommands_Part
 };
 
 Begin_Enum_String(Enum_IRCCommands)
@@ -24,6 +25,7 @@ Begin_Enum_String(Enum_IRCCommands)
     Enum_String(Enum_IRCCommands_Oper, "OPER");
     Enum_String(Enum_IRCCommands_Quit, "QUIT");
     Enum_String(Enum_IRCCommands_Join, "JOIN");
+    Enum_String(Enum_IRCCommands_Part, "PART");
 }
 End_Enum_String;
 
