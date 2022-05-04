@@ -162,11 +162,13 @@ OBJECTS := \
 	$(OBJDIR)/irccommand.o \
 	$(OBJDIR)/irccommandsfactory.o \
 	$(OBJDIR)/ircjoincommand.o \
+	$(OBJDIR)/ircmodecommand.o \
 	$(OBJDIR)/ircnickcommand.o \
 	$(OBJDIR)/ircopercommand.o \
 	$(OBJDIR)/ircpartcommand.o \
 	$(OBJDIR)/ircpasscommand.o \
 	$(OBJDIR)/ircquitcommand.o \
+	$(OBJDIR)/irctopiccommand.o \
 	$(OBJDIR)/ircusercommand.o \
 	$(OBJDIR)/irclexer.o \
 	$(OBJDIR)/ircparser.o \
@@ -253,6 +255,9 @@ $(OBJDIR)/irccommandsfactory.o: source/irccommands/irccommandsfactory.cpp
 $(OBJDIR)/ircjoincommand.o: source/irccommands/ircjoincommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircmodecommand.o: source/irccommands/ircmodecommand.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircnickcommand.o: source/irccommands/ircnickcommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -266,6 +271,9 @@ $(OBJDIR)/ircpasscommand.o: source/irccommands/ircpasscommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircquitcommand.o: source/irccommands/ircquitcommand.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irctopiccommand.o: source/irccommands/irctopiccommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircusercommand.o: source/irccommands/ircusercommand.cpp
