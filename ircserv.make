@@ -172,6 +172,7 @@ OBJECTS := \
 	$(OBJDIR)/ircpartcommand.o \
 	$(OBJDIR)/ircpasscommand.o \
 	$(OBJDIR)/ircquitcommand.o \
+	$(OBJDIR)/irctimecommand.o \
 	$(OBJDIR)/irctopiccommand.o \
 	$(OBJDIR)/ircusercommand.o \
 	$(OBJDIR)/ircversioncommand.o \
@@ -288,6 +289,9 @@ $(OBJDIR)/ircpasscommand.o: source/irccommands/ircpasscommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircquitcommand.o: source/irccommands/ircquitcommand.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irctimecommand.o: source/irccommands/irctimecommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irctopiccommand.o: source/irccommands/irctopiccommand.cpp

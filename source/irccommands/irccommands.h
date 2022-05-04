@@ -21,7 +21,8 @@ enum Enum_IRCCommands
     Enum_IRCCommands_List,
     Enum_IRCCommands_Invite,
     Enum_IRCCommands_Kick,
-    Enum_IRCCommands_Version
+    Enum_IRCCommands_Version,
+    Enum_IRCCommands_Time
 };
 
 Begin_Enum_String(Enum_IRCCommands)
@@ -40,6 +41,7 @@ Begin_Enum_String(Enum_IRCCommands)
     Enum_String(Enum_IRCCommands_Invite, "INVITE");
     Enum_String(Enum_IRCCommands_Kick, "KICK");
     Enum_String(Enum_IRCCommands_Version, "VERSION");
+    Enum_String(Enum_IRCCommands_Time, "TIME");
 }
 End_Enum_String;
 
