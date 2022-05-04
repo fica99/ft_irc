@@ -162,6 +162,7 @@ OBJECTS := \
 	$(OBJDIR)/irccommand.o \
 	$(OBJDIR)/irccommandsfactory.o \
 	$(OBJDIR)/ircnickcommand.o \
+	$(OBJDIR)/ircopercommand.o \
 	$(OBJDIR)/ircpasscommand.o \
 	$(OBJDIR)/ircusercommand.o \
 	$(OBJDIR)/irclexer.o \
@@ -247,6 +248,9 @@ $(OBJDIR)/irccommandsfactory.o: source/irccommands/irccommandsfactory.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircnickcommand.o: source/irccommands/ircnickcommand.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircopercommand.o: source/irccommands/ircopercommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircpasscommand.o: source/irccommands/ircpasscommand.cpp
