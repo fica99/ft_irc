@@ -16,6 +16,7 @@
 #include "ircresponses/ircresponseerr_nooperhost.h"
 #include "ircresponses/ircresponseerr_nosuchchannel.h"
 #include "ircresponses/ircresponseerr_passwdmismatch.h"
+#include "ircresponses/ircresponseerr_toomanychannels.h"
 #include "ircresponses/ircresponserpl_topic.h"
 #include "ircresponses/ircresponserpl_youreoper.h"
 
@@ -89,6 +90,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCCResponses responseType
             break;
         case Enum_IRCResponses_ERR_PASSWDMISMATCH:
             response = New(IRCResponseERR_PASSWDMISMATCH)();
+            break;
+        case Enum_IRCResponses_ERR_TOOMANYCHANNELS:
+            response = New(IRCResponseERR_TOOMANYCHANNELS)();
             break;
         case Enum_IRCResponses_RPL_TOPIC:
             response = New(IRCResponseRPL_TOPIC)();
