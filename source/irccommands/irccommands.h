@@ -24,7 +24,8 @@ enum Enum_IRCCommands
     Enum_IRCCommands_Version,
     Enum_IRCCommands_Time,
     Enum_IRCCommands_Privmsg,
-    Enum_IRCCommands_Notice
+    Enum_IRCCommands_Notice,
+    Enum_IRCCommands_Kill
 };
 
 Begin_Enum_String(Enum_IRCCommands)
@@ -46,6 +47,7 @@ Begin_Enum_String(Enum_IRCCommands)
     Enum_String(Enum_IRCCommands_Time, "TIME");
     Enum_String(Enum_IRCCommands_Privmsg, "PRIVMSG");
     Enum_String(Enum_IRCCommands_Notice, "NOTICE");
+    Enum_String(Enum_IRCCommands_Kill, "KILL");
 }
 End_Enum_String;
 
