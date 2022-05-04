@@ -5,10 +5,7 @@
 namespace ircserv
 {
 
-IRCResponse::IRCResponse(Enum_IRCCResponses responseType, const std::string& prefix, const std::string& delimeter)
-    : m_ResponseType(responseType)
-    , m_Prefix(prefix)
-    , m_Delimeter(delimeter)
+IRCResponse::IRCResponse(Enum_IRCCResponses responseEnum) : m_ResponseEnum(responseEnum)
 {
     Initialize();
 }

@@ -11,7 +11,7 @@ namespace ircserv
 class IRCCommand
 {
 public:
-    IRCCommand();
+    IRCCommand(Enum_IRCCommands commandEnum = Enum_IRCCommands_Unknown);
     virtual ~IRCCommand();
 private:
     void Initialize(void);
@@ -20,6 +20,9 @@ private:
 public:
     virtual bool ProcessCommand(/*serverclass */) = 0;
 
+private:
+    virtual bool ValidateArgs(/*serverclass */) = 0;
+
 public:
     inline void SetNick(const std::string& nick) { m_Nick = nick; }
     inline void SetUser(const std::string& user) { m_User = user; }
@@ -27,6 +30,10 @@ public:
     inline void SetArgs(const std::vector<std::string>& args) { m_Args = args; }
     inline const std::vector<std::string>& GetArgs(void) const { return m_Args; }
 
+protected:
+    inline Enum_IRCCommands GetCommandEnum(void) const { return m_CommandEnum; }
+private:
+    Enum_IRCCommands m_CommandEnum;
 protected: 
     std::string m_Nick;
     std::string m_User;

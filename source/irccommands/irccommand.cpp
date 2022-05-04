@@ -5,7 +5,7 @@
 namespace ircserv
 {
 
-IRCCommand::IRCCommand()
+IRCCommand::IRCCommand(Enum_IRCCommands commandEnum) : m_CommandEnum(commandEnum)
 {
     Initialize();
 }
