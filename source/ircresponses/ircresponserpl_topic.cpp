@@ -30,7 +30,7 @@ std::string IRCResponseRPL_TOPIC::GetResponse(void) const
     std::string response;
     
     response += GetPrefix();
-    response += " " + EnumString<Enum_IRCCResponses>::From(GetResponseEnum());
+    response += " " + EnumString<Enum_IRCResponses>::From(GetResponseEnum());
     response += " " + m_Channel + " :" + m_Topic;
     return response;
 }

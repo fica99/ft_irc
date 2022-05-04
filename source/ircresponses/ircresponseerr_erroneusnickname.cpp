@@ -30,7 +30,7 @@ std::string IRCResponseERR_ERRONEUSNICKNAME::GetResponse(void) const
     std::string response;
     
     response += GetPrefix();
-    response += " " + EnumString<Enum_IRCCResponses>::From(GetResponseEnum());
+    response += " " + EnumString<Enum_IRCResponses>::From(GetResponseEnum());
     response += " " + m_Nick + " :Erroneus nickname";
     return response;
 }

@@ -18,7 +18,7 @@ private:
     DECLARE_SIMPLE_SINGLETON(IRCResponsesFactory);
 
 public:
-    IRCResponse* CreateResponse(Enum_IRCCResponses responseType = Enum_IRCResponses_Unknown);
+    IRCResponse* CreateResponse(Enum_IRCResponses responseType = Enum_IRCResponses_Unknown);
     void DestroyResponse(IRCResponse* response);
 };
 

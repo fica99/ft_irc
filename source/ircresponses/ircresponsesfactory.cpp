@@ -15,6 +15,7 @@
 #include "ircresponses/ircresponseerr_nonicknamegiven.h"
 #include "ircresponses/ircresponseerr_nooperhost.h"
 #include "ircresponses/ircresponseerr_nosuchchannel.h"
+#include "ircresponses/ircresponseerr_notonchannel.h"
 #include "ircresponses/ircresponseerr_passwdmismatch.h"
 #include "ircresponses/ircresponseerr_toomanychannels.h"
 #include "ircresponses/ircresponserpl_topic.h"
@@ -47,7 +48,7 @@ void IRCResponsesFactory::Shutdown(void)
 {
 }
 
-IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCCResponses responseType)
+IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
 {
     IRCResponse* response = NULL;
     switch (responseType)
@@ -87,6 +88,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCCResponses responseType
             break;
         case Enum_IRCResponses_ERR_NOSUCHCHANNEL:
             response = New(IRCResponseERR_NOSUCHCHANNEL)();
+            break;
+        case Enum_IRCResponses_ERR_NOTONCHANNEL:
+            response = New(IRCResponseERR_NOTONCHANNEL)();
             break;
         case Enum_IRCResponses_ERR_PASSWDMISMATCH:
             response = New(IRCResponseERR_PASSWDMISMATCH)();
