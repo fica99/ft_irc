@@ -204,6 +204,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponseerr_notoplevel.o \
 	$(OBJDIR)/ircresponseerr_passwdmismatch.o \
 	$(OBJDIR)/ircresponseerr_toomanychannels.o \
+	$(OBJDIR)/ircresponseerr_toomanytargets.o \
 	$(OBJDIR)/ircresponseerr_wildtoplevel.o \
 	$(OBJDIR)/ircresponserpl_away.o \
 	$(OBJDIR)/ircresponserpl_endofnames.o \
@@ -412,6 +413,9 @@ $(OBJDIR)/ircresponseerr_passwdmismatch.o: source/ircresponses/ircresponseerr_pa
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_toomanychannels.o: source/ircresponses/ircresponseerr_toomanychannels.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_toomanytargets.o: source/ircresponses/ircresponseerr_toomanytargets.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_wildtoplevel.o: source/ircresponses/ircresponseerr_wildtoplevel.cpp

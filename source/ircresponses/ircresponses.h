@@ -21,6 +21,7 @@ enum Enum_IRCResponses
     Enum_IRCResponses_ERR_NOSUCHCHANNEL = 403,
     Enum_IRCResponses_ERR_CANNOTSENDTOCHAN = 404,
     Enum_IRCResponses_ERR_TOOMANYCHANNELS = 405,
+    Enum_IRCResponses_ERR_TOOMANYTARGETS = 407,
     Enum_IRCResponses_ERR_NORECIPIENT = 411,
     Enum_IRCResponses_ERR_NOTEXTTOSEND = 412,
     Enum_IRCResponses_ERR_NOTOPLEVEL = 413,
@@ -57,6 +58,7 @@ Begin_Enum_String(Enum_IRCResponses)
     Enum_String(Enum_IRCResponses_ERR_NOSUCHCHANNEL, "403");
     Enum_String(Enum_IRCResponses_ERR_CANNOTSENDTOCHAN, "404");
     Enum_String(Enum_IRCResponses_ERR_TOOMANYCHANNELS, "405");
+    Enum_String(Enum_IRCResponses_ERR_TOOMANYTARGETS, "407");
     Enum_String(Enum_IRCResponses_ERR_NORECIPIENT, "411");
     Enum_String(Enum_IRCResponses_ERR_NOTEXTTOSEND, "412");
     Enum_String(Enum_IRCResponses_ERR_NOTOPLEVEL, "413");

@@ -25,6 +25,7 @@
 #include "ircresponses/ircresponseerr_notoplevel.h"
 #include "ircresponses/ircresponseerr_passwdmismatch.h"
 #include "ircresponses/ircresponseerr_toomanychannels.h"
+#include "ircresponses/ircresponseerr_toomanytargets.h"
 #include "ircresponses/ircresponseerr_wildtoplevel.h"
 #include "ircresponses/ircresponserpl_away.h"
 #include "ircresponses/ircresponserpl_endofnames.h"
@@ -132,6 +133,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_ERR_TOOMANYCHANNELS:
             response = New(IRCResponseERR_TOOMANYCHANNELS)();
+            break;
+        case Enum_IRCResponses_ERR_TOOMANYTARGETS:
+            response = New(IRCResponseERR_TOOMANYTARGETS)();
             break;
         case Enum_IRCResponses_ERR_WILDTOPLEVEL:
             response = New(IRCResponseERR_WILDTOPLEVEL)();
