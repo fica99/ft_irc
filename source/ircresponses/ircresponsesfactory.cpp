@@ -7,6 +7,7 @@
 #include "ircresponses/ircresponseerr_badchannelkey.h"
 #include "ircresponses/ircresponseerr_bannedfromchan.h"
 #include "ircresponses/ircresponseerr_channelisfull.h"
+#include "ircresponses/ircresponseerr_chanoprivsneeded.h"
 #include "ircresponses/ircresponseerr_erroneusnickname.h"
 #include "ircresponses/ircresponseerr_inviteonlychan.h"
 #include "ircresponses/ircresponseerr_needmoreparams.h"
@@ -70,6 +71,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_ERR_CHANNELISFULL:
             response = New(IRCResponseERR_CHANNELISFULL)();
+            break;
+        case Enum_IRCResponses_ERR_CHANOPRIVSNEEDED:
+            response = New(IRCResponseERR_CHANOPRIVSNEEDED)();
             break;
         case Enum_IRCResponses_ERR_ERRONEUSNICKNAME:
             response = New(IRCResponseERR_ERRONEUSNICKNAME)();

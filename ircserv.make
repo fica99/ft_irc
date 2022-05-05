@@ -186,6 +186,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponseerr_badchannelkey.o \
 	$(OBJDIR)/ircresponseerr_bannedfromchan.o \
 	$(OBJDIR)/ircresponseerr_channelisfull.o \
+	$(OBJDIR)/ircresponseerr_chanoprivsneeded.o \
 	$(OBJDIR)/ircresponseerr_erroneusnickname.o \
 	$(OBJDIR)/ircresponseerr_inviteonlychan.o \
 	$(OBJDIR)/ircresponseerr_needmoreparams.o \
@@ -350,6 +351,9 @@ $(OBJDIR)/ircresponseerr_bannedfromchan.o: source/ircresponses/ircresponseerr_ba
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_channelisfull.o: source/ircresponses/ircresponseerr_channelisfull.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_chanoprivsneeded.o: source/ircresponses/ircresponseerr_chanoprivsneeded.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_erroneusnickname.o: source/ircresponses/ircresponseerr_erroneusnickname.cpp
