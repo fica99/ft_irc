@@ -197,6 +197,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponseerr_nooperhost.o \
 	$(OBJDIR)/ircresponseerr_norecipient.o \
 	$(OBJDIR)/ircresponseerr_nosuchchannel.o \
+	$(OBJDIR)/ircresponseerr_nosuchnick.o \
 	$(OBJDIR)/ircresponseerr_nosuchserver.o \
 	$(OBJDIR)/ircresponseerr_notonchannel.o \
 	$(OBJDIR)/ircresponseerr_passwdmismatch.o \
@@ -387,6 +388,9 @@ $(OBJDIR)/ircresponseerr_norecipient.o: source/ircresponses/ircresponseerr_norec
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_nosuchchannel.o: source/ircresponses/ircresponseerr_nosuchchannel.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_nosuchnick.o: source/ircresponses/ircresponseerr_nosuchnick.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_nosuchserver.o: source/ircresponses/ircresponseerr_nosuchserver.cpp
