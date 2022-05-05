@@ -18,6 +18,7 @@
 #include "ircresponses/ircresponseerr_notonchannel.h"
 #include "ircresponses/ircresponseerr_passwdmismatch.h"
 #include "ircresponses/ircresponseerr_toomanychannels.h"
+#include "ircresponses/ircresponserpl_namreply.h"
 #include "ircresponses/ircresponserpl_topic.h"
 #include "ircresponses/ircresponserpl_youreoper.h"
 
@@ -97,6 +98,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_ERR_TOOMANYCHANNELS:
             response = New(IRCResponseERR_TOOMANYCHANNELS)();
+            break;
+        case Enum_IRCResponses_RPL_NAMREPLY:
+            response = New(IRCResponseRPL_NAMREPLY)();
             break;
         case Enum_IRCResponses_RPL_TOPIC:
             response = New(IRCResponseRPL_TOPIC)();
