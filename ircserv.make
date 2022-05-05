@@ -159,6 +159,13 @@ all: prebuild prelink $(TARGET)
 endif
 
 OBJECTS := \
+	$(OBJDIR)/main.o \
+	$(OBJDIR)/precomp.o \
+	$(OBJDIR)/commandlineoptionparams.o \
+	$(OBJDIR)/commandlineoptionpasswordparams.o \
+	$(OBJDIR)/commandlineoptionportparams.o \
+	$(OBJDIR)/commandlineoptions.o \
+	$(OBJDIR)/commandlineoptionschecker.o \
 	$(OBJDIR)/irccommand.o \
 	$(OBJDIR)/irccommandsfactory.o \
 	$(OBJDIR)/ircjoincommand.o \
@@ -181,13 +188,6 @@ OBJECTS := \
 	$(OBJDIR)/ircprefixtoken.o \
 	$(OBJDIR)/irctoken.o \
 	$(OBJDIR)/irctokensfactory.o \
-	$(OBJDIR)/main.o \
-	$(OBJDIR)/precomp.o \
-	$(OBJDIR)/commandlineoptionparams.o \
-	$(OBJDIR)/commandlineoptionpasswordparams.o \
-	$(OBJDIR)/commandlineoptionportparams.o \
-	$(OBJDIR)/commandlineoptions.o \
-	$(OBJDIR)/commandlineoptionschecker.o \
 	$(OBJDIR)/ircresponse.o \
 	$(OBJDIR)/ircresponseerr_alreadyregistered.o \
 	$(OBJDIR)/ircresponseerr_badchannelkey.o \
@@ -282,72 +282,6 @@ else
 $(OBJECTS): | $(OBJDIR)
 endif
 
-$(OBJDIR)/irccommand.o: source/commands/irccommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/irccommandsfactory.o: source/commands/irccommandsfactory.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircjoincommand.o: source/commands/ircjoincommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/irckickcommand.o: source/commands/irckickcommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/irckillcommand.o: source/commands/irckillcommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/irclistcommand.o: source/commands/irclistcommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircnamescommand.o: source/commands/ircnamescommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircnickcommand.o: source/commands/ircnickcommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircnoticecommand.o: source/commands/ircnoticecommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircopercommand.o: source/commands/ircopercommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircpartcommand.o: source/commands/ircpartcommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircpasscommand.o: source/commands/ircpasscommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircprivmsgcommand.o: source/commands/ircprivmsgcommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircquitcommand.o: source/commands/ircquitcommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircusercommand.o: source/commands/ircusercommand.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/irclexer.o: source/commandsprocessing/lexer/irclexer.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircparser.o: source/commandsprocessing/parser/ircparser.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircargtoken.o: source/commandsprocessing/tokens/ircargtoken.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/irccommandtoken.o: source/commandsprocessing/tokens/irccommandtoken.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircprefixtoken.o: source/commandsprocessing/tokens/ircprefixtoken.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/irctoken.o: source/commandsprocessing/tokens/irctoken.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/irctokensfactory.o: source/commandsprocessing/tokens/irctokensfactory.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: source/main/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -369,112 +303,178 @@ $(OBJDIR)/commandlineoptions.o: source/programoptions/commandlineoptions.cpp
 $(OBJDIR)/commandlineoptionschecker.o: source/programoptions/commandlineoptionschecker.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponse.o: source/responses/ircresponse.cpp
+$(OBJDIR)/irccommand.o: source/server/commands/commands/irccommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_alreadyregistered.o: source/responses/ircresponseerr_alreadyregistered.cpp
+$(OBJDIR)/irccommandsfactory.o: source/server/commands/commands/irccommandsfactory.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_badchannelkey.o: source/responses/ircresponseerr_badchannelkey.cpp
+$(OBJDIR)/ircjoincommand.o: source/server/commands/commands/ircjoincommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_bannedfromchan.o: source/responses/ircresponseerr_bannedfromchan.cpp
+$(OBJDIR)/irckickcommand.o: source/server/commands/commands/irckickcommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_cannotsendtochan.o: source/responses/ircresponseerr_cannotsendtochan.cpp
+$(OBJDIR)/irckillcommand.o: source/server/commands/commands/irckillcommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_cantkillserver.o: source/responses/ircresponseerr_cantkillserver.cpp
+$(OBJDIR)/irclistcommand.o: source/server/commands/commands/irclistcommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_channelisfull.o: source/responses/ircresponseerr_channelisfull.cpp
+$(OBJDIR)/ircnamescommand.o: source/server/commands/commands/ircnamescommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_chanoprivsneeded.o: source/responses/ircresponseerr_chanoprivsneeded.cpp
+$(OBJDIR)/ircnickcommand.o: source/server/commands/commands/ircnickcommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_erroneusnickname.o: source/responses/ircresponseerr_erroneusnickname.cpp
+$(OBJDIR)/ircnoticecommand.o: source/server/commands/commands/ircnoticecommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_inviteonlychan.o: source/responses/ircresponseerr_inviteonlychan.cpp
+$(OBJDIR)/ircopercommand.o: source/server/commands/commands/ircopercommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_needmoreparams.o: source/responses/ircresponseerr_needmoreparams.cpp
+$(OBJDIR)/ircpartcommand.o: source/server/commands/commands/ircpartcommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_nickcollision.o: source/responses/ircresponseerr_nickcollision.cpp
+$(OBJDIR)/ircpasscommand.o: source/server/commands/commands/ircpasscommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_nicknameinuse.o: source/responses/ircresponseerr_nicknameinuse.cpp
+$(OBJDIR)/ircprivmsgcommand.o: source/server/commands/commands/ircprivmsgcommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_nonicknamegiven.o: source/responses/ircresponseerr_nonicknamegiven.cpp
+$(OBJDIR)/ircquitcommand.o: source/server/commands/commands/ircquitcommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_nooperhost.o: source/responses/ircresponseerr_nooperhost.cpp
+$(OBJDIR)/ircusercommand.o: source/server/commands/commands/ircusercommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_noprivileges.o: source/responses/ircresponseerr_noprivileges.cpp
+$(OBJDIR)/irclexer.o: source/server/commands/parsing/lexer/irclexer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_norecipient.o: source/responses/ircresponseerr_norecipient.cpp
+$(OBJDIR)/ircparser.o: source/server/commands/parsing/parser/ircparser.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_nosuchchannel.o: source/responses/ircresponseerr_nosuchchannel.cpp
+$(OBJDIR)/ircargtoken.o: source/server/commands/parsing/tokens/ircargtoken.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_nosuchnick.o: source/responses/ircresponseerr_nosuchnick.cpp
+$(OBJDIR)/irccommandtoken.o: source/server/commands/parsing/tokens/irccommandtoken.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_nosuchserver.o: source/responses/ircresponseerr_nosuchserver.cpp
+$(OBJDIR)/ircprefixtoken.o: source/server/commands/parsing/tokens/ircprefixtoken.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_notexttosend.o: source/responses/ircresponseerr_notexttosend.cpp
+$(OBJDIR)/irctoken.o: source/server/commands/parsing/tokens/irctoken.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_notonchannel.o: source/responses/ircresponseerr_notonchannel.cpp
+$(OBJDIR)/irctokensfactory.o: source/server/commands/parsing/tokens/irctokensfactory.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_notoplevel.o: source/responses/ircresponseerr_notoplevel.cpp
+$(OBJDIR)/ircresponse.o: source/server/commands/responses/ircresponse.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_passwdmismatch.o: source/responses/ircresponseerr_passwdmismatch.cpp
+$(OBJDIR)/ircresponseerr_alreadyregistered.o: source/server/commands/responses/ircresponseerr_alreadyregistered.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_toomanychannels.o: source/responses/ircresponseerr_toomanychannels.cpp
+$(OBJDIR)/ircresponseerr_badchannelkey.o: source/server/commands/responses/ircresponseerr_badchannelkey.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_toomanytargets.o: source/responses/ircresponseerr_toomanytargets.cpp
+$(OBJDIR)/ircresponseerr_bannedfromchan.o: source/server/commands/responses/ircresponseerr_bannedfromchan.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponseerr_wildtoplevel.o: source/responses/ircresponseerr_wildtoplevel.cpp
+$(OBJDIR)/ircresponseerr_cannotsendtochan.o: source/server/commands/responses/ircresponseerr_cannotsendtochan.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponserpl_away.o: source/responses/ircresponserpl_away.cpp
+$(OBJDIR)/ircresponseerr_cantkillserver.o: source/server/commands/responses/ircresponseerr_cantkillserver.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponserpl_endofnames.o: source/responses/ircresponserpl_endofnames.cpp
+$(OBJDIR)/ircresponseerr_channelisfull.o: source/server/commands/responses/ircresponseerr_channelisfull.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponserpl_list.o: source/responses/ircresponserpl_list.cpp
+$(OBJDIR)/ircresponseerr_chanoprivsneeded.o: source/server/commands/responses/ircresponseerr_chanoprivsneeded.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponserpl_listend.o: source/responses/ircresponserpl_listend.cpp
+$(OBJDIR)/ircresponseerr_erroneusnickname.o: source/server/commands/responses/ircresponseerr_erroneusnickname.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponserpl_liststart.o: source/responses/ircresponserpl_liststart.cpp
+$(OBJDIR)/ircresponseerr_inviteonlychan.o: source/server/commands/responses/ircresponseerr_inviteonlychan.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponserpl_namreply.o: source/responses/ircresponserpl_namreply.cpp
+$(OBJDIR)/ircresponseerr_needmoreparams.o: source/server/commands/responses/ircresponseerr_needmoreparams.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponserpl_topic.o: source/responses/ircresponserpl_topic.cpp
+$(OBJDIR)/ircresponseerr_nickcollision.o: source/server/commands/responses/ircresponseerr_nickcollision.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponserpl_youreoper.o: source/responses/ircresponserpl_youreoper.cpp
+$(OBJDIR)/ircresponseerr_nicknameinuse.o: source/server/commands/responses/ircresponseerr_nicknameinuse.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/ircresponsesfactory.o: source/responses/ircresponsesfactory.cpp
+$(OBJDIR)/ircresponseerr_nonicknamegiven.o: source/server/commands/responses/ircresponseerr_nonicknamegiven.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_nooperhost.o: source/server/commands/responses/ircresponseerr_nooperhost.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_noprivileges.o: source/server/commands/responses/ircresponseerr_noprivileges.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_norecipient.o: source/server/commands/responses/ircresponseerr_norecipient.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_nosuchchannel.o: source/server/commands/responses/ircresponseerr_nosuchchannel.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_nosuchnick.o: source/server/commands/responses/ircresponseerr_nosuchnick.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_nosuchserver.o: source/server/commands/responses/ircresponseerr_nosuchserver.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_notexttosend.o: source/server/commands/responses/ircresponseerr_notexttosend.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_notonchannel.o: source/server/commands/responses/ircresponseerr_notonchannel.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_notoplevel.o: source/server/commands/responses/ircresponseerr_notoplevel.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_passwdmismatch.o: source/server/commands/responses/ircresponseerr_passwdmismatch.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_toomanychannels.o: source/server/commands/responses/ircresponseerr_toomanychannels.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_toomanytargets.o: source/server/commands/responses/ircresponseerr_toomanytargets.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_wildtoplevel.o: source/server/commands/responses/ircresponseerr_wildtoplevel.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_away.o: source/server/commands/responses/ircresponserpl_away.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_endofnames.o: source/server/commands/responses/ircresponserpl_endofnames.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_list.o: source/server/commands/responses/ircresponserpl_list.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_listend.o: source/server/commands/responses/ircresponserpl_listend.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_liststart.o: source/server/commands/responses/ircresponserpl_liststart.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_namreply.o: source/server/commands/responses/ircresponserpl_namreply.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_topic.o: source/server/commands/responses/ircresponserpl_topic.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_youreoper.o: source/server/commands/responses/ircresponserpl_youreoper.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponsesfactory.o: source/server/commands/responses/ircresponsesfactory.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
