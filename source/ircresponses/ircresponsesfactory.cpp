@@ -16,6 +16,7 @@
 #include "ircresponses/ircresponseerr_nicknameinuse.h"
 #include "ircresponses/ircresponseerr_nonicknamegiven.h"
 #include "ircresponses/ircresponseerr_nooperhost.h"
+#include "ircresponses/ircresponseerr_noprivileges.h"
 #include "ircresponses/ircresponseerr_norecipient.h"
 #include "ircresponses/ircresponseerr_nosuchchannel.h"
 #include "ircresponses/ircresponseerr_nosuchnick.h"
@@ -106,6 +107,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_ERR_NOOPERHOST:
             response = New(IRCResponseERR_NOOPERHOST)();
+            break;
+        case Enum_IRCResponses_ERR_NOPRIVILEGES:
+            response = New(IRCResponseERR_NOPRIVILEGES)();
             break;
         case Enum_IRCResponses_ERR_NORECIPIENT:
             response = New(IRCResponseERR_NORECIPIENT)();
