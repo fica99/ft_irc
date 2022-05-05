@@ -20,6 +20,7 @@
 #include "ircresponses/ircresponseerr_passwdmismatch.h"
 #include "ircresponses/ircresponseerr_toomanychannels.h"
 #include "ircresponses/ircresponserpl_endofnames.h"
+#include "ircresponses/ircresponserpl_list.h"
 #include "ircresponses/ircresponserpl_listend.h"
 #include "ircresponses/ircresponserpl_liststart.h"
 #include "ircresponses/ircresponserpl_namreply.h"
@@ -108,6 +109,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_RPL_ENDOFNAMES:
             response = New(IRCResponseRPL_ENDOFNAMES)();
+            break;
+        case Enum_IRCResponses_RPL_LIST:
+            response = New(IRCResponseRPL_LIST)();
             break;
         case Enum_IRCResponses_RPL_LISTEND:
             response = New(IRCResponseRPL_LISTEND)();
