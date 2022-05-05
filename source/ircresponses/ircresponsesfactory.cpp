@@ -20,6 +20,7 @@
 #include "ircresponses/ircresponseerr_nosuchchannel.h"
 #include "ircresponses/ircresponseerr_nosuchnick.h"
 #include "ircresponses/ircresponseerr_nosuchserver.h"
+#include "ircresponses/ircresponseerr_notexttosend.h"
 #include "ircresponses/ircresponseerr_notonchannel.h"
 #include "ircresponses/ircresponseerr_passwdmismatch.h"
 #include "ircresponses/ircresponseerr_toomanychannels.h"
@@ -115,6 +116,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_ERR_NOSUCHSERVER:
             response = New(IRCResponseERR_NOSUCHSERVER)();
+            break;
+        case Enum_IRCResponses_ERR_NOTEXTTOSEND:
+            response = New(IRCResponseERR_NOTEXTTOSEND)();
             break;
         case Enum_IRCResponses_ERR_NOTONCHANNEL:
             response = New(IRCResponseERR_NOTONCHANNEL)();

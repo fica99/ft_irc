@@ -22,6 +22,7 @@ enum Enum_IRCResponses
     Enum_IRCResponses_ERR_CANNOTSENDTOCHAN = 404,
     Enum_IRCResponses_ERR_TOOMANYCHANNELS = 405,
     Enum_IRCResponses_ERR_NORECIPIENT = 411,
+    Enum_IRCResponses_ERR_NOTEXTTOSEND = 412,
     Enum_IRCResponses_ERR_WILDTOPLEVEL = 414,
     Enum_IRCResponses_ERR_NONICKNAMEGIVEN = 431,
     Enum_IRCResponses_ERR_ERRONEUSNICKNAME = 432,
@@ -56,6 +57,7 @@ Begin_Enum_String(Enum_IRCResponses)
     Enum_String(Enum_IRCResponses_ERR_CANNOTSENDTOCHAN, "404");
     Enum_String(Enum_IRCResponses_ERR_TOOMANYCHANNELS, "405");
     Enum_String(Enum_IRCResponses_ERR_NORECIPIENT, "411");
+    Enum_String(Enum_IRCResponses_ERR_NOTEXTTOSEND, "412");
     Enum_String(Enum_IRCResponses_ERR_WILDTOPLEVEL, "414");
     Enum_String(Enum_IRCResponses_ERR_NONICKNAMEGIVEN, "431");
     Enum_String(Enum_IRCResponses_ERR_ERRONEUSNICKNAME, "432");
