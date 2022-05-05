@@ -199,6 +199,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponseerr_passwdmismatch.o \
 	$(OBJDIR)/ircresponseerr_toomanychannels.o \
 	$(OBJDIR)/ircresponserpl_endofnames.o \
+	$(OBJDIR)/ircresponserpl_liststart.o \
 	$(OBJDIR)/ircresponserpl_namreply.o \
 	$(OBJDIR)/ircresponserpl_topic.o \
 	$(OBJDIR)/ircresponserpl_youreoper.o \
@@ -386,6 +387,9 @@ $(OBJDIR)/ircresponseerr_toomanychannels.o: source/ircresponses/ircresponseerr_t
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponserpl_endofnames.o: source/ircresponses/ircresponserpl_endofnames.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_liststart.o: source/ircresponses/ircresponserpl_liststart.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponserpl_namreply.o: source/ircresponses/ircresponserpl_namreply.cpp
