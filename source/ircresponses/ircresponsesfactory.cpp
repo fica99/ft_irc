@@ -7,6 +7,7 @@
 #include "ircresponses/ircresponseerr_badchannelkey.h"
 #include "ircresponses/ircresponseerr_bannedfromchan.h"
 #include "ircresponses/ircresponseerr_cannotsendtochan.h"
+#include "ircresponses/ircresponseerr_cantkillserver.h"
 #include "ircresponses/ircresponseerr_channelisfull.h"
 #include "ircresponses/ircresponseerr_chanoprivsneeded.h"
 #include "ircresponses/ircresponseerr_erroneusnickname.h"
@@ -80,6 +81,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_ERR_CANNOTSENDTOCHAN:
             response = New(IRCResponseERR_CANNOTSENDTOCHAN)();
+            break;
+        case Enum_IRCResponses_ERR_CANTKILLSERVER:
+            response = New(IRCResponseERR_CANTKILLSERVER)();
             break;
         case Enum_IRCResponses_ERR_CHANNELISFULL:
             response = New(IRCResponseERR_CHANNELISFULL)();
