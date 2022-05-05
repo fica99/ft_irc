@@ -201,6 +201,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponseerr_nosuchserver.o \
 	$(OBJDIR)/ircresponseerr_notexttosend.o \
 	$(OBJDIR)/ircresponseerr_notonchannel.o \
+	$(OBJDIR)/ircresponseerr_notoplevel.o \
 	$(OBJDIR)/ircresponseerr_passwdmismatch.o \
 	$(OBJDIR)/ircresponseerr_toomanychannels.o \
 	$(OBJDIR)/ircresponseerr_wildtoplevel.o \
@@ -402,6 +403,9 @@ $(OBJDIR)/ircresponseerr_notexttosend.o: source/ircresponses/ircresponseerr_note
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_notonchannel.o: source/ircresponses/ircresponseerr_notonchannel.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_notoplevel.o: source/ircresponses/ircresponseerr_notoplevel.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_passwdmismatch.o: source/ircresponses/ircresponseerr_passwdmismatch.cpp
