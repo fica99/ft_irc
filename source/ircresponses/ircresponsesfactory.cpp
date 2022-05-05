@@ -24,6 +24,7 @@
 #include "ircresponses/ircresponseerr_passwdmismatch.h"
 #include "ircresponses/ircresponseerr_toomanychannels.h"
 #include "ircresponses/ircresponseerr_wildtoplevel.h"
+#include "ircresponses/ircresponserpl_away.h"
 #include "ircresponses/ircresponserpl_endofnames.h"
 #include "ircresponses/ircresponserpl_list.h"
 #include "ircresponses/ircresponserpl_listend.h"
@@ -126,6 +127,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_ERR_WILDTOPLEVEL:
             response = New(IRCResponseERR_WILDTOPLEVEL)();
+            break;
+        case Enum_IRCResponses_RPL_AWAY:
+            response = New(IRCResponseRPL_AWAY)();
             break;
         case Enum_IRCResponses_RPL_ENDOFNAMES:
             response = New(IRCResponseRPL_ENDOFNAMES)();

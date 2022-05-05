@@ -8,6 +8,7 @@ namespace ircserv
 enum Enum_IRCResponses
 {
     Enum_IRCResponses_Unknown = 0,
+    Enum_IRCResponses_RPL_AWAY = 301,
     Enum_IRCResponses_RPL_LISTSTART = 321,
     Enum_IRCResponses_RPL_LIST = 322,
     Enum_IRCResponses_RPL_LISTEND = 323,
@@ -41,6 +42,7 @@ enum Enum_IRCResponses
 
 Begin_Enum_String(Enum_IRCResponses)
 {
+    Enum_String(Enum_IRCResponses_RPL_AWAY, "301");
     Enum_String(Enum_IRCResponses_RPL_LISTSTART, "321");
     Enum_String(Enum_IRCResponses_RPL_LIST, "322");
     Enum_String(Enum_IRCResponses_RPL_LISTEND, "323");
