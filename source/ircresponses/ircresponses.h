@@ -10,6 +10,7 @@ enum Enum_IRCResponses
     Enum_IRCResponses_Unknown = 0,
     Enum_IRCResponses_RPL_TOPIC = 332,
     Enum_IRCResponses_RPL_NAMREPLY = 353,
+    Enum_IRCResponses_RPL_ENDOFNAMES = 366,
     Enum_IRCResponses_RPL_YOUREOPER = 381,
     Enum_IRCResponses_ERR_NOSUCHCHANNEL = 403,
     Enum_IRCResponses_ERR_TOOMANYCHANNELS = 405,
@@ -33,6 +34,7 @@ Begin_Enum_String(Enum_IRCResponses)
 {
     Enum_String(Enum_IRCResponses_RPL_TOPIC, "332");
     Enum_String(Enum_IRCResponses_RPL_NAMREPLY, "353");
+    Enum_String(Enum_IRCResponses_RPL_ENDOFNAMES, "366");
     Enum_String(Enum_IRCResponses_RPL_YOUREOPER, "381");
     Enum_String(Enum_IRCResponses_ERR_NOSUCHCHANNEL, "403");
     Enum_String(Enum_IRCResponses_ERR_TOOMANYCHANNELS, "405");
