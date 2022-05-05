@@ -20,30 +20,22 @@
 namespace ircserv
 {
 
-IMPLEMENT_SIMPLE_SINGLETON(IRCCommandsFactory);
-
 IRCCommandsFactory::IRCCommandsFactory()
 {
-    IMPLEMENT_SIMPLE_SINGLETON_CONSTRUCTOR();
-
     Initialize();
 }
 
 void IRCCommandsFactory::Initialize(void)
 {
-    IRCCommandsFactory::CreateSingleton();
 }
 
 IRCCommandsFactory::~IRCCommandsFactory()
 {
     Shutdown();
-
-    IMPLEMENT_SIMPLE_SINGLETON_DESTRUCTOR();
 }
 
 void IRCCommandsFactory::Shutdown(void)
 {
-    IRCCommandsFactory::DestroySingleton();
 }
 
 IRCCommand* IRCCommandsFactory::CreateCommand(Enum_IRCCommands commandType)
