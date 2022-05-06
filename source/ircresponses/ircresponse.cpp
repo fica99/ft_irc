@@ -5,7 +5,7 @@
 namespace ircserv
 {
 
-IRCResponse::IRCResponse(Enum_IRCCResponses responseEnum) : m_ResponseEnum(responseEnum)
+IRCResponse::IRCResponse(Enum_IRCResponses responseEnum) : m_ResponseEnum(responseEnum)
 {
     Initialize();
 }
