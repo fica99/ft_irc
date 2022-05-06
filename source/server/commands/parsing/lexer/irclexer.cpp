@@ -6,15 +6,12 @@
 #include "server/commands/parsing/tokens/ircprefixtoken.h"
 #include "server/commands/parsing/tokens/irccommandtoken.h"
 #include "server/commands/parsing/tokens/ircargtoken.h"
+#include "server/commands/parsing/ircsymbolsdefinition.h"
 
 namespace ircserv
 {
 
 IRCLexer::IRCLexer()
-    : LETTERS_ASCII("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
-    , DIGITS_ASCII("0123456789")
-    , SPECIAL_ASCII("-[]\\`/^{}")
-    , WHITE_ASCII(" \a\0\r\n,")
 {
     Initialize();
 }
@@ -108,7 +105,7 @@ std::string IRCLexer::GetNick(std::string& msg)
     std::string nick;
     size_t pos;
 
-    pos = msg.find_first_not_of(LETTERS_ASCII + DIGITS_ASCII + SPECIAL_ASCII);
+    pos = msg.find_first_not_of(IRCSymbolsDefinition::LETTERS_ASCII + IRCSymbolsDefinition::DIGITS_ASCII + IRCSymbolsDefinition::SPECIAL_ASCII);
     nick = msg.substr(0, pos);
     msg.erase(0, pos);
     return nick;
@@ -119,7 +116,7 @@ std::string IRCLexer::GetUser(std::string& msg)
     std::string user;
     size_t pos;
 
-    pos = msg.find_first_of(WHITE_ASCII + "@");
+    pos = msg.find_first_of(IRCSymbolsDefinition::WHITE_ASCII + "@");
     user = msg.substr(0, pos);
     msg.erase(0, pos);
     return user;
@@ -144,15 +141,15 @@ IRCToken* IRCLexer::GetCommandToken(std::string& msg)
     std::string command;
     unsigned short int commandNumber = 0;
 
-    pos = msg.find_first_not_of(LETTERS_ASCII);
+    pos = msg.find_first_not_of(IRCSymbolsDefinition::LETTERS_ASCII);
     if (pos != 0)
     {
         command = msg.substr(0, pos);
         msg.erase(0, pos);
     }
-    else if (msg.size() >= 3 && DIGITS_ASCII.find(msg[0]) != DIGITS_ASCII.npos
-            && DIGITS_ASCII.find(msg[1]) != DIGITS_ASCII.npos
-            && DIGITS_ASCII.find(msg[2]) != DIGITS_ASCII.npos)
+    else if (msg.size() >= 3 && IRCSymbolsDefinition::DIGITS_ASCII.find(msg[0]) != IRCSymbolsDefinition::DIGITS_ASCII.npos
+            && IRCSymbolsDefinition::DIGITS_ASCII.find(msg[1]) != IRCSymbolsDefinition::DIGITS_ASCII.npos
+            && IRCSymbolsDefinition::DIGITS_ASCII.find(msg[2]) != IRCSymbolsDefinition::DIGITS_ASCII.npos)
     {
         commandNumber = atoi(msg.substr(0, 3).c_str());
         msg.erase(0, 3);
