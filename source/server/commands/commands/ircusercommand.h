@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "server/commands/commands/irccommand.h"
 
 namespace ircserv
@@ -19,6 +21,14 @@ public:
 
 private:
     bool ValidateArgs(/*serverclass */);
+
+private:
+    bool SetUsername(const std::string& arg);
+    bool SetRealname(const std::string& arg);
+
+private:
+    std::string m_Username;
+    std::string m_Realname;
 };
 
 }
