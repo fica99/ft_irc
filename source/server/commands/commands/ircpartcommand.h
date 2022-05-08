@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+#include <string>
+
 #include "server/commands/commands/irccommand.h"
 
 namespace ircserv
@@ -19,6 +22,13 @@ public:
 
 private:
     bool ValidateArgs(/*serverclass */);
+
+private:
+    bool SetChannels(const std::string& channels);
+    bool SetChannel(const std::string& channel);
+
+private:
+    std::vector<std::string> m_Channels;
 };
 
 }
