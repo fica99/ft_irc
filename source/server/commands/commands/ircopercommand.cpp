@@ -33,6 +33,11 @@ bool IRCOperCommand::ProcessCommand(/*serverclass */)
 {
     if (ValidateArgs(/*serverclass */))
     {
+        IRCResponseRPL_YOUREOPER* response = dynamic_cast<IRCResponseRPL_YOUREOPER*>(
+            GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_RPL_YOUREOPER)
+        );
+        // send response
+        GetIRCResponsesFactory().DestroyResponse(response);
         return true;
     }
     return false;
@@ -53,13 +58,14 @@ bool IRCOperCommand::ValidateArgs(/*serverclass */)
         GetIRCResponsesFactory().DestroyResponse(response);
         return false;
     }
-    SetUser(m_Args[0]);
-    m_Password = m_Args[1];
-    IRCResponseRPL_YOUREOPER* response = dynamic_cast<IRCResponseRPL_YOUREOPER*>(
-        GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_RPL_YOUREOPER)
-    );
-    // send response
-    GetIRCResponsesFactory().DestroyResponse(response);
+    else
+    {
+        if (!SetUser(m_Args[0]))
+        {
+            return false;
+        }
+        m_Password = m_Args[1];
+    }
     return true;
 }
 
