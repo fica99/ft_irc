@@ -1,7 +1,7 @@
 #include "Server.h"
 
-#include "ircmessages/lexer/irclexer.h"
-#include "ircmessages/parser/ircparser.h"
+#include "server/commands/parsing/lexer/irclexer.h"
+#include "server/commands/parsing/parser/ircparser.h"
 #include <unistd.h>
 
 
@@ -63,7 +63,7 @@ void Server::recv_from_client() {
             ircserv::IRCLexer lex;
             ircserv::IRCCommand *command = parser.CreateCommand(lex.Tokenize(std::string(buf)));
             std::map<int, Client>::iterator cl = clients.find(userpfd[i].fd);
-            command->ProcessCommand(this, *cl);
+            //command->ProcessCommand();
             if (cl == clients.end())
                 std::cout << "end!" << std::endl;
             userpfd[i].revents = 0;
