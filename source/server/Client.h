@@ -5,9 +5,14 @@
 
 class Client {
 public:
+    //Client();
+    //~Client();
     bool ready_for_flush;
     int id;
-    int fd;
-    struct sockaddr sockaddr;
-    std::ostringstream buf;
+    std::string nickname;
+    //struct sockaddr sockaddr;
+    std::string buf;
+    Client operator=(const Client& lhs);
+    void setNickname(const std::string &nickname);
 };
+

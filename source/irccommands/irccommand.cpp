@@ -23,7 +23,7 @@ void IRCCommand::Shutdown(void)
 {
 }
 
-bool IRCCommand::ProcessCommand(/*serverclass */)
+bool IRCCommand::ProcessCommand(Server *s, std::pair<const int, Client> &client)
 {
     return true;
 }

@@ -2,11 +2,16 @@
 
 #include <string>
 #include <vector>
-
 #include "irccommands/irccommands.h"
+#include "server/Server.h"
 
 namespace ircserv
 {
+
+enum errcode {
+    ERR_NONICKNAMEGIVEN,
+    ERR_NICKNAMEINUSE
+};
 
 class IRCCommand
 {
@@ -18,7 +23,7 @@ private:
     void Shutdown(void);
 
 public:
-    virtual bool ProcessCommand(/*serverclass */);
+    virtual bool ProcessCommand(Server *s, std::pair<const int, Client> &client);
 
 public:
     inline void SetCommandType(Enum_IRCCommands commandType) { m_CommandType = commandType; }
@@ -32,6 +37,9 @@ protected:
     Enum_IRCCommands m_CommandType;
     std::string m_Prefix;
     std::vector<std::string> m_Args;
+
+public:
+    errcode err; 
 };
 
 }
