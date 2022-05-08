@@ -79,11 +79,10 @@ bool IRCUserCommand::SetRealname(const std::string& arg)
 {
     size_t pos;
 
-    pos = arg.find_first_of(":");
-    if (pos == 0)
+    pos = arg.find_first_of(" ");
+    if (pos != arg.npos)
     {
         m_Username = arg;
-        m_Username.erase(0, 1);
     }
     else
     {

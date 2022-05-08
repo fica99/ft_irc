@@ -50,9 +50,9 @@ IRCCommand* IRCParser::CreateCommand(const std::vector<IRCToken*>& tokens)
             {
                 if (prefixToken != NULL)
                 {
-                    command->SetNick(prefixToken->GetNick());
-                    command->SetUser(prefixToken->GetUser());
-                    command->SetHost(prefixToken->GetHost());
+                    command->SetPrefixNick(prefixToken->GetNick());
+                    command->SetPrefixUser(prefixToken->GetUser());
+                    command->SetPrefixHost(prefixToken->GetHost());
                 }
                 command->SetArgs(GetArgs(std::vector<IRCToken*>(tokens.begin() + i, tokens.end())));
             }
