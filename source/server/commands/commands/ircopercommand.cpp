@@ -3,6 +3,7 @@
 #include "server/commands/commands/ircopercommand.h"
 
 #include "server/commands/commands/irccommands.h"
+#include "server/commands/parsing/ircsymbolsdefinition.h"
 #include "server/commands/responses/ircresponseerr_needmoreparams.h"
 #include "server/commands/responses/ircresponserpl_youreoper.h"
 #include "server/commands/responses/ircresponsesfactory.h"
@@ -52,6 +53,8 @@ bool IRCOperCommand::ValidateArgs(/*serverclass */)
         GetIRCResponsesFactory().DestroyResponse(response);
         return false;
     }
+    SetUser(m_Args[0]);
+    m_Password = m_Args[1];
     IRCResponseRPL_YOUREOPER* response = dynamic_cast<IRCResponseRPL_YOUREOPER*>(
         GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_RPL_YOUREOPER)
     );
@@ -59,4 +62,18 @@ bool IRCOperCommand::ValidateArgs(/*serverclass */)
     GetIRCResponsesFactory().DestroyResponse(response);
     return true;
 }
+
+bool IRCOperCommand::SetUser(const std::string& arg)
+{
+    size_t pos;
+
+    pos = arg.find_first_of(IRCSymbolsDefinition::WHITE_ASCII);
+    if (pos != arg.npos)
+    {
+        return false;
+    }
+    m_User = arg;
+    return true;
+}
+
 }

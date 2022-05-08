@@ -51,6 +51,7 @@ bool IRCPassCommand::ValidateArgs(/*serverclass */)
         GetIRCResponsesFactory().DestroyResponse(response);
         return false;
     }
+    m_Password = m_Args[0];
     return true;
 }
 

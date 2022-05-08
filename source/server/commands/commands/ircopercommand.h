@@ -24,7 +24,6 @@ private:
 
 private:
     bool SetUser(const std::string& arg);
-    bool SetPassword(const std::string& arg);
 
 private:
     std::string m_User;

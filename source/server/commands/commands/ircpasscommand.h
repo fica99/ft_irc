@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "server/commands/commands/irccommand.h"
 
 namespace ircserv
@@ -19,6 +21,9 @@ public:
 
 private:
     bool ValidateArgs(/*serverclass */);
+
+private:
+    std::string m_Password;
 };
 
 }
