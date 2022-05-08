@@ -26,7 +26,7 @@ void IRCOperCommand::Shutdown(void)
 {
 }
 
-bool IRCOperCommand::ProcessCommand(/*serverclass */)
+bool IRCOperCommand::ProcessCommand(Server *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {

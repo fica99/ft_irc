@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 
-Server::Server(uint16_t port): _count(0) {
+Server::Server(uint16_t port) {
     //int on = 1;
     servaddr = new struct sockaddr_in;
 
@@ -31,14 +31,13 @@ void Server::accept_conn() {
 
     if ((user_fd = accept(_fd, (sockaddr *)servaddr, (socklen_t *)&(addrlen))) > 0) {
         struct pollfd pfd;
-        
-        fcntl(user_fd, F_SETFL, O_NONBLOCK);
         Client cl;
+
+        fcntl(user_fd, F_SETFL, O_NONBLOCK);
         pfd.fd = user_fd;
         pfd.events = POLLIN;
         userpfd.push_back(pfd);
-
-        //clients.insert(std::make_pair(fd, cl));
+        clients.insert(std::make_pair(user_fd, cl));
     }
 }
 
@@ -63,13 +62,16 @@ void Server::recv_from_client() {
             ircserv::IRCLexer lex;
             ircserv::IRCCommand *command = parser.CreateCommand(lex.Tokenize(std::string(buf)));
             std::map<int, Client>::iterator cl = clients.find(userpfd[i].fd);
-            //command->ProcessCommand();
+
             if (cl == clients.end())
-                std::cout << "end!" << std::endl;
+                std::cerr << "unhandled error. I ask for the understanding" << std::endl;
             userpfd[i].revents = 0;
-            std::string mes(buf);
-            //std::cout << "point" << std::endl;
-            sendMessage(mes, userpfd[i].fd);
+            //std::string mes(buf);
+            if (curr->obuf.size()) {
+                sendMessage(curr->obuf, userpfd[i].fd);
+                curr->obuf.clear();
+            }
+            //sendMessage(mes, userpfd[i].fd);
         }
         i++;
     }
@@ -78,4 +80,8 @@ void Server::recv_from_client() {
 
 void Server::sendMessage(const std::string &mes, int fd) const {
     send(fd, mes.c_str(), mes.size(), 0);
+}
+
+bool Server::setNickname(std::string &nickname) {
+    curr->nickname = nickname;
 }

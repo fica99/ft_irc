@@ -38,7 +38,7 @@ void IRCCommandsManager::ProcessCommand(const std::string& message)
     IRCCommand* command = m_Parser.CreateCommand(tokens);
     if (command != NULL)
     {
-        command->ProcessCommand();
+        //command->ProcessCommand(;
     }
     m_Lexer.DestroyTokens(tokens);
     m_Parser.DestroyCommand(command);

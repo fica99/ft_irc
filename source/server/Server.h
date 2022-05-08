@@ -23,12 +23,12 @@ private:
     int _fd;
     struct sockaddr_in *servaddr;
     std::vector<struct pollfd> userpfd;
-public:
-    int _count;
     std::map<int, Client> clients;
+    Client *curr;
+public:
     void recv_from_client();
     void accept_conn();
+    bool setNickname(std::string &nickname);
     void sendMessage(const std::string &mes, int fd) const;
-    void handle_inputs();
 };
 

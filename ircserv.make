@@ -166,6 +166,8 @@ OBJECTS := \
 	$(OBJDIR)/commandlineoptionportparams.o \
 	$(OBJDIR)/commandlineoptions.o \
 	$(OBJDIR)/commandlineoptionschecker.o \
+	$(OBJDIR)/Client.o \
+	$(OBJDIR)/Server.o \
 	$(OBJDIR)/irccommand.o \
 	$(OBJDIR)/irccommandsfactory.o \
 	$(OBJDIR)/ircjoincommand.o \
@@ -302,6 +304,12 @@ $(OBJDIR)/commandlineoptions.o: source/programoptions/commandlineoptions.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/commandlineoptionschecker.o: source/programoptions/commandlineoptionschecker.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Client.o: source/server/Client.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Server.o: source/server/Server.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irccommand.o: source/server/commands/commands/irccommand.cpp

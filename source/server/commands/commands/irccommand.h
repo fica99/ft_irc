@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "server/commands/commands/irccommands.h"
+#include "server/Server.h"
 
 namespace ircserv
 {
@@ -18,7 +19,7 @@ private:
     void Shutdown(void);
 
 public:
-    virtual bool ProcessCommand(/*serverclass */) = 0;
+    virtual bool ProcessCommand(Server *serv) = 0;
 
 private:
     virtual bool ValidateArgs(/*serverclass */) = 0;

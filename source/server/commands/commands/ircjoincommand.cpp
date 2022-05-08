@@ -26,7 +26,7 @@ void IRCJoinCommand::Shutdown(void)
 {
 }
 
-bool IRCJoinCommand::ProcessCommand(/*serverclass */)
+bool IRCJoinCommand::ProcessCommand(Server *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {

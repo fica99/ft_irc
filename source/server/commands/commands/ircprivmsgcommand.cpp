@@ -26,7 +26,7 @@ void IRCPrivmsgCommand::Shutdown(void)
 {
 }
 
-bool IRCPrivmsgCommand::ProcessCommand(/*serverclass */)
+bool IRCPrivmsgCommand::ProcessCommand(Server *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {
