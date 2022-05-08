@@ -64,21 +64,21 @@ bool IRCOperCommand::ValidateArgs(/*serverclass */)
         {
             return false;
         }
-        m_Password = m_Args[1];
+        SetPassword(m_Args[1]);
     }
     return true;
 }
 
-bool IRCOperCommand::SetUser(const std::string& arg)
+bool IRCOperCommand::SetUser(const std::string& user)
 {
     size_t pos;
 
-    pos = arg.find_first_of(IRCSymbolsDefinition::WHITE_ASCII);
-    if (pos != arg.npos)
+    pos = user.find_first_of(IRCSymbolsDefinition::WHITE_ASCII);
+    if (pos != user.npos)
     {
         return false;
     }
-    m_User = arg;
+    m_User = user;
     return true;
 }
 

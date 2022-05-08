@@ -23,7 +23,8 @@ private:
     bool ValidateArgs(/*serverclass */);
 
 private:
-    bool SetUser(const std::string& arg);
+    bool SetUser(const std::string& user);
+    inline void SetPassword(const std::string& password) { m_Password = password; }
 
 private:
     std::string m_User;

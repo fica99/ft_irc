@@ -56,33 +56,35 @@ bool IRCUserCommand::ValidateArgs(/*serverclass */)
     {
         if (!SetUsername(m_Args[0]) || !SetRealname(m_Args[3]))
         {
+            m_Username.clear();
+            m_Realname.clear();
             return false;
         }
     }
     return true;
 }
 
-bool IRCUserCommand::SetUsername(const std::string& arg)
+bool IRCUserCommand::SetUsername(const std::string& username)
 {
     size_t pos;
 
-    pos = arg.find_first_of(IRCSymbolsDefinition::WHITE_ASCII);
-    if (pos != arg.npos)
+    pos = username.find_first_of(IRCSymbolsDefinition::WHITE_ASCII);
+    if (pos != username.npos)
     {
         return false;
     }
-    m_Username = arg;
+    m_Username = username;
     return true;
 }
 
-bool IRCUserCommand::SetRealname(const std::string& arg)
+bool IRCUserCommand::SetRealname(const std::string& realname)
 {
     size_t pos;
 
-    pos = arg.find_first_of(" ");
-    if (pos != arg.npos)
+    pos = realname.find_first_of(" ");
+    if (pos != realname.npos)
     {
-        m_Username = arg;
+        m_Realname = realname;
     }
     else
     {

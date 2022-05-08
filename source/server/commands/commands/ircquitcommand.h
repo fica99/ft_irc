@@ -23,6 +23,9 @@ private:
     bool ValidateArgs(/*serverclass */);
 
 private:
+    inline void SetQuitMessage(const std::string quitMessage) { m_QuitMessage = quitMessage; }
+
+private:
     std::string m_QuitMessage;
 };
 

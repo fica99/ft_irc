@@ -68,16 +68,16 @@ bool IRCNickCommand::ValidateArgs(/*serverclass */)
     return true;
 }
 
-bool IRCNickCommand::SetNickname(const std::string& arg)
+bool IRCNickCommand::SetNickname(const std::string& nickname)
 {
     size_t pos;
 
-    pos = arg.find_first_not_of(IRCSymbolsDefinition::LETTERS_ASCII + IRCSymbolsDefinition::DIGITS_ASCII + IRCSymbolsDefinition::SPECIAL_ASCII);
-    if (pos != arg.npos)
+    pos = nickname.find_first_not_of(IRCSymbolsDefinition::LETTERS_ASCII + IRCSymbolsDefinition::DIGITS_ASCII + IRCSymbolsDefinition::SPECIAL_ASCII);
+    if (pos != nickname.npos)
     {
         return false;
     }
-    m_Nickname = arg;
+    m_Nickname = nickname;
     return true;
 }
 
