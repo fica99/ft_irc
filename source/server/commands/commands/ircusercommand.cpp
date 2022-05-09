@@ -3,7 +3,7 @@
 #include "server/commands/commands/ircusercommand.h"
 
 #include "server/commands/commands/irccommands.h"
-#include "server/commands/parsing/ircsymbolsdefinition.h"
+#include "server/commands/parsing/ircparsinghelper.h"
 #include "server/commands/responses/ircresponseerr_needmoreparams.h"
 #include "server/commands/responses/ircresponsesfactory.h"
 
@@ -54,41 +54,12 @@ bool IRCUserCommand::ValidateArgs(/*serverclass */)
     }
     else
     {
-        if (!SetUsername(m_Args[0]) || !SetRealname(m_Args[3]))
+        if (!IRCParsingHelper::IsUser(m_Args[0]) || !IRCParsingHelper::IsRealname(m_Args[3]))
         {
-            m_Username.clear();
-            m_Realname.clear();
             return false;
         }
-    }
-    return true;
-}
-
-bool IRCUserCommand::SetUsername(const std::string& username)
-{
-    size_t pos;
-
-    pos = username.find_first_of(IRCSymbolsDefinition::WHITE_ASCII);
-    if (pos != username.npos)
-    {
-        return false;
-    }
-    m_Username = username;
-    return true;
-}
-
-bool IRCUserCommand::SetRealname(const std::string& realname)
-{
-    size_t pos;
-
-    pos = realname.find_first_of(" ");
-    if (pos != realname.npos)
-    {
-        m_Realname = realname;
-    }
-    else
-    {
-        return false;
+        SetUsername(m_Args[0]);
+        SetRealname(m_Args[3]);
     }
     return true;
 }

@@ -3,7 +3,7 @@
 #include "server/commands/commands/ircopercommand.h"
 
 #include "server/commands/commands/irccommands.h"
-#include "server/commands/parsing/ircsymbolsdefinition.h"
+#include "server/commands/parsing/ircparsinghelper.h"
 #include "server/commands/responses/ircresponseerr_needmoreparams.h"
 #include "server/commands/responses/ircresponserpl_youreoper.h"
 #include "server/commands/responses/ircresponsesfactory.h"
@@ -60,25 +60,13 @@ bool IRCOperCommand::ValidateArgs(/*serverclass */)
     }
     else
     {
-        if (!SetUser(m_Args[0]))
+        if (!IRCParsingHelper::IsUser(m_Args[0]))
         {
             return false;
         }
+        SetUser(m_Args[1]);
         SetPassword(m_Args[1]);
     }
-    return true;
-}
-
-bool IRCOperCommand::SetUser(const std::string& user)
-{
-    size_t pos;
-
-    pos = user.find_first_of(IRCSymbolsDefinition::WHITE_ASCII);
-    if (pos != user.npos)
-    {
-        return false;
-    }
-    m_User = user;
     return true;
 }
 

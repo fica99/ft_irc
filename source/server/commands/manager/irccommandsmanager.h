@@ -5,7 +5,6 @@
 #include "server/commands/parsing/lexer/irclexer.h"
 #include "server/commands/parsing/parser/ircparser.h"
 
-
 namespace ircserv
 {
 

@@ -18,7 +18,6 @@ static void Shutdown(void)
     CommandLineOptionsChecker::DestroySingleton();
 }
 
-
 }
 
 int main(int argc, const char* argv[])

@@ -3,7 +3,7 @@
 #include "server/commands/commands/ircnickcommand.h"
 
 #include "server/commands/commands/irccommands.h"
-#include "server/commands/parsing/ircsymbolsdefinition.h"
+#include "server/commands/parsing/ircparsinghelper.h"
 #include "server/commands/responses/ircresponseerr_erroneusnickname.h"
 #include "server/commands/responses/ircresponseerr_nonicknamegiven.h"
 #include "server/commands/responses/ircresponsesfactory.h"
@@ -51,7 +51,7 @@ bool IRCNickCommand::ValidateArgs(/*serverclass */)
     }
     else
     {
-        if (!SetNickname(m_Args[0]))
+        if (!IRCParsingHelper::IsNick(m_Args[0]))
         {
             IRCResponseERR_ERRONEUSNICKNAME* response = dynamic_cast<IRCResponseERR_ERRONEUSNICKNAME*>(
                 GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_ERR_ERRONEUSNICKNAME)
@@ -64,20 +64,8 @@ bool IRCNickCommand::ValidateArgs(/*serverclass */)
             GetIRCResponsesFactory().DestroyResponse(response);
             return false;
         }
+        SetNickname(m_Args[0]);
     }
-    return true;
-}
-
-bool IRCNickCommand::SetNickname(const std::string& nickname)
-{
-    size_t pos;
-
-    pos = nickname.find_first_not_of(IRCSymbolsDefinition::LETTERS_ASCII + IRCSymbolsDefinition::DIGITS_ASCII + IRCSymbolsDefinition::SPECIAL_ASCII);
-    if (pos != nickname.npos)
-    {
-        return false;
-    }
-    m_Nickname = nickname;
     return true;
 }
 

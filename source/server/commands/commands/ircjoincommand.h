@@ -24,11 +24,8 @@ private:
     bool ValidateArgs(/*serverclass */);
 
 private:
-    bool SetChannels(const std::string& channels);
-    bool SetChannel(const std::string& channel);
+    inline void SetChannels(const std::vector<std::string>& channels) { m_Channels = channels; }
     inline void SetKeys(const std::vector<std::string>& keys) { m_Keys = keys; }
-
-    std::vector<std::string> Split(std::string line, const std::string& delim);
 
 private:
     std::vector<std::string> m_Channels;

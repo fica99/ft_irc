@@ -23,7 +23,7 @@ private:
     bool ValidateArgs(/*serverclass */);
 
 private:
-    bool SetNickname(const std::string& nickname);
+    inline void SetNickname(const std::string& nickname) { m_Nickname = nickname; }
 private:
     std::string m_Nickname;
 

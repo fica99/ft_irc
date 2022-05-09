@@ -23,8 +23,8 @@ private:
     bool ValidateArgs(/*serverclass */);
 
 private:
-    bool SetUsername(const std::string& username);
-    bool SetRealname(const std::string& realname);
+    inline void SetUsername(const std::string& username) { m_Username = username; }
+    inline void SetRealname(const std::string& realname) { m_Realname = realname; }
 
 private:
     std::string m_Username;
