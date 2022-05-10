@@ -45,6 +45,11 @@ IRCCommand* IRCParser::CreateCommand(const std::vector<IRCToken*>& tokens)
         {
             commandToken = dynamic_cast<IRCCommandToken*>(tokens[i++]);
 
+            if (tokens.size() - i > 15)
+            {
+                return NULL;
+            }
+            
             command = m_CommandsFactory.CreateCommand(GetCommandEnum(commandToken));
             if (command != NULL)
             {
