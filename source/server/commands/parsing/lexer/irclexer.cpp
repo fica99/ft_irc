@@ -130,7 +130,7 @@ std::string IRCLexer::GetUser(std::string& msg)
     std::string user;
     size_t pos;
 
-    pos = msg.find('@');
+    pos = msg.find_first_of("@ ");
     user = msg.substr(0, pos);
     if (IRCParsingHelper::IsUser(user))
     {
@@ -203,7 +203,7 @@ IRCToken* IRCLexer::GetArgToken(std::string& msg)
         if (msg[0] == ':')
         {
             msg.erase(0, 1);
-            pos = msg.find_first_of(IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII);
+            pos = msg.find(IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII);
             arg = msg.substr(0, pos);
         }
         else
