@@ -84,6 +84,10 @@ bool IRCParsingHelper::IsChannels(const std::string& channelsStr)
 {
     std::vector<std::string> channelsVec;
 
+    if (channelsStr.empty())
+    {
+        return false;
+    }
     channelsVec = Split(channelsStr, ",");
     for (size_t i = 0; i < channelsVec.size(); ++i)
     {
