@@ -31,6 +31,7 @@ bool IRCNickCommand::ProcessCommand(Server *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {
+        serv->setNickname(m_Args[0]);
         return true;
     }
     return false;

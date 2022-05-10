@@ -28,10 +28,13 @@ private:
     Client *curr;
     int	sendError(int fd, int err, const std::vector<std::string> args);
     int		sendReply(int fd, int rpl, const std::vector<std::string> &args);
+
+    bool processCommand(Client *curr);
 public:
     void recv_from_client();
     void accept_conn();
     bool setNickname(std::string &nickname);
+    bool setPrefix(std::string &prefix);
     void sendMessage(const std::string &mes, int fd) const;
 };
 

@@ -1,7 +1,7 @@
 #include "Client.h"
 #include <string.h>
 
-//Client::Client() {}
+Client::Client(): registered(false), errcode(0) {}
 
 Client Client::operator=(const Client& lhs) {
     Client cl;

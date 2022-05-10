@@ -30,7 +30,7 @@ bool IRCUserCommand::ProcessCommand(Server *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {
-        serv->setNickname(m_Args[0]);
+        serv->setPrefix(m_Args[0]);
         return true;
     }
     return false;
@@ -40,7 +40,6 @@ bool IRCUserCommand::ValidateArgs(/*serverclass */)
 {
     if (m_Args.empty())
     {
-
         return false;
     }
     return true;
