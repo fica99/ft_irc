@@ -32,34 +32,54 @@ void IRCLexer::Shutdown(void)
 std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
 {
     std::vector<IRCToken*> tokens;
+    IRCToken* token;
     std::string msg = line;
+    static const size_t crlfLength = IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII.size();
 
-    if (!msg.empty() && msg[0] == ':')
+    if (msg.empty() || msg.size() > 512)
+    {
+        return tokens;
+    }
+
+    if (msg[0] == ':')
     {
         msg.erase(0, 1);
-        tokens.push_back(GetPrefixToken(msg));
-        if (msg.empty() || !IRCParsingHelper::IsSymbolSpace(msg[0]))
+        
+        token = GetPrefixToken(msg);
+        if (token == NULL || msg.empty() || !IRCParsingHelper::IsSymbolSpace(msg[0]))
+        {
+            return tokens;
+        }
+
+        tokens.push_back(token);
+        msg.erase(0, msg.find_first_not_of(IRCParsingHelper::IRCSymbolsDefinition::SPACE_ASCII));
+    }
+
+    token = GetCommandToken(msg);
+    if (token == NULL)
+    {
+        DestroyTokens(tokens);
+        return tokens;
+    }
+    tokens.push_back(token);
+
+    while (msg.size() > crlfLength)
+    {
+        token = GetArgToken(msg);
+        if (token == NULL)
         {
             DestroyTokens(tokens);
             return tokens;
         }
-        msg.erase(0, msg.find_first_not_of(IRCParsingHelper::IRCSymbolsDefinition::SPACE_ASCII));
+        tokens.push_back(token);
     }
 
-    tokens.push_back(GetCommandToken(msg));
-
-    while (msg.size() > 2)
-    {
-        tokens.push_back(GetArgToken(msg));
-        if (tokens.back() == NULL)
-        {
-            break;
-        }
-    }
-    if (msg.size() != 2 || msg.compare(msg.size() - 2, 2, IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII))
+    if (msg.size() != crlfLength ||
+        msg.compare(msg.size() - crlfLength, crlfLength, IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII))
     {
         DestroyTokens(tokens);
     }
+
     return tokens;
 }
 
@@ -84,15 +104,29 @@ IRCToken* IRCLexer::GetPrefixToken(std::string& msg)
     std::string host;
 
     nick = GetNick(msg);
+    if (nick.empty())
+    {
+        return NULL;
+    }
+
     if (!msg.empty() && msg[0] == '!')
     {
         msg.erase(0, 1);
         user = GetUser(msg);
+        if (user.empty())
+        {
+            return NULL;
+        }
     }
+
     if (!msg.empty() && msg[0] == '@')
     {
         msg.erase(0, 1);
         host = GetHost(msg);
+        if (host.empty())
+        {
+            return NULL;
+        }
     }
 
     token = dynamic_cast<IRCPrefixToken*>(m_TokensFactory.CreateToken(Enum_IRCTokens_Prefix));
@@ -102,6 +136,7 @@ IRCToken* IRCLexer::GetPrefixToken(std::string& msg)
         token->SetUser(user);
         token->SetHost(host);
     }
+
     return token;
 }
 
@@ -177,6 +212,12 @@ IRCToken* IRCLexer::GetCommandToken(std::string& msg)
     {
         command.clear();
     }
+
+    if (command.empty() && !commandNumber)
+    {
+        return NULL;
+    }
+
     token = dynamic_cast<IRCCommandToken*>(m_TokensFactory.CreateToken(Enum_IRCTokens_Command));
     if (token != NULL)
     {
@@ -198,21 +239,24 @@ IRCToken* IRCLexer::GetArgToken(std::string& msg)
     }
     pos = msg.find_first_not_of(IRCParsingHelper::IRCSymbolsDefinition::SPACE_ASCII);
     msg.erase(0, pos);
-    if (!msg.empty())
+
+    if (!msg.empty() && msg[0] == ':')
     {
-        if (msg[0] == ':')
-        {
-            msg.erase(0, 1);
-            pos = msg.find(IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII);
-            arg = msg.substr(0, pos);
-        }
-        else
-        {
-            pos = msg.find_first_of(IRCParsingHelper::IRCSymbolsDefinition::WHITE_ASCII);
-            arg = msg.substr(0, pos);
-        }
-        msg.erase(0, pos);
+        msg.erase(0, 1);
+        pos = msg.find(IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII);
+        arg = msg.substr(0, pos);
     }
+    else
+    {
+        pos = msg.find_first_of(IRCParsingHelper::IRCSymbolsDefinition::WHITE_ASCII);
+        arg = msg.substr(0, pos);
+        if (arg.empty())
+        {
+            return NULL;
+        }
+    }
+    msg.erase(0, pos);
+
     token = dynamic_cast<IRCArgToken*>(m_TokensFactory.CreateToken(Enum_IRCTokens_Arg));
     if (token != NULL)
     {

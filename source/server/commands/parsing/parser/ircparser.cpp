@@ -50,11 +50,6 @@ IRCCommand* IRCParser::CreateCommand(const std::vector<IRCToken*>& tokens)
             {
                 if (prefixToken != NULL)
                 {
-                    if (prefixToken->GetNick().empty())
-                    {
-                        DestroyCommand(command);
-                        return NULL;
-                    }
                     command->SetPrefixNick(prefixToken->GetNick());
                     command->SetPrefixUser(prefixToken->GetUser());
                     command->SetPrefixHost(prefixToken->GetHost());

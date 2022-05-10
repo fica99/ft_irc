@@ -44,7 +44,7 @@ bool IRCParsingHelper::IsNick(const std::string& nick)
 {
     size_t pos;
 
-    if (nick.empty() || !IsSymbolLetter(nick[0]))
+    if (nick.empty() || nick.size() > 9 || !IsSymbolLetter(nick[0]))
     {
         return false;
     }
@@ -68,7 +68,7 @@ bool IRCParsingHelper::IsChannel(const std::string& channel)
 {
     size_t pos = 0;
 
-    if (channel.empty())
+    if (channel.empty() || channel.size() > 200)
     {
         return false;
     }
