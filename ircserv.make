@@ -20,9 +20,9 @@ ifeq ($(config),release)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Release-linux
+  TARGETDIR = bin/Release
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Release-linux
+  OBJDIR = tmp/Release
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DNDEBUG -DRELEASE
@@ -57,9 +57,9 @@ ifeq ($(config),debug)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Debug-linux
+  TARGETDIR = bin/Debug
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Debug-linux
+  OBJDIR = tmp/Debug
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DDEBUG
@@ -94,9 +94,9 @@ ifeq ($(config),profile)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Profile-linux
+  TARGETDIR = bin/Profile
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Profile-linux
+  OBJDIR = tmp/Profile
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DNDEBUG -DPFOFILE
@@ -131,9 +131,9 @@ ifeq ($(config),final)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Final-linux
+  TARGETDIR = bin/Final
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Final-linux
+  OBJDIR = tmp/Final
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DFINAL

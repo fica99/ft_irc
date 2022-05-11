@@ -1,7 +1,7 @@
 workspace "ft_irc"
     configurations { "Release", "Debug", "Profile", "Final" }
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}"
+outputdir = "%{cfg.buildcfg}"
 
 project "ircserv"
     kind "ConsoleApp"
