@@ -28,10 +28,11 @@ void IRCUserCommand::Shutdown(void)
 {
 }
 
-bool IRCUserCommand::ProcessCommand(/*serverclass */)
+bool IRCUserCommand::ProcessCommand(Server *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {
+        serv->setPrefix(m_Args[0]);
         return true;
     }
     return false;

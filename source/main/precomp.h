@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <cstdlib>
 #include <string>
 #include <limits>
@@ -9,3 +10,5 @@
 #include <exception>
 #include <cassert>
 #include <sstream>
+#include <map>
+#include <cstring>

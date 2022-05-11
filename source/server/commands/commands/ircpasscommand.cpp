@@ -27,7 +27,7 @@ void IRCPassCommand::Shutdown(void)
 {
 }
 
-bool IRCPassCommand::ProcessCommand(/*serverclass */)
+bool IRCPassCommand::ProcessCommand(Server *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {

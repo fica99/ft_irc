@@ -1,6 +1,8 @@
 tmp/
 bin/
 *.DS_Store
+.idea/
+.vscode/
 
 # Prerequisites
 *.d

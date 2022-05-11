@@ -20,9 +20,9 @@ ifeq ($(config),release)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Release-macosx
+  TARGETDIR = bin/Release-linux
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Release-macosx
+  OBJDIR = tmp/Release-linux
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DNDEBUG -DRELEASE
@@ -57,9 +57,9 @@ ifeq ($(config),debug)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Debug-macosx
+  TARGETDIR = bin/Debug-linux
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Debug-macosx
+  OBJDIR = tmp/Debug-linux
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DDEBUG
@@ -94,9 +94,9 @@ ifeq ($(config),profile)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Profile-macosx
+  TARGETDIR = bin/Profile-linux
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Profile-macosx
+  OBJDIR = tmp/Profile-linux
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DNDEBUG -DPFOFILE
@@ -131,9 +131,9 @@ ifeq ($(config),final)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Final-macosx
+  TARGETDIR = bin/Final-linux
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Final-macosx
+  OBJDIR = tmp/Final-linux
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
   DEFINES += -DFINAL
@@ -166,6 +166,8 @@ OBJECTS := \
 	$(OBJDIR)/commandlineoptionportparams.o \
 	$(OBJDIR)/commandlineoptions.o \
 	$(OBJDIR)/commandlineoptionschecker.o \
+	$(OBJDIR)/Client.o \
+	$(OBJDIR)/Server.o \
 	$(OBJDIR)/irccommand.o \
 	$(OBJDIR)/irccommandsfactory.o \
 	$(OBJDIR)/ircjoincommand.o \
@@ -303,6 +305,12 @@ $(OBJDIR)/commandlineoptions.o: source/programoptions/commandlineoptions.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/commandlineoptionschecker.o: source/programoptions/commandlineoptionschecker.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Client.o: source/server/Client.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Server.o: source/server/Server.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irccommand.o: source/server/commands/commands/irccommand.cpp

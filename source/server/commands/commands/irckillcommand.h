@@ -17,7 +17,7 @@ private:
     void Shutdown(void);
 
 public:
-    bool ProcessCommand(/*serverclass */);
+    bool ProcessCommand(Server *serv);
 
 private:
     bool ValidateArgs(/*serverclass */);
