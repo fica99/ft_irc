@@ -31,10 +31,6 @@ private:
     IRCToken* GetArgToken(std::string& msg);
 private:
     IRCTokensFactory m_TokensFactory;
-    const std::string LETTERS_ASCII;
-    const std::string DIGITS_ASCII;
-    const std::string SPECIAL_ASCII;
-    const std::string WHITE_ASCII;
 };
 
 }

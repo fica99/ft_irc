@@ -18,7 +18,6 @@ static void Shutdown(void)
     CommandLineOptionsChecker::DestroySingleton();
 }
 
-
 }
 
 void servetLoop(int port) {

@@ -4,6 +4,7 @@
 
 #include "server/commands/commands/irccommand.h"
 #include "server/commands/parsing/tokens/irctoken.h"
+#include "server/commands/responses/ircresponsesfactory.h"
 #include "server/Server.h"
 
 namespace ircserv
@@ -20,6 +21,7 @@ IRCCommandsManager::IRCCommandsManager()
 
 void IRCCommandsManager::Initialize(void)
 {
+    IRCResponsesFactory::CreateSingleton();
 }
 
 IRCCommandsManager::~IRCCommandsManager()
@@ -31,6 +33,7 @@ IRCCommandsManager::~IRCCommandsManager()
 
 void IRCCommandsManager::Shutdown(void)
 {
+    IRCResponsesFactory::DestroySingleton();
 }
 
 void IRCCommandsManager::ProcessCommand(const std::string& message, Server *serv)

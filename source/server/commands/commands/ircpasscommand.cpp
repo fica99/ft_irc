@@ -47,9 +47,11 @@ bool IRCPassCommand::ValidateArgs(/*serverclass */)
         {
             response->SetCommand(EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
         }
+        // send response
         GetIRCResponsesFactory().DestroyResponse(response);
         return false;
     }
+    SetPassword(m_Args[0]);
     return true;
 }
 

@@ -37,10 +37,9 @@ bool IRCQuitCommand::ProcessCommand(Server *serv)
 
 bool IRCQuitCommand::ValidateArgs(/*serverclass */)
 {
-    if (m_Args.empty())
+    if (!m_Args.empty())
     {
-
-        return false;
+        SetQuitMessage(m_Args[0]);
     }
     return true;
 }

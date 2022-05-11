@@ -184,6 +184,7 @@ OBJECTS := \
 	$(OBJDIR)/ircquitcommand.o \
 	$(OBJDIR)/ircusercommand.o \
 	$(OBJDIR)/irccommandsmanager.o \
+	$(OBJDIR)/ircparsinghelper.o \
 	$(OBJDIR)/irclexer.o \
 	$(OBJDIR)/ircparser.o \
 	$(OBJDIR)/ircargtoken.o \
@@ -358,6 +359,9 @@ $(OBJDIR)/ircusercommand.o: source/server/commands/commands/ircusercommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irccommandsmanager.o: source/server/commands/manager/irccommandsmanager.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircparsinghelper.o: source/server/commands/parsing/ircparsinghelper.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irclexer.o: source/server/commands/parsing/lexer/irclexer.cpp
