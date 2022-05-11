@@ -2,64 +2,53 @@
 
 #include "server/commands/parsing/lexer/irclexer.h"
 #include "server/commands/parsing/parser/ircparser.h"
+#include "server/commands/manager/irccommandsmanager.h"
+#include <stdio.h>
 #include <unistd.h>
 
 
 Server::Server(uint16_t port) {
-    servaddr = new struct sockaddr_in;
+    m_servaddr = new struct sockaddr_in;
 
-    memset(servaddr, 0, sizeof(struct sockaddr_in));
-    _fd = socket(AF_INET, SOCK_STREAM, 0);
-    servaddr->sin_family = AF_INET;
-    servaddr->sin_addr.s_addr = INADDR_ANY;
-    servaddr->sin_port = htons(port);
+    memset(m_servaddr, 0, sizeof(struct sockaddr_in));
+    m_fd = socket(AF_INET, SOCK_STREAM, 0);
+    m_servaddr->sin_family = AF_INET;
+    m_servaddr->sin_addr.s_addr = INADDR_ANY;
+    m_servaddr->sin_port = htons(port);
 
-    fcntl(_fd, F_SETFL, O_NONBLOCK);
+    fcntl(m_fd, F_SETFL, O_NONBLOCK);
     socklen_t len = sizeof(struct sockaddr_in);
-    if (bind(_fd, (struct sockaddr *)servaddr, len) < 0)
+    if (bind(m_fd, (struct sockaddr *)m_servaddr, len) < 0)
         perror("bind");
-    listen(_fd, LISTEN_QUEUE);
+    listen(m_fd, LISTEN_QUEUE);
 }
 
 void Server::accept_conn() {
     int user_fd;
     static size_t addrlen = sizeof(struct sockaddr_in);
 
-    if ((user_fd = accept(_fd, (sockaddr *)servaddr, (socklen_t *)&(addrlen))) > 0) {
+    if ((user_fd = accept(m_fd, (sockaddr *)m_servaddr, (socklen_t *)&(addrlen))) > 0) {
         struct pollfd pfd;
         Client cl;
 
         fcntl(user_fd, F_SETFL, O_NONBLOCK);
         pfd.fd = user_fd;
         pfd.events = POLLIN;
-        userpfd.push_back(pfd);
-        clients.insert(std::make_pair(user_fd, cl));
+        m_userpfd.push_back(pfd);
+        m_clients.insert(std::make_pair(user_fd, cl));
     }
 }
-
-bool Server::processCommand(Client *curr) {
-    ircserv::IRCParser parser;
-    ircserv::IRCLexer lex;
-    ircserv::IRCCommand *command = parser.CreateCommand(lex.Tokenize(curr->inbuf));
-            
-    if (command == NULL) {
-        std::cerr << "unexpected command:" << "\t" << curr->inbuf;
-        return false;
-    }
-    return command->ProcessCommand(this);
-}
-
 
 void Server::recv_from_client() {
-    int ready = poll(userpfd.data(), userpfd.size(), 0);
+    int ready = poll(m_userpfd.data(), m_userpfd.size(), 0);
     int i = 0;
     static char buf[RECV_BUF + 1];
     
     if (ready < 0)
         perror("poll");
     while (ready--) {
-        if (userpfd[i].revents == POLLIN) {
-            int read = recv(userpfd[i].fd, buf, RECV_BUF, 0);
+        if (m_userpfd[i].revents == POLLIN) {
+            int read = recv(m_userpfd[i].fd, buf, RECV_BUF, 0);
 
             buf[read] = 0;
             std::cout << buf;
@@ -67,22 +56,24 @@ void Server::recv_from_client() {
             std::cout << std::endl;
 
             if (read == 0) {
-                userpfd.erase(userpfd.begin() + i);
+                m_userpfd.erase(m_userpfd.begin() + i);
                 continue;
             } else if (read > 512) {
                 std::cerr << "recv: message too long" << std::endl;
                 continue ;
             }
-            std::map<int, Client>::iterator cl = clients.find(userpfd[i].fd);
-            curr = &((*cl).second);
-            if (!curr->prefix.empty() || curr->nickname.empty()) {
+            std::map<int, Client>::iterator cl = m_clients.find(m_userpfd[i].fd);
+            m_curr = &((*cl).second);
+            if (!m_curr->prefix.empty() || m_curr->nickname.empty()) {
                 std::vector<std::string> v(0);
-                sendError(userpfd[i].fd, ERR_NOTREGISTERED, v);
+                sendError(m_userpfd[i].fd, ERR_NOTREGISTERED, v);
             }
-            curr->inbuf += buf;
-            if (strchr(buf, '\n'))
-                Server::processCommand(this->curr);
-            userpfd[i].revents = 0;
+            m_curr->inbuf += buf;
+            if (strchr(buf, '\n')) {
+				ircserv::IRCCommandsManager manager;
+				manager.ProcessCommand(m_curr->inbuf, this);
+			}
+            m_userpfd[i].revents = 0;
         }
         i++;
     }
@@ -94,12 +85,12 @@ void Server::sendMessage(const std::string &mes, int fd) const {
 }
 
 bool Server::setNickname(std::string &nickname) {
-    curr->nickname = nickname;
+    m_curr->nickname = nickname;
     return true;
 }
 
 bool Server::setPrefix(std::string &prefix) {
-    curr->prefix = prefix;
+    m_curr->prefix = prefix;
     return true;
 }
 
@@ -108,7 +99,7 @@ int		Server::sendReply(int fd, int rpl, const std::vector<std::string> &args)
 	std::string	msg = ":ft_irc ";
 	std::stringstream	ss;
 	ss << rpl;
-	msg += ss.str() + " " + curr->nickname + " ";
+	msg += ss.str() + " " + m_curr->nickname + " ";
 	switch (rpl)
 	{
 	case RPL_USERHOST:
@@ -348,7 +339,7 @@ int		Server::sendError(int fd, int err, const std::vector<std::string> args)
 	std::string	msg = ":ft_irc ";
 	std::stringstream	ss;
 	ss << err;
-	msg += ss.str() + " " + curr->nickname;
+	msg += ss.str() + " " + m_curr->nickname;
 	switch (err)
 	{
 	case ERR_NOSUCHNICK:

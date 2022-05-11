@@ -20,7 +20,7 @@ private:
     DECLARE_SIMPLE_SINGLETON(IRCCommandsManager);
 
 public:
-    void ProcessCommand(const std::string& message);
+    void ProcessCommand(const std::string& message, Server *serv);
 private:
     IRCLexer m_Lexer;
     IRCParser m_Parser;

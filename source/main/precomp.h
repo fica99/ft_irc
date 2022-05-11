@@ -10,3 +10,5 @@
 #include <exception>
 #include <cassert>
 #include <sstream>
+#include <map>
+#include <cstring>
