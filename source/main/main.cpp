@@ -3,11 +3,31 @@
 #include "programoptions/commandlineoptionschecker.h"
 #include "programoptions/commandlineoptions.h"
 #include "server/Server.h"
+
 namespace ircserv
 {
 
+#ifdef IRC_LOGGER_INITIALIZED
+static void InitializeLogger(void)
+{
+    static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("logs.csv", 1048576, 3);
+    static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+#ifdef IRC_DEBUG
+    plog::init(plog::debug, &fileAppender).addAppender(&consoleAppender);
+#elif defined(IRC_RELEASE)
+    plog::init(plog::info, &fileAppender).addAppender(&consoleAppender);
+#endif
+
+    PLOGD << "Initialized logger";
+}
+#endif // IRC_LOGGER_INITIALIZED
+
 static void Initialize(void)
 {
+#ifdef IRC_LOGGER_INITIALIZED
+    InitializeLogger();
+#endif // IRC_LOGGER_INITIALIZED
+
     CommandLineOptionsChecker::CreateSingleton();
     CommandLineOptions::CreateSingleton();
 }
