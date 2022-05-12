@@ -79,18 +79,37 @@ void Server::recv_from_client() {
     }
 }
 
+bool Server::find_nickname(std::string &nick) {
+	if (nickname_list.find(nick) != nickname_list.end())
+		return true;
+	return false;
+}
+
+bool Server::reg_nickname(std::string &nick) {
+	std::pair<std::set<std::string>::iterator, bool> ret = nickname_list.insert(nick);
+
+	return ret.second;
+}
+
+bool Server::delete_nickname(std::string &nick) {
+	size_t ret = nickname_list.erase(nick);
+
+	return ret;
+}
 
 void Server::sendMessage(const std::string &mes, int fd) const {
     send(fd, mes.c_str(), mes.size(), 0);
 }
 
 bool Server::setNickname(std::string &nickname) {
-    m_curr->nickname = nickname;
+	if (m_curr->nickname.empty())
+    	m_curr->nickname = nickname;
     return true;
 }
 
 bool Server::setPrefix(std::string &prefix) {
-    m_curr->prefix = prefix;
+	if (m_curr->prefix.empty())
+    	m_curr->prefix = prefix;
     return true;
 }
 

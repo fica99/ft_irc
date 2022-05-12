@@ -22,6 +22,7 @@ private:
     std::vector<struct pollfd> m_userpfd;
     std::map<int, Client> m_clients;
     Client *m_curr;
+    std::set<std::string> nickname_list;
 
     int	sendError(int fd, int err, const std::vector<std::string> args);
     int	sendReply(int fd, int rpl, const std::vector<std::string> &args);
@@ -31,5 +32,8 @@ public:
     bool setNickname(std::string &nickname);
     bool setPrefix(std::string &prefix);
     void sendMessage(const std::string &mes, int fd) const;
+    bool reg_nickname(std::string &nick);
+    bool find_nickname(std::string &nick);
+    bool delete_nickname(std::string &nickname);
 };
 
