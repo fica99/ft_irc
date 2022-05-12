@@ -38,12 +38,16 @@ void IRCCommandsManager::Shutdown(void)
 
 void IRCCommandsManager::ProcessCommand(const std::string& message, Server *serv)
 {
+    IRC_PLOGD << "Processing message: " << message;
     std::vector<IRCToken*> tokens = m_Lexer.Tokenize(message);
     IRCCommand* command = m_Parser.CreateCommand(tokens);
     if (command != NULL)
     {
+        IRC_PLOGI << "Get command from message: " << EnumString<Enum_IRCCommands>::From(command->GetCommandEnum());
         command->ProcessCommand(serv);
-    } else {
+    } else
+    {
+        IRC_PLOGI << "Invalid command from message: " << message;
         std::cerr << "unknown command: " << message;
         if (*message.rbegin() != '\n')
             std::cerr << std::endl;

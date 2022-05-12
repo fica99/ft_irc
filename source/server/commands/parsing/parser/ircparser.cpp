@@ -47,6 +47,8 @@ IRCCommand* IRCParser::CreateCommand(const std::vector<IRCToken*>& tokens)
 
             if (tokens.size() - i > 15)
             {
+                IRC_PLOGD << "Number of arguments is greater then maximum available 15";
+
                 return NULL;
             }
             
@@ -62,7 +64,10 @@ IRCCommand* IRCParser::CreateCommand(const std::vector<IRCToken*>& tokens)
                 command->SetArgs(GetArgs(std::vector<IRCToken*>(tokens.begin() + i, tokens.end())));
             }
         }
-
+    }
+    else
+    {
+        IRC_PLOGD << "No tokens in message";
     }
     return command;
 }

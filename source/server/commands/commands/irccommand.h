@@ -31,7 +31,7 @@ public:
     inline void SetArgs(const std::vector<std::string>& args) { m_Args = args; }
     inline const std::vector<std::string>& GetArgs(void) const { return m_Args; }
 
-protected:
+public:
     inline Enum_IRCCommands GetCommandEnum(void) const { return m_CommandEnum; }
 private:
     Enum_IRCCommands m_CommandEnum;
