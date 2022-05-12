@@ -72,18 +72,34 @@ void CommandLineOptionsChecker::Check(int argc, const char *argv[])
 {
     if (argc - 1 != m_ParamsCallbacks.size())
     {
+        IRC_PLOGD << "Number of commandline arguments: " << argc - 1;
+        IRC_PLOGD << "Expected number of commandline arguments: " << m_ParamsCallbacks.size();
+
         throw std::invalid_argument("Expected other number of commandline arguments");
     }
     for (size_t i = 1; i < argc; ++i)
     {
         ParamsCallback& paramsCallback = m_ParamsCallbacks[i - 1];
         CommandLineOptionParams* params = paramsCallback.first;
-        if (params && params->IsValid(argv[i]))
+
+        if (params != NULL && params->IsValid(argv[i]))
         {
             paramsCallback.second(argv[i]);
         }
         else
         {
+            IRC_PLOGD << "Invalid commandline argument: " << argv[i];
+            IRC_PLOGD << "Invalid commandline argument position: " << i;
+
+            if (params != NULL)
+            {
+                IRC_PLOGD << "Expected commandline argument on this position: " << params->GetValueName();
+            }
+            else
+            {
+                IRC_PLOGD << "Сommandline parameters are not set for correct parsing this argument";
+            }
+
             throw std::invalid_argument(std::string("Invalid argument: ") + argv[i]);
         }
     }

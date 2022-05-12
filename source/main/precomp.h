@@ -14,11 +14,31 @@
 #include <cstring>
 
 #if defined(IRC_RELEASE) || defined(IRC_DEBUG)
-#define IRC_LOGGER_INITIALIZED
+
 #include <plog/Log.h>
 #include <plog/Init.h>
 #include <plog/Appenders/RollingFileAppender.h>
 #include <plog/Formatters/CsvFormatter.h>
 #include <plog/Appenders/ConsoleAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
-#endif // defined(IRC_RELEASE) || defined(IRC_DEBUG)
+
+    #define IRC_LOGGER_INITIALIZED
+    #define IRC_PLOGD PLOGD
+    #define IRC_PLOGI PLOGI
+
+#else
+
+struct NullStream: public std::stringstream {
+   NullStream(): std::stringstream() {}
+};
+
+template<typename T>
+void operator<<(const NullStream& ss, const T& t) {}
+
+static NullStream nullStream;
+static std::ostream &nullostream = nullStream;
+
+    #define IRC_PLOGD nullostream
+    #define IRC_PLOGI nullostream
+
+#endif // !(defined(IRC_RELEASE) || defined(IRC_DEBUG))

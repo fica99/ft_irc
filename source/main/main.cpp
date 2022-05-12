@@ -17,8 +17,6 @@ static void InitializeLogger(void)
 #elif defined(IRC_RELEASE)
     plog::init(plog::info, &fileAppender).addAppender(&consoleAppender);
 #endif
-
-    PLOGD << "Initialized logger";
 }
 #endif // IRC_LOGGER_INITIALIZED
 
@@ -27,7 +25,6 @@ static void Initialize(void)
 #ifdef IRC_LOGGER_INITIALIZED
     InitializeLogger();
 #endif // IRC_LOGGER_INITIALIZED
-
     CommandLineOptionsChecker::CreateSingleton();
     CommandLineOptions::CreateSingleton();
 }
@@ -54,10 +51,13 @@ int main(int argc, const char* argv[])
    int exitStatus = EXIT_SUCCESS;
 
    ircserv::Initialize();
+
    try
    {
        ircserv::GetCommandLineOptionsChecker().Check(argc, argv);
-       servetLoop(atoi(argv[1]));
+
+       IRC_PLOGI << "Port: " << ircserv::GetCommandLineOptions().GetPort();
+       IRC_PLOGI << "Password: " << ircserv::GetCommandLineOptions().GetPassword();
    }
    catch (const std::exception &x)
    {
@@ -65,6 +65,12 @@ int main(int argc, const char* argv[])
        std::cerr << ircserv::GetCommandLineOptionsChecker().GetUsage() << std::endl;
        exitStatus = EXIT_FAILURE;
    }
+
+   if (exitStatus == EXIT_SUCCESS)
+   {
+       servetLoop(atoi(argv[1]));
+   }
+
    ircserv::Shutdown();
    return EXIT_SUCCESS;
 }
