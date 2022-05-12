@@ -22,7 +22,7 @@
 #include <plog/Appenders/ConsoleAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
 
-    #define IRC_LOGGER_INITIALIZED
+    #define IRC_LOGGER_DEFINED
     #define IRC_PLOGD PLOGD
     #define IRC_PLOGI PLOGI
     #define IRC_PLOGE PLOGE

@@ -7,7 +7,7 @@
 namespace ircserv
 {
 
-#ifdef IRC_LOGGER_INITIALIZED
+#ifdef IRC_LOGGER_DEFINED
 static void InitializeLogger(void)
 {
     static plog::RollingFileAppender<plog::CsvFormatter> fileAppender("logs.csv", 1048576, 3);
@@ -18,13 +18,13 @@ static void InitializeLogger(void)
     plog::init(plog::info, &fileAppender).addAppender(&consoleAppender);
 #endif
 }
-#endif // IRC_LOGGER_INITIALIZED
+#endif // IRC_LOGGER_DEFINED
 
 static void Initialize(void)
 {
-#ifdef IRC_LOGGER_INITIALIZED
+#ifdef IRC_LOGGER_DEFINED
     InitializeLogger();
-#endif // IRC_LOGGER_INITIALIZED
+#endif // IRC_LOGGER_DEFINED
     CommandLineOptionsChecker::CreateSingleton();
     CommandLineOptions::CreateSingleton();
 }
