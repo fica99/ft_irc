@@ -12,3 +12,7 @@
 #include <sstream>
 #include <map>
 #include <cstring>
+
+#if defined(IRC_RELEASE) || defined(IRC_DEBUG)
+#include <plog/Log.h>
+#endif // defined(IRC_RELEASE) || defined(IRC_DEBUG)

@@ -25,12 +25,12 @@ ifeq ($(config),release)
   OBJDIR = tmp/Release
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
-  DEFINES += -DNDEBUG -DRELEASE
-  INCLUDES += -Isource
+  DEFINES += -DDEBUG -DIRC_RELEASE
+  INCLUDES += -Isource -Iextern/logging/plog/include
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++98
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -g
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -g -std=c++98
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS +=
   LDDEPS +=
@@ -62,8 +62,8 @@ ifeq ($(config),debug)
   OBJDIR = tmp/Debug
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
-  DEFINES += -DDEBUG
-  INCLUDES += -Isource
+  DEFINES += -DDEBUG -DIRC_DEBUG
+  INCLUDES += -Isource -Iextern/logging/plog/include
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O0 -g
@@ -99,7 +99,7 @@ ifeq ($(config),profile)
   OBJDIR = tmp/Profile
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
-  DEFINES += -DNDEBUG -DPFOFILE
+  DEFINES += -DNDEBUG -DIRC_PFOFILE
   INCLUDES += -Isource
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -136,7 +136,7 @@ ifeq ($(config),final)
   OBJDIR = tmp/Final
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
-  DEFINES += -DFINAL
+  DEFINES += -DNDEBUG -DIRC_FINAL
   INCLUDES += -Isource
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
