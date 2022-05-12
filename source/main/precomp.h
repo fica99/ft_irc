@@ -25,6 +25,7 @@
     #define IRC_LOGGER_INITIALIZED
     #define IRC_PLOGD PLOGD
     #define IRC_PLOGI PLOGI
+    #define IRC_PLOGE PLOGE
 
 #else
 
@@ -36,9 +37,10 @@ template<typename T>
 void operator<<(const NullStream& ss, const T& t) {}
 
 static NullStream nullStream;
-static std::ostream &nullostream = nullStream;
+static std::stringstream &nullostream = nullStream;
 
     #define IRC_PLOGD nullostream
-    #define IRC_PLOGI nullostream
+    #define IRC_PLOGI std::cout
+    #define IRC_PLOGE std::cerr
 
 #endif // !(defined(IRC_RELEASE) || defined(IRC_DEBUG))

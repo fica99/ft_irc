@@ -56,13 +56,13 @@ int main(int argc, const char* argv[])
    {
        ircserv::GetCommandLineOptionsChecker().Check(argc, argv);
 
-       IRC_PLOGI << "Port: " << ircserv::GetCommandLineOptions().GetPort();
-       IRC_PLOGI << "Password: " << ircserv::GetCommandLineOptions().GetPassword();
+       IRC_PLOGI << "Port: " << ircserv::GetCommandLineOptions().GetPort() << std::endl;
+       IRC_PLOGI << "Password: " << ircserv::GetCommandLineOptions().GetPassword() << std::endl;
    }
    catch (const std::exception &x)
    {
-       std::cerr << x.what() << '\n';
-       std::cerr << ircserv::GetCommandLineOptionsChecker().GetUsage() << std::endl;
+       IRC_PLOGE << x.what() << std::endl;
+       IRC_PLOGE << ircserv::GetCommandLineOptionsChecker().GetUsage() << std::endl;
        exitStatus = EXIT_FAILURE;
    }
 
