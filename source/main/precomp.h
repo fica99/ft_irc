@@ -14,5 +14,7 @@
 #include <cstring>
 
 #if defined(IRC_RELEASE) || defined(IRC_DEBUG)
+#define IRC_LOGGER_INITIALIZED
 #include <plog/Log.h>
+#include "plog/Initializers/RollingFileInitializer.h"
 #endif // defined(IRC_RELEASE) || defined(IRC_DEBUG)

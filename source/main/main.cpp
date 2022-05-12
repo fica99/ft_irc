@@ -3,11 +3,27 @@
 #include "programoptions/commandlineoptionschecker.h"
 #include "programoptions/commandlineoptions.h"
 #include "server/Server.h"
+
 namespace ircserv
 {
 
+#ifdef IRC_LOGGER_INITIALIZED
+static void InitializeLogger(void)
+{
+#ifdef IRC_DEBUG
+    plog::init(plog::debug, "logs_debug.txt");
+#elif defined(IRC_RELEASE)
+    plog::init(plog::info, "logs_release.txt");
+#endif
+}
+#endif // IRC_LOGGER_INITIALIZED
+
 static void Initialize(void)
 {
+#ifdef IRC_LOGGER_INITIALIZED
+    InitializeLogger();
+#endif // IRC_LOGGER_INITIALIZED
+
     CommandLineOptionsChecker::CreateSingleton();
     CommandLineOptions::CreateSingleton();
 }
