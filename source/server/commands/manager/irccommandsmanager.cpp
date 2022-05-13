@@ -38,16 +38,16 @@ void IRCCommandsManager::Shutdown(void)
 
 void IRCCommandsManager::ProcessCommand(const std::string& message, Server *serv)
 {
-    IRC_PLOGD << "Processing message: " << message;
+    // IRC_PLOGD << "Processing message: " << message;
     std::vector<IRCToken*> tokens = m_Lexer.Tokenize(message);
     IRCCommand* command = m_Parser.CreateCommand(tokens);
     if (command != NULL)
     {
-        IRC_PLOGI << "Got command from message: " << EnumString<Enum_IRCCommands>::From(command->GetCommandEnum()) << std::endl;
+        // IRC_PLOGI << "Got command from message: " << EnumString<Enum_IRCCommands>::From(command->GetCommandEnum()) << std::endl;
         command->ProcessCommand(serv);
     } else
     {
-        IRC_PLOGE << "Invalid command from message: " << message << std::endl;
+        // IRC_PLOGD << "Invalid command from message: " << message << std::endl;
     }
     m_Lexer.DestroyTokens(tokens);
     m_Parser.DestroyCommand(command);

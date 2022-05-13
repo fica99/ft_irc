@@ -25,7 +25,7 @@ ifeq ($(config),release)
   OBJDIR = tmp/Release
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
-  DEFINES += -DDEBUG -DIRC_RELEASE
+  DEFINES += -DDEBUG -DIRC_RELEASE -DIRC_LOGGER_DEFINED
   INCLUDES += -Isource -Iextern/logging/plog/include
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -62,7 +62,7 @@ ifeq ($(config),debug)
   OBJDIR = tmp/Debug
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
-  DEFINES += -DDEBUG -DIRC_DEBUG
+  DEFINES += -DDEBUG -DIRC_DEBUG -DIRC_LOGGER_DEFINED
   INCLUDES += -Isource -Iextern/logging/plog/include
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -228,6 +228,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponserpl_topic.o \
 	$(OBJDIR)/ircresponserpl_youreoper.o \
 	$(OBJDIR)/ircresponsesfactory.o \
+	$(OBJDIR)/irclogsinitializer.o \
 
 RESOURCES := \
 
@@ -491,6 +492,9 @@ $(OBJDIR)/ircresponserpl_youreoper.o: source/server/commands/responses/ircrespon
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponsesfactory.o: source/server/commands/responses/ircresponsesfactory.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irclogsinitializer.o: source/utils/logs/irclogsinitializer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
