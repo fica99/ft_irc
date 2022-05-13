@@ -29,7 +29,8 @@ project "ircserv"
         defines
         {
             "DEBUG",
-            "IRC_RELEASE"
+            "IRC_RELEASE",
+            "IRC_LOGGER_DEFINED"
         }
         includedirs
         {
@@ -42,7 +43,8 @@ project "ircserv"
         defines
         {
             "DEBUG",
-            "IRC_DEBUG"
+            "IRC_DEBUG",
+            "IRC_LOGGER_DEFINED"
         }
         includedirs
         {
