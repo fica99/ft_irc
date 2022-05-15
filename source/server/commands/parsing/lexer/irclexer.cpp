@@ -38,8 +38,7 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
 
     if (msg.empty() || msg.size() > 512)
     {
-        // IRC_PLOGD << "Invalid message size: " << msg.size();
-        // IRC_PLOGD << "Message should be greater then 0 and less then 512";
+        IRC_LOGD("Invalid message size: %d. Message should be greater then 0 and less then 512", msg.size());
         return tokens;
     }
 
@@ -50,8 +49,7 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
         token = GetPrefixToken(msg);
         if (token == NULL || msg.empty() || !IRCParsingHelper::IsSymbolSpace(msg[0]))
         {
-            // IRC_PLOGD << "Invalid prefix token in message";
-            // IRC_PLOGD << "Expected space symbol after prefix";
+            IRC_LOGD("%s", "Invalid prefix token in message. Expected space symbol after prefix");
             return tokens;
         }
 
@@ -62,7 +60,7 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
     token = GetCommandToken(msg);
     if (token == NULL)
     {
-        // IRC_PLOGD << "Invalid command token in message";
+        IRC_LOGD("%s", "Invalid command token in message");
         DestroyTokens(tokens);
         return tokens;
     }
@@ -73,7 +71,7 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
         token = GetArgToken(msg);
         if (token == NULL)
         {
-            // IRC_PLOGD << "Invalid argument token in message";
+            IRC_LOGD("%s", "Invalid argument token in message");
             DestroyTokens(tokens);
             return tokens;
         }
@@ -83,8 +81,7 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
     if (msg.size() != crlfLength ||
         msg.compare(msg.size() - crlfLength, crlfLength, IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII))
     {
-        // IRC_PLOGD << "No CRLF symbols at the end of message";
-
+        IRC_LOGD("%s", "No CRLF symbols at the end of message");
         DestroyTokens(tokens);
     }
 
@@ -163,7 +160,7 @@ std::string IRCLexer::GetNick(std::string& msg)
     }
     else
     {
-        // IRC_PLOGD << "Invalid prefix nickname";
+        IRC_LOGD("%s", "Invalid prefix nickname");
         nick.clear();
     }
     return nick;
@@ -182,7 +179,7 @@ std::string IRCLexer::GetUser(std::string& msg)
     }
     else
     {
-        // IRC_PLOGD << "Invalid prefix username";
+        IRC_LOGD("%s", "Invalid prefix username");
         user.clear();
     }
     return user;
@@ -225,7 +222,7 @@ IRCToken* IRCLexer::GetCommandToken(std::string& msg)
 
     if (command.empty() && !commandNumber)
     {
-        // IRC_PLOGD << "Command token is not numerious and not from letters";
+        IRC_LOGD("%s", "Command token is not numerious and not from letters");
         return NULL;
     }
 
@@ -246,7 +243,7 @@ IRCToken* IRCLexer::GetArgToken(std::string& msg)
 
     if (msg.empty() || !IRCParsingHelper::IsSymbolSpace(msg[0]))
     {
-        // IRC_PLOGD << "Before argument token should be space";
+        IRC_LOGD("%s", "Before argument token should be space");
         return NULL;
     }
     pos = msg.find_first_not_of(IRCParsingHelper::IRCSymbolsDefinition::SPACE_ASCII);
@@ -264,7 +261,7 @@ IRCToken* IRCLexer::GetArgToken(std::string& msg)
         arg = msg.substr(0, pos);
         if (arg.empty())
         {
-            // IRC_PLOGD << "Argument without colons cannot be empty";
+            IRC_LOGD("%s", "Argument without colons cannot be empty");
             return NULL;
         }
     }
