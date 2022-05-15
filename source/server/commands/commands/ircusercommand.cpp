@@ -2,6 +2,7 @@
 
 #include "server/commands/commands/ircusercommand.h"
 
+#include "server/ircserver.h"
 #include "server/commands/commands/irccommands.h"
 #include "server/commands/parsing/ircparsinghelper.h"
 #include "server/commands/responses/ircresponseerr_needmoreparams.h"
@@ -28,7 +29,7 @@ void IRCUserCommand::Shutdown(void)
 {
 }
 
-bool IRCUserCommand::ProcessCommand(Server *serv)
+bool IRCUserCommand::ProcessCommand(IRCServer *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {

@@ -166,8 +166,6 @@ OBJECTS := \
 	$(OBJDIR)/commandlineoptionportparams.o \
 	$(OBJDIR)/commandlineoptions.o \
 	$(OBJDIR)/commandlineoptionschecker.o \
-	$(OBJDIR)/Client.o \
-	$(OBJDIR)/Server.o \
 	$(OBJDIR)/irccommand.o \
 	$(OBJDIR)/irccommandsfactory.o \
 	$(OBJDIR)/ircjoincommand.o \
@@ -228,6 +226,8 @@ OBJECTS := \
 	$(OBJDIR)/ircresponserpl_topic.o \
 	$(OBJDIR)/ircresponserpl_youreoper.o \
 	$(OBJDIR)/ircresponsesfactory.o \
+	$(OBJDIR)/ircclient.o \
+	$(OBJDIR)/ircserver.o \
 	$(OBJDIR)/irclogsinitializer.o \
 
 RESOURCES := \
@@ -306,12 +306,6 @@ $(OBJDIR)/commandlineoptions.o: source/programoptions/commandlineoptions.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/commandlineoptionschecker.o: source/programoptions/commandlineoptionschecker.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Client.o: source/server/Client.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Server.o: source/server/Server.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irccommand.o: source/server/commands/commands/irccommand.cpp
@@ -492,6 +486,12 @@ $(OBJDIR)/ircresponserpl_youreoper.o: source/server/commands/responses/ircrespon
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponsesfactory.o: source/server/commands/responses/ircresponsesfactory.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircclient.o: source/server/ircclient.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircserver.o: source/server/ircserver.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irclogsinitializer.o: source/utils/logs/irclogsinitializer.cpp

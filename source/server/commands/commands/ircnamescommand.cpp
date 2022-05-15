@@ -27,7 +27,7 @@ void IRCNamesCommand::Shutdown(void)
 {
 }
 
-bool IRCNamesCommand::ProcessCommand(Server *serv)
+bool IRCNamesCommand::ProcessCommand(IRCServer *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {

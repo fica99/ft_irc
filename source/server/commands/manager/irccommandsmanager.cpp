@@ -5,17 +5,12 @@
 #include "server/commands/commands/irccommand.h"
 #include "server/commands/parsing/tokens/irctoken.h"
 #include "server/commands/responses/ircresponsesfactory.h"
-#include "server/Server.h"
 
 namespace ircserv
 {
 
-IMPLEMENT_SIMPLE_SINGLETON(IRCCommandsManager);
-
 IRCCommandsManager::IRCCommandsManager()
 {
-    IMPLEMENT_SIMPLE_SINGLETON_CONSTRUCTOR();
-
     Initialize();
 }
 
@@ -27,8 +22,6 @@ void IRCCommandsManager::Initialize(void)
 IRCCommandsManager::~IRCCommandsManager()
 {
     Shutdown();
-
-    IMPLEMENT_SIMPLE_SINGLETON_DESTRUCTOR();
 }
 
 void IRCCommandsManager::Shutdown(void)
@@ -36,18 +29,18 @@ void IRCCommandsManager::Shutdown(void)
     IRCResponsesFactory::DestroySingleton();
 }
 
-void IRCCommandsManager::ProcessCommand(const std::string& message, Server *serv)
+void IRCCommandsManager::ProcessCommand(const std::string& message, IRCServer *serv)
 {
-    // IRC_PLOGD << "Processing message: " << message;
+    IRC_LOGD("Processing message: %s", message.c_str());
     std::vector<IRCToken*> tokens = m_Lexer.Tokenize(message);
     IRCCommand* command = m_Parser.CreateCommand(tokens);
     if (command != NULL)
     {
-        // IRC_PLOGI << "Got command from message: " << EnumString<Enum_IRCCommands>::From(command->GetCommandEnum()) << std::endl;
+        IRC_LOGD("Got command from message: %s", EnumString<Enum_IRCCommands>::From(command->GetCommandEnum()).c_str());
         command->ProcessCommand(serv);
     } else
     {
-        // IRC_PLOGD << "Invalid command from message: " << message << std::endl;
+        IRC_LOGD("Invalid command message: %s", message.c_str());
     }
     m_Lexer.DestroyTokens(tokens);
     m_Parser.DestroyCommand(command);

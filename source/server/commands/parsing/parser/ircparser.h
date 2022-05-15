@@ -12,6 +12,8 @@
 namespace ircserv
 {
 
+class IRCCommand;
+
 class IRCParser
 {
 public:

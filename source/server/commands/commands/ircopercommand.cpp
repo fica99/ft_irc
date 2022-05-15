@@ -29,7 +29,7 @@ void IRCOperCommand::Shutdown(void)
 {
 }
 
-bool IRCOperCommand::ProcessCommand(Server *serv)
+bool IRCOperCommand::ProcessCommand(IRCServer *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {

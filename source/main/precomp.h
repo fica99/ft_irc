@@ -13,4 +13,6 @@
 #include <map>
 #include <cstring>
 #include <cstdio>
+#include <stdlib.h>
+#include <unistd.h>
 #include "utils/logs/irclogs.h"
