@@ -16,7 +16,7 @@ project "ircserv"
 
     includedirs
     {
-        "source",
+        "source"
     }
 
     files
@@ -28,15 +28,25 @@ project "ircserv"
     filter "configurations:Release"
         defines
         {
-            "NDEBUG",
-            "RELEASE"
+            "DEBUG",
+            "IRC_RELEASE"
         }
+        includedirs
+        {
+            "extern/logging/plog/include"
+        }
+        symbols "On"
         optimize "On"
 
     filter "configurations:Debug"
         defines
         {
-            "DEBUG"
+            "DEBUG",
+            "IRC_DEBUG"
+        }
+        includedirs
+        {
+            "extern/logging/plog/include"
         }
         symbols "On"
         optimize "Off"
@@ -45,13 +55,16 @@ project "ircserv"
         defines
         {
             "NDEBUG",
-            "PFOFILE"
+            "IRC_PFOFILE"
         }
+        symbols "Off"
         optimize "On"
 
     filter "configurations:Final"
         defines
         {
-            "FINAL"
+            "NDEBUG",
+            "IRC_FINAL"
         }
+        symbols "Off"
         optimize "On"

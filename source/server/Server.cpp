@@ -59,7 +59,7 @@ void Server::recv_from_client() {
                 m_userpfd.erase(m_userpfd.begin() + i);
                 continue;
             } else if (read > 512) {
-                std::cerr << "recv: message too long" << std::endl;
+                IRC_PLOGE << "recv: message too long" << std::endl;
                 continue ;
             }
             std::map<int, Client>::iterator cl = m_clients.find(m_userpfd[i].fd);

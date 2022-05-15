@@ -1,0 +1,3 @@
+[submodule "extern/logging/plog"]
+	path = extern/logging/plog
+	url = git@github.com:SergiusTheBest/plog.git
