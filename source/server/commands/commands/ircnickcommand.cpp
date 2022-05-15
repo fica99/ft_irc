@@ -2,6 +2,7 @@
 
 #include "server/commands/commands/ircnickcommand.h"
 
+#include "server/ircserver.h"
 #include "server/commands/commands/irccommands.h"
 #include "server/commands/parsing/ircparsinghelper.h"
 #include "server/commands/responses/ircresponseerr_erroneusnickname.h"
@@ -29,7 +30,7 @@ void IRCNickCommand::Shutdown(void)
 {
 }
 
-bool IRCNickCommand::ProcessCommand(Server *serv)
+bool IRCNickCommand::ProcessCommand(IRCServer *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {

@@ -3,12 +3,12 @@
 #include <string>
 #include <vector>
 
-#include "server/commands/commands/irccommand.h"
 #include "server/commands/commands/irccommands.h"
 
 namespace ircserv
 {
 
+class IRCCommand;
 class IRCCommandsFactory
 {
 public:

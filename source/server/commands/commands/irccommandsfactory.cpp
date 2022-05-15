@@ -3,6 +3,7 @@
 #include "server/commands/commands/irccommandsfactory.h"
 
 #include "utils/memory.h"
+#include "server/commands/commands/irccommand.h"
 #include "server/commands/commands/ircjoincommand.h"
 #include "server/commands/commands/irckickcommand.h"
 #include "server/commands/commands/irckillcommand.h"

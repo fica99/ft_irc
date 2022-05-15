@@ -26,7 +26,7 @@ void IRCQuitCommand::Shutdown(void)
 {
 }
 
-bool IRCQuitCommand::ProcessCommand(Server *serv)
+bool IRCQuitCommand::ProcessCommand(IRCServer *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {

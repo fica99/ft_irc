@@ -2,12 +2,11 @@
 
 #include "programoptions/commandlineoptionschecker.h"
 #include "programoptions/commandlineoptions.h"
-#include "server/Server.h"
+#include "server/ircserver.h"
 #include "utils/logs/irclogsinitializer.h"
 
 namespace ircserv
 {
-
 
 static void Initialize(void)
 {
@@ -23,14 +22,17 @@ static void Shutdown(void)
 
 static void ServerLoop()
 {
-    Server serv(GetCommandLineOptions().GetPort());
+    IRCServer serv(GetCommandLineOptions().GetPort());
 
     IRC_LOGI("%s", "The server is running...");
+
     while (true)
     {
-        serv.accept_conn();
-        serv.recv_from_client();
+        // serv.acceptConn();
+        // serv.recvFromClient();
     }
+
+    IRC_LOGI("%s", "The server is stopped");
 }
 
 static bool CheckCommandLineOptions(int argc, const char **argv)

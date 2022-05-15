@@ -17,7 +17,7 @@ private:
     void Shutdown(void);
 
 public:
-    bool ProcessCommand(Server *serv);
+    bool ProcessCommand(IRCServer *serv);
 
 private:
     bool ValidateArgs(/*serverclass */);
