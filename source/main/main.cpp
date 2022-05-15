@@ -28,8 +28,8 @@ static void ServerLoop()
 
     while (true)
     {
-        // serv.acceptConn();
-        // serv.recvFromClient();
+        serv.acceptConn();
+        serv.recvFromClient();
     }
 
     IRC_LOGI("%s", "The server is stopped");
