@@ -25,6 +25,7 @@ static void ServerLoop()
 {
     Server serv(GetCommandLineOptions().GetPort());
 
+    IRC_LOGI("%s", "The server is running...");
     while (true)
     {
         serv.accept_conn();
@@ -61,10 +62,7 @@ int main(int argc, const char* argv[])
 
     if (ircserv::CheckCommandLineOptions(argc, argv))
     {
-        if (exitStatus == EXIT_SUCCESS)
-        {
-            ircserv::ServerLoop();
-        }
+        ircserv::ServerLoop();
     }
     else
     {
