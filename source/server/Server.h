@@ -13,6 +13,22 @@
 #define LISTEN_QUEUE 128
 #define RECV_BUF 513
 
+class Channel {
+public:
+    Channel(Client &creator);
+    
+    void add_op(Client &nick, std::string &pass);
+    void add_user(Client &nick);
+    void make_private();
+
+private:
+    Client owner;
+    std::list<Client> users;
+    std::list<Client> ops;
+    std::list<Client> banned;
+    bool fprivate; 
+};
+
 class Server {
 public:
     explicit Server(uint16_t port);
@@ -23,6 +39,7 @@ private:
     std::map<int, Client> m_clients;
     Client *m_curr;
     std::set<std::string> nickname_list;
+    std::map<std::string,  Channel> m_channels_list;
 
     int	sendError(int fd, int err, const std::vector<std::string> args);
     int	sendReply(int fd, int rpl, const std::vector<std::string> &args);
@@ -35,5 +52,7 @@ public:
     bool reg_nickname(std::string &nick);
     bool find_nickname(std::string &nick);
     bool delete_nickname(std::string &nickname);
+    bool join_channel(std::string &channel, Client &cl);
+    bool mode();
 };
 

@@ -9,6 +9,7 @@ public:
     std::string inbuf;
     std::string nickname;
     std::string prefix;   //not used after registration
+    int fd;
     int errcode;
     bool registered;
 };

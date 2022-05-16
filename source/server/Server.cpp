@@ -7,6 +7,17 @@
 #include <unistd.h>
 
 
+Channel::Channel(Client &creator): fprivate(false), owner(creator) {}
+
+// void Channel::add_op(Client &cl) {
+// 	//todo if { check_pass(); sendError(); }
+// 	this->ops.push_back(cl);
+// }
+
+// void Channel::add_user(Client &cl) {
+// 	users.push_back(cl);
+// }
+
 Server::Server(uint16_t port) {
     m_servaddr = new struct sockaddr_in;
 
@@ -35,6 +46,7 @@ void Server::accept_conn() {
         pfd.fd = user_fd;
         pfd.events = POLLIN;
         m_userpfd.push_back(pfd);
+		cl.fd = user_fd;
         m_clients.insert(std::make_pair(user_fd, cl));
     }
 }
@@ -112,6 +124,18 @@ bool Server::setPrefix(std::string &prefix) {
     	m_curr->prefix = prefix;
     return true;
 }
+
+// bool Server::join_channel(std::string &channel_name, Client &cl)
+// {
+// 	Channel ch(cl);
+
+
+// 	pair<map<string, Channel>::iterator, bool> p = m_channels_list.insert(std::make_pair(channel_name, ch));
+// 	if (p.second == false) {
+// 		(*p.first).second.
+// 	}
+// }
+
 
 int		Server::sendReply(int fd, int rpl, const std::vector<std::string> &args)
 {
