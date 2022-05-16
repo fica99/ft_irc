@@ -3,6 +3,7 @@
 #include "server/commands/commands/ircnoticecommand.h"
 
 #include "server/commands/commands/irccommands.h"
+#include "server/commands/parsing/ircparsinghelper.h"
 #include "server/commands/responses/ircresponsesfactory.h"
 
 namespace ircserv
@@ -26,7 +27,7 @@ void IRCNoticeCommand::Shutdown(void)
 {
 }
 
-bool IRCNoticeCommand::ProcessCommand(Server *serv)
+bool IRCNoticeCommand::ProcessCommand(IRCServer *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {
@@ -37,9 +38,18 @@ bool IRCNoticeCommand::ProcessCommand(Server *serv)
 
 bool IRCNoticeCommand::ValidateArgs(/*serverclass */)
 {
-    if (m_Args.empty())
+    if (m_Args.size() < 2)
     {
         return false;
+    }
+    else
+    {
+        if (!IRCParsingHelper::IsNick(m_Args[0]))
+        {
+            return false;
+        }
+        SetNickname(m_Args[0]);
+        SetText(m_Args[1]);
     }
     return true;
 }

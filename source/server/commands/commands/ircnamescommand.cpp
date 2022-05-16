@@ -3,6 +3,7 @@
 #include "server/commands/commands/ircnamescommand.h"
 
 #include "server/commands/commands/irccommands.h"
+#include "server/commands/parsing/ircparsinghelper.h"
 #include "server/commands/responses/ircresponsesfactory.h"
 
 namespace ircserv
@@ -26,7 +27,7 @@ void IRCNamesCommand::Shutdown(void)
 {
 }
 
-bool IRCNamesCommand::ProcessCommand(Server *serv)
+bool IRCNamesCommand::ProcessCommand(IRCServer *serv)
 {
     if (ValidateArgs(/*serverclass */))
     {
@@ -37,11 +38,17 @@ bool IRCNamesCommand::ProcessCommand(Server *serv)
 
 bool IRCNamesCommand::ValidateArgs(/*serverclass */)
 {
-    if (m_Args.empty())
+    if (!m_Args.empty())
     {
-
-        return false;
+        if (!IRCParsingHelper::IsChannels(m_Args[0]))
+        {
+            return false;
+        }
+        SetChannels(IRCParsingHelper::Split(m_Args[0], ","));
     }
     return true;
 }
+
+
+
 }

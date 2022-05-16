@@ -10,7 +10,6 @@
 namespace ircserv
 {
 
-IMPLEMENT_SIMPLE_SINGLETON(CommandLineOptionsChecker);
 std::string CommandLineOptionsChecker::m_Usage;
 
 static void CommandLineCallback_Port(const char *arg)
@@ -29,8 +28,6 @@ static void CommandLineCallback_Password(const char *arg)
 
 CommandLineOptionsChecker::CommandLineOptionsChecker()
 {
-    IMPLEMENT_SIMPLE_SINGLETON_CONSTRUCTOR();
-
     Initialize();
 }
 
@@ -45,8 +42,6 @@ void CommandLineOptionsChecker::Initialize(void)
 CommandLineOptionsChecker::~CommandLineOptionsChecker()
 {
     Shutdown();
-
-    IMPLEMENT_SIMPLE_SINGLETON_DESTRUCTOR();
 }
 
 void CommandLineOptionsChecker::Shutdown(void)
@@ -72,18 +67,31 @@ void CommandLineOptionsChecker::Check(int argc, const char *argv[])
 {
     if (argc - 1 != m_ParamsCallbacks.size())
     {
+        IRC_LOGD("Number of commandline arguments: %d. Expected number of commandline arguments: %d", argc - 1, m_ParamsCallbacks.size());
+
         throw std::invalid_argument("Expected other number of commandline arguments");
     }
     for (size_t i = 1; i < argc; ++i)
     {
         ParamsCallback& paramsCallback = m_ParamsCallbacks[i - 1];
         CommandLineOptionParams* params = paramsCallback.first;
+
+
         if (params && params->IsValid(argv[i]))
         {
             paramsCallback.second(argv[i]);
         }
         else
         {
+            if (params == NULL)
+            {
+                IRC_LOGD("%s", "Сommandline parameters are not set for correct parsing");
+            }
+            else
+            {
+                IRC_LOGD("Invalid commandline argument: %s; position: %d. Expected commandline argument on this position: %s", argv[i], i, params->GetValueName().c_str());
+            }
+
             throw std::invalid_argument(std::string("Invalid argument: ") + argv[i]);
         }
     }

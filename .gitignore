@@ -1,5 +1,7 @@
+logs.csv
 tmp/
 bin/
+*.DS_Store
 .idea/
 .vscode/
 

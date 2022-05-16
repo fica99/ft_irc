@@ -12,5 +12,8 @@
 #include <sstream>
 #include <map>
 #include <cstring>
-#include <set>
+#include <cstdio>
+#include <stdlib.h>
+#include <unistd.h>
 #include <list>
+#include "utils/logs/irclogs.h"

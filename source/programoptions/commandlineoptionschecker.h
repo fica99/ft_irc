@@ -4,7 +4,6 @@
 #include <utility>
 
 #include "programoptions/commandlineoptionparams.h"
-#include "utils/singleton.h"
 
 namespace ircserv
 {
@@ -19,7 +18,6 @@ public:
 private:
     void Initialize(void);
     void Shutdown(void);
-    DECLARE_SIMPLE_SINGLETON(CommandLineOptionsChecker);
 
 private:
     void SetUsage(void);
@@ -34,7 +32,5 @@ private:
     std::vector<ParamsCallback> m_ParamsCallbacks;
     static std::string m_Usage;
 };
-
-#define GetCommandLineOptionsChecker() CommandLineOptionsChecker::GetInstance()
 
 }

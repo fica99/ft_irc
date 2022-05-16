@@ -5,6 +5,7 @@
 #include "server/commands/parsing/tokens/ircargtoken.h"
 #include "server/commands/parsing/tokens/ircprefixtoken.h"
 
+
 namespace ircserv
 {
 
@@ -45,19 +46,28 @@ IRCCommand* IRCParser::CreateCommand(const std::vector<IRCToken*>& tokens)
         {
             commandToken = dynamic_cast<IRCCommandToken*>(tokens[i++]);
 
+            if (tokens.size() - i > 15)
+            {
+                IRC_LOGD("%s", "Number of arguments is greater then maximum available 15");
+                return NULL;
+            }
+            
             command = m_CommandsFactory.CreateCommand(GetCommandEnum(commandToken));
             if (command != NULL)
             {
                 if (prefixToken != NULL)
                 {
-                    command->SetNick(prefixToken->GetNick());
-                    command->SetUser(prefixToken->GetUser());
-                    command->SetHost(prefixToken->GetHost());
+                    command->SetPrefixNick(prefixToken->GetNick());
+                    command->SetPrefixUser(prefixToken->GetUser());
+                    command->SetPrefixHost(prefixToken->GetHost());
                 }
                 command->SetArgs(GetArgs(std::vector<IRCToken*>(tokens.begin() + i, tokens.end())));
             }
         }
-
+    }
+    else
+    {
+        IRC_LOGD("%s", "No tokens in message");
     }
     return command;
 }
@@ -78,7 +88,8 @@ Enum_IRCCommands IRCParser::GetCommandEnum(IRCCommandToken *commandToken)
     {
         if (!EnumString<Enum_IRCCommands>::To(commandEnum, commandToken->GetCommand()))
         {
-            commandEnum = static_cast<Enum_IRCCommands>(commandToken->GetCommandNumber());
+            // tempory disable numeric commands
+            //commandEnum = static_cast<Enum_IRCCommands>(commandToken->GetCommandNumber());
         }
     }
     return commandEnum;

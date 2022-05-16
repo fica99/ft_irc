@@ -20,17 +20,17 @@ ifeq ($(config),release)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Release-linux
+  TARGETDIR = bin/Release
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Release-linux
+  OBJDIR = tmp/Release
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
-  DEFINES += -DNDEBUG -DRELEASE
-  INCLUDES += -Isource
+  DEFINES += -DDEBUG -DIRC_RELEASE -DIRC_LOGGER_DEFINED
+  INCLUDES += -Isource -Iextern/logging/plog/include
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2
-  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++98
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -g
+  ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -O2 -g -std=c++98
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS +=
   LDDEPS +=
@@ -57,13 +57,13 @@ ifeq ($(config),debug)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Debug-linux
+  TARGETDIR = bin/Debug
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Debug-linux
+  OBJDIR = tmp/Debug
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
-  DEFINES += -DDEBUG
-  INCLUDES += -Isource
+  DEFINES += -DDEBUG -DIRC_DEBUG -DIRC_LOGGER_DEFINED
+  INCLUDES += -Isource -Iextern/logging/plog/include
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O0 -g
@@ -94,12 +94,12 @@ ifeq ($(config),profile)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Profile-linux
+  TARGETDIR = bin/Profile
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Profile-linux
+  OBJDIR = tmp/Profile
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
-  DEFINES += -DNDEBUG -DPFOFILE
+  DEFINES += -DNDEBUG -DIRC_PFOFILE
   INCLUDES += -Isource
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -131,12 +131,12 @@ ifeq ($(config),final)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = bin/Final-linux
+  TARGETDIR = bin/Final
   TARGET = $(TARGETDIR)/ircserv
-  OBJDIR = tmp/Final-linux
+  OBJDIR = tmp/Final
   PCH = source/main/precomp.h
   GCH = $(OBJDIR)/$(notdir $(PCH)).gch
-  DEFINES += -DFINAL
+  DEFINES += -DNDEBUG -DIRC_FINAL
   INCLUDES += -Isource
   FORCE_INCLUDE += -include $(OBJDIR)/$(notdir $(PCH))
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -166,8 +166,6 @@ OBJECTS := \
 	$(OBJDIR)/commandlineoptionportparams.o \
 	$(OBJDIR)/commandlineoptions.o \
 	$(OBJDIR)/commandlineoptionschecker.o \
-	$(OBJDIR)/Client.o \
-	$(OBJDIR)/Server.o \
 	$(OBJDIR)/irccommand.o \
 	$(OBJDIR)/irccommandsfactory.o \
 	$(OBJDIR)/ircjoincommand.o \
@@ -184,6 +182,7 @@ OBJECTS := \
 	$(OBJDIR)/ircquitcommand.o \
 	$(OBJDIR)/ircusercommand.o \
 	$(OBJDIR)/irccommandsmanager.o \
+	$(OBJDIR)/ircparsinghelper.o \
 	$(OBJDIR)/irclexer.o \
 	$(OBJDIR)/ircparser.o \
 	$(OBJDIR)/ircargtoken.o \
@@ -227,6 +226,9 @@ OBJECTS := \
 	$(OBJDIR)/ircresponserpl_topic.o \
 	$(OBJDIR)/ircresponserpl_youreoper.o \
 	$(OBJDIR)/ircresponsesfactory.o \
+	$(OBJDIR)/ircclient.o \
+	$(OBJDIR)/ircserver.o \
+	$(OBJDIR)/irclogsinitializer.o \
 
 RESOURCES := \
 
@@ -306,12 +308,6 @@ $(OBJDIR)/commandlineoptions.o: source/programoptions/commandlineoptions.cpp
 $(OBJDIR)/commandlineoptionschecker.o: source/programoptions/commandlineoptionschecker.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Client.o: source/server/Client.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Server.o: source/server/Server.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irccommand.o: source/server/commands/commands/irccommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -358,6 +354,9 @@ $(OBJDIR)/ircusercommand.o: source/server/commands/commands/ircusercommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irccommandsmanager.o: source/server/commands/manager/irccommandsmanager.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircparsinghelper.o: source/server/commands/parsing/ircparsinghelper.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/irclexer.o: source/server/commands/parsing/lexer/irclexer.cpp
@@ -487,6 +486,15 @@ $(OBJDIR)/ircresponserpl_youreoper.o: source/server/commands/responses/ircrespon
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponsesfactory.o: source/server/commands/responses/ircresponsesfactory.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircclient.o: source/server/ircclient.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircserver.o: source/server/ircserver.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irclogsinitializer.o: source/utils/logs/irclogsinitializer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

@@ -1,10 +1,14 @@
 #pragma once
-#include "main/precomp.h"
 
-class Client {
-public:
-    Client();
+#include <string>
 
+namespace ircserv
+{
+
+struct IRCClient 
+{
+    IRCClient();
+    virtual ~IRCClient();
     std::string obuf;
     std::string inbuf;
     std::string nickname;
@@ -13,3 +17,5 @@ public:
     int errcode;
     bool registered;
 };
+
+}

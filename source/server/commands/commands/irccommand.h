@@ -4,10 +4,11 @@
 #include <vector>
 
 #include "server/commands/commands/irccommands.h"
-#include "server/Server.h"
 
 namespace ircserv
 {
+
+class IRCServer;
 
 class IRCCommand
 {
@@ -19,26 +20,26 @@ private:
     void Shutdown(void);
 
 public:
-    virtual bool ProcessCommand(Server *serv) = 0;
+    virtual bool ProcessCommand(IRCServer *serv) = 0;
 
 private:
     virtual bool ValidateArgs(/*serverclass */) = 0;
 
 public:
-    inline void SetNick(const std::string& nick) { m_Nick = nick; }
-    inline void SetUser(const std::string& user) { m_User = user; }
-    inline void SetHost(const std::string& host) { m_Host = host; }
+    inline void SetPrefixNick(const std::string& nick) { m_PrefixNick = nick; }
+    inline void SetPrefixUser(const std::string& user) { m_PrefixUser = user; }
+    inline void SetPrefixHost(const std::string& host) { m_PrefixHost = host; }
     inline void SetArgs(const std::vector<std::string>& args) { m_Args = args; }
     inline const std::vector<std::string>& GetArgs(void) const { return m_Args; }
 
-protected:
+public:
     inline Enum_IRCCommands GetCommandEnum(void) const { return m_CommandEnum; }
 private:
     Enum_IRCCommands m_CommandEnum;
 protected: 
-    std::string m_Nick;
-    std::string m_User;
-    std::string m_Host;
+    std::string m_PrefixNick;
+    std::string m_PrefixUser;
+    std::string m_PrefixHost;
     std::vector<std::string> m_Args;
 };
 
