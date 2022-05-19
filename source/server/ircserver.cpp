@@ -10,6 +10,10 @@
 #define LISTEN_QUEUE 128
 #define RECV_BUF 513
 #define MAX_CONNECTIONS 1024
+#define MAX_CHANNELS 20
+#define CHANNEL_DO_NOTHING 0
+#define CHANNEL_MAKE_PUBLIC 1
+#define CHANNEL_MAKE_PRIVATE 2
 
 typedef std::map<std::string, ircserv::IRCChannel>::iterator IRCChannelIter;
 typedef std::pair<IRCChannelIter, bool> IRCChannelPair;

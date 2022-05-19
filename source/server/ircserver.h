@@ -11,10 +11,6 @@
 #include "server/commands/responses/ircresponses.h"
 #include "server/commands/manager/irccommandsmanager.h"
 
-#define MAX_CHANNELS 20
-#define CHANNEL_DO_NOTHING 0
-#define CHANNEL_MAKE_PUBLIC 1
-#define CHANNEL_MAKE_PRIVATE 2
 namespace ircserv
 {
 
