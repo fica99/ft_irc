@@ -29,8 +29,12 @@ std::string IRCResponseERR_NOSUCHCHANNEL::GetResponse(void) const
 {
     std::string response;
     
-    response += GetPrefix();
-    response += " " + EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetPrefix().empty())
+    {
+        response += GetPrefix();
+        response += " ";
+    }
+    response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
     response += " " + m_ChannelName + " :No such channel";
     return response;
 }

@@ -29,8 +29,12 @@ std::string IRCResponseERR_WILDTOPLEVEL::GetResponse(void) const
 {
     std::string response;
     
-    response += GetPrefix();
-    response += " " + EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetPrefix().empty())
+    {
+        response += GetPrefix();
+        response += " ";
+    }
+    response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
     response += " " + m_Mask + " :Wildcard in toplevel domain";
     return response;
 }

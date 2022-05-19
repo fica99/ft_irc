@@ -204,7 +204,7 @@ IRCToken* IRCLexer::GetCommandToken(std::string& msg)
     std::string command;
     unsigned short int commandNumber = 0;
 
-    pos = msg.find_first_of(IRCParsingHelper::IRCSymbolsDefinition::SPACE_ASCII);
+    pos = msg.find_first_not_of(IRCParsingHelper::IRCSymbolsDefinition::DIGITS_ASCII + IRCParsingHelper::IRCSymbolsDefinition::LETTERS_ASCII);
     command = msg.substr(0, pos);
     if (IRCParsingHelper::IsLetterCommand(command))
     {
