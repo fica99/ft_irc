@@ -201,9 +201,10 @@ void IRCServer::RecvFromClient()
     }
 }
 
-void IRCServer::sendMessage(const std::string &mes, int fd) const
+void IRCServer::sendResponse(std::string mes) const
 {
-    send(fd, mes.c_str(), mes.size(), 0);
+    mes += "\n";
+    send(m_Curr->fd, mes.c_str(), mes.size(), 0);
 }
 
 Enum_IRCResponses IRCServer::setNickname(const std::string &nickname)

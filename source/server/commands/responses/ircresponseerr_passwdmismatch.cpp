@@ -29,8 +29,12 @@ std::string IRCResponseERR_PASSWDMISMATCH::GetResponse(void) const
 {
     std::string response;
     
-    response += GetPrefix();
-    response += " " + EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetPrefix().empty())
+    {
+        response += GetPrefix();
+        response += " ";
+    }
+    response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
     response += " :Password incorrect";
     return response;
 }

@@ -29,8 +29,12 @@ std::string IRCResponseERR_NOPRIVILEGES::GetResponse(void) const
 {
     std::string response;
     
-    response += GetPrefix();
-    response += " " + EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetPrefix().empty())
+    {
+        response += GetPrefix();
+        response += " ";
+    }
+    response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
     response += " :Permission Denied- You're not an IRC operator";
     return response;
 }
