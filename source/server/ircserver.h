@@ -29,7 +29,7 @@ public:
 public:
     void noticeCommand(std::string &mes, std::string &reciever);
     Enum_IRCResponses setNickname(const std::string &nickname);
-    Enum_IRCResponses setPrefix(const std::string &prefix);
+    Enum_IRCResponses userCommand(const std::string &prefix);
     void sendMessage(const std::string &mes, int fd) const;
     std::string &get_topic() { return m_Topic; }
     Enum_IRCResponses joinCommand(std::string &channel_name);

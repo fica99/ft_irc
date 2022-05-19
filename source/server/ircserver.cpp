@@ -221,13 +221,13 @@ Enum_IRCResponses IRCServer::setNickname(const std::string &nickname)
     return Enum_IRCResponses_Unknown;
 }
 
-Enum_IRCResponses IRCServer::setPrefix(const std::string &prefix)
+Enum_IRCResponses IRCServer::userCommand(const std::string &prefix)
 {
+    for (IRCClientIter it = m_Clients.begin(); it != m_Clients.end(); it++) {
+        if (it->second.prefix == prefix)
+            return Enum_IRCResponses_ERR_ALREADYREGISTRED;
+    }
     m_Curr->prefix = prefix;
     return Enum_IRCResponses_Unknown;
 }
-
-
-
-
 }
