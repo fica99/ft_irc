@@ -224,6 +224,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponserpl_liststart.o \
 	$(OBJDIR)/ircresponserpl_namreply.o \
 	$(OBJDIR)/ircresponserpl_topic.o \
+	$(OBJDIR)/ircresponserpl_umodeis.o \
 	$(OBJDIR)/ircresponserpl_youreoper.o \
 	$(OBJDIR)/ircresponsesfactory.o \
 	$(OBJDIR)/ircchannel.o \
@@ -481,6 +482,9 @@ $(OBJDIR)/ircresponserpl_namreply.o: source/server/commands/responses/ircrespons
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponserpl_topic.o: source/server/commands/responses/ircresponserpl_topic.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_umodeis.o: source/server/commands/responses/ircresponserpl_umodeis.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponserpl_youreoper.o: source/server/commands/responses/ircresponserpl_youreoper.cpp

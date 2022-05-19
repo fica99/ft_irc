@@ -36,6 +36,7 @@
 #include "server/commands/responses/ircresponserpl_liststart.h"
 #include "server/commands/responses/ircresponserpl_namreply.h"
 #include "server/commands/responses/ircresponserpl_topic.h"
+#include "server/commands/responses/ircresponserpl_umodeis.h"
 #include "server/commands/responses/ircresponserpl_youreoper.h"
 
 namespace ircserv
@@ -168,6 +169,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_RPL_TOPIC:
             response = New(IRCResponseRPL_TOPIC)();
+            break;
+        case Enum_IRCResponses_RPL_UMODEIS:
+            response = New(IRCResponseRPL_UMODEIS)();
             break;
         case Enum_IRCResponses_RPL_YOUREOPER:
             response = New(IRCResponseRPL_YOUREOPER)();
