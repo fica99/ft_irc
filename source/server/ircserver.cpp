@@ -103,8 +103,9 @@ IRCServer::IRCServer(uint16_t port)
     m_Servaddr.sin_family = AF_INET;
     m_Servaddr.sin_addr.s_addr = INADDR_ANY;
     m_Servaddr.sin_port = htons(port);
-
+    int on = 1;
     fcntl(m_Fd, F_SETFL, O_NONBLOCK);
+    setsockopt(m_Fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
     if (bind(m_Fd, (struct sockaddr *)&m_Servaddr, sizeof(m_Servaddr)) < 0)
     {
         perror("bind");

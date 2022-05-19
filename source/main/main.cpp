@@ -4,7 +4,7 @@
 #include "programoptions/commandlineoptions.h"
 #include "server/ircserver.h"
 #include "utils/logs/irclogsinitializer.h"
-
+bool work = true;
 namespace ircserv
 {
 
@@ -20,13 +20,18 @@ static void Shutdown(void)
     IRCLogsInitializer::DestroySingleton();
 }
 
+void	sigHandler(int signum)
+{
+	(void)signum;
+	work = false;
+}
+
 static void ServerLoop()
 {
     IRCServer serv(GetCommandLineOptions().GetPort());
 
     IRC_LOGI("%s", "The server is running...");
-
-    while (true)
+    while (work)
     {
         serv.acceptConn();
         serv.recvFromClient();
@@ -38,7 +43,7 @@ static void ServerLoop()
 static bool CheckCommandLineOptions(int argc, const char **argv)
 {
     CommandLineOptionsChecker checker;
-
+    signal(SIGINT, sigHandler);
     try
     {
         checker.Check(argc, argv);
