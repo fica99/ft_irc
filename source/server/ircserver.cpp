@@ -162,11 +162,14 @@ void IRCServer::recvFromClient()
         if (m_Userpfd[i].revents == POLLIN)
         {
             //memset(buf, 0, strlen(buf));
-            int read = recv(m_Userpfd[i].fd, buf, RECV_BUF, 0);
-
-            buf[read] = 0;
+            int rd = recv(m_Userpfd[i].fd, buf, RECV_BUF, 0);
+            if (rd == -1) {
+                perror("read");
+                continue;
+            } 
+            buf[rd] = 0;
             std::cout << buf;
-            if (buf[read - 1] != '\n')
+            if (buf[rd - 1] != '\n')
                 std::cout << std::endl;
 
             if (read == 0)
