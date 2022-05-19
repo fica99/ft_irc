@@ -38,6 +38,7 @@ public:
     Enum_IRCResponses topicCommand(std::string &channel_name);
     Enum_IRCResponses privmsgCommand(std::string &msg, std::string &receiver);
     void sendResponse(std::string mes) const;
+    void quitCommand();
 
 private:
     int	sendError(int fd, int err, const std::vector<std::string> args);

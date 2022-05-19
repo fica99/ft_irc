@@ -158,9 +158,7 @@ void IRCServer::RecvFromClient()
     static char buf[RECV_BUF + 1];
 
     if (ready < 0)
-    {
         perror("poll");
-    }
     while (ready)
     {
         if (m_Userpfd[i].revents == POLLIN)
@@ -230,4 +228,18 @@ Enum_IRCResponses IRCServer::userCommand(const std::string &prefix)
     m_Curr->prefix = prefix;
     return Enum_IRCResponses_Unknown;
 }
+
+void IRCServer::quitCommand() {
+    IRCClientIter it = m_Clients.find(m_Curr->fd);
+    close(m_Curr->fd);
+    for (std::vector<struct pollfd>::iterator it = m_Userpfd.begin(); it != m_Userpfd.end(); it++) {
+        if (it->fd == m_Curr->fd) {
+            m_Userpfd.erase(it);
+            break;
+        }
+    }
+    m_Clients.erase(it);
+    m_Curr = NULL;
+}
+
 }
