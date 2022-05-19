@@ -128,7 +128,7 @@ void IRCServer::Shutdown(void)
 {
 }
 
-void IRCServer::acceptConn()
+void IRCServer::AcceptConn()
 {
     int userFd;
     static size_t addrlen = sizeof(struct sockaddr_in);
@@ -147,7 +147,7 @@ void IRCServer::acceptConn()
     }
 }
 
-void IRCServer::recvFromClient()
+void IRCServer::RecvFromClient()
 {
     int ready = poll(m_Userpfd.data(), m_Userpfd.size(), 0);
     int i = 0;

@@ -23,8 +23,8 @@ private:
     void Initialize(void);
     void Shutdown(void);
 public:
-    void acceptConn();
-    void recvFromClient();
+    void AcceptConn();
+    void RecvFromClient();
 
 public:
     Enum_IRCResponses setNickname(const std::string &nickname);

@@ -33,8 +33,8 @@ static void ServerLoop()
     IRC_LOGI("%s", "The server is running...");
     while (work)
     {
-        serv.acceptConn();
-        serv.recvFromClient();
+        serv.AcceptConn();
+        serv.RecvFromClient();
     }
 
     IRC_LOGI("%s", "The server is stopped");
