@@ -1,12 +1,13 @@
-#include "main/precomp.h"
-#include "ircclient.h"
+#pragma once
+
+#include "server/ircclient.h"
 #include "server/commands/responses/ircresponses.h"
-#define MAX_CHANNEL_USERS 100
 
 namespace ircserv
 {
 
-class IRCChannel {
+class IRCChannel
+{
 public:
     IRCChannel(IRCClient &creator, std::string &name);
     

@@ -1,8 +1,13 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include "ircchannel.h"
+#include "main/precomp.h"
 
-namespace ircserv {
+#include "server/ircchannel.h"
+
+#include <sys/socket.h>
+
+#define MAX_CHANNEL_USERS 100
+
+namespace ircserv
+{
 
 IRCChannel::IRCChannel(IRCClient &creator, std::string &name): fprivate(false), owner(creator), _name(name)  {}
 
@@ -34,4 +39,5 @@ bool IRCChannel::isMember(std::string &nick) {
     }
     return false;
 }
+
 }
