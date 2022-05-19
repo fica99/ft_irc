@@ -23,7 +23,6 @@ namespace ircserv
 {
 
 
-
 Enum_IRCResponses IRCServer::joinCommand(std::string &channel_name) {
     if (m_Channels.size() >= MAX_CHANNELS)
         return Enum_IRCResponses_ERR_TOOMANYCHANNELS;
@@ -117,6 +116,10 @@ IRCServer::IRCServer(uint16_t port)
 
 IRCServer::~IRCServer(void)
 {
+    for (IRCClientIter it = m_Clients.begin(); it != m_Clients.end(); it++) {
+        close(it->second.fd);
+    }
+    close(m_Fd);
     Shutdown();
 }
 

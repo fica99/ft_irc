@@ -4,6 +4,7 @@
 #include "programoptions/commandlineoptions.h"
 #include "server/ircserver.h"
 #include "utils/logs/irclogsinitializer.h"
+#include <signal.h>
 bool work = true;
 namespace ircserv
 {
@@ -20,12 +21,6 @@ static void Shutdown(void)
     IRCLogsInitializer::DestroySingleton();
 }
 
-void	sigHandler(int signum)
-{
-	(void)signum;
-	work = false;
-}
-
 static void ServerLoop()
 {
     IRCServer serv(GetCommandLineOptions().GetPort());
@@ -36,14 +31,12 @@ static void ServerLoop()
         serv.AcceptConn();
         serv.RecvFromClient();
     }
-
     IRC_LOGI("%s", "The server is stopped");
 }
 
 static bool CheckCommandLineOptions(int argc, const char **argv)
 {
     CommandLineOptionsChecker checker;
-    signal(SIGINT, sigHandler);
     try
     {
         checker.Check(argc, argv);
@@ -62,9 +55,16 @@ static bool CheckCommandLineOptions(int argc, const char **argv)
 
 }
 
+void	sigHandler(int signum)
+{
+	(void)signum;
+	work = false;
+}
+
 int main(int argc, const char* argv[])
 {
     int exitStatus = EXIT_SUCCESS;
+    signal(SIGINT, &sigHandler);
     ircserv::Initialize();
 
     if (ircserv::CheckCommandLineOptions(argc, argv))
