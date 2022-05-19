@@ -51,7 +51,8 @@ bool IRCNickCommand::ProcessCommand(IRCServer *serv)
             else if (responseNicknameInUse != NULL)
             {
                 responseNicknameInUse->SetNick(m_Args[0]);
-                send(serv->m_Curr->fd, responseNicknameInUse->GetResponse().c_str(), responseNicknameInUse->GetResponse().size(), 0);
+                int i = send(serv->m_Curr->fd, responseNicknameInUse->GetResponse().c_str(), responseNicknameInUse->GetResponse().size(), 0);
+                perror("send");
             }
 
             GetIRCResponsesFactory().DestroyResponse(response);
