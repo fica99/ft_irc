@@ -2,6 +2,7 @@
 
 #include "server/commands/commands/ircquitcommand.h"
 
+#include "server/ircserver.h"
 #include "server/commands/commands/irccommands.h"
 #include "server/commands/responses/ircresponsesfactory.h"
 
@@ -30,6 +31,7 @@ bool IRCQuitCommand::ProcessCommand(IRCServer *serv)
 {
     if (ValidateArgs(serv))
     {
+        serv->quitCommand();
         return true;
     }
     return false;
