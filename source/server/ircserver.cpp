@@ -160,7 +160,7 @@ void IRCServer::recvFromClient()
     {
         if (m_Userpfd[i].revents == POLLIN)
         {
-            memset(buf, 0, strlen(buf));
+            //memset(buf, 0, strlen(buf));
             int read = recv(m_Userpfd[i].fd, buf, RECV_BUF, 0);
 
             buf[read] = 0;
@@ -184,6 +184,7 @@ void IRCServer::recvFromClient()
             if (strchr(buf, '\n'))
             {
                 m_CommandsManager.ProcessCommand(m_Curr->inbuf, this);
+                m_Curr->inbuf.clear();
             }
             m_Userpfd[i].revents = 0;
         }
