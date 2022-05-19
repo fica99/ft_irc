@@ -11,7 +11,7 @@
 #define RECV_BUF 513
 #define MAX_CONNECTIONS 1024
 
-typedef std::map<const std::string, ircserv::IRCChannel>::iterator IRCChannelIter;
+typedef std::map<std::string, ircserv::IRCChannel>::iterator IRCChannelIter;
 typedef std::pair<IRCChannelIter, bool> IRCChannelPair;
 
 namespace ircserv
@@ -60,7 +60,7 @@ Enum_IRCResponses IRCServer::modeCommand(int p, std::string &banned, std::string
     }
     if (!banned.empty())
         ch.ban_user(banned);
-    return Enum_IRCResponses_RPL_RPL_UMODEIS;
+    return Enum_IRCResponses_RPL_UMODEIS;
 }
 
 Enum_IRCResponses IRCServer::topicCommand(std::string &channel_name) {
