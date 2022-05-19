@@ -191,7 +191,8 @@ void IRCServer::RecvFromClient()
             if (strchr(buf, '\n'))
             {
                 m_CommandsManager.ProcessCommand(m_Curr->inbuf, this);
-                m_Curr->inbuf.clear();
+                if (m_Curr)
+                    m_Curr->inbuf.clear();
             }
             m_Userpfd[i].revents = 0;
         }
