@@ -172,12 +172,12 @@ void IRCServer::recvFromClient()
             if (buf[rd - 1] != '\n')
                 std::cout << std::endl;
 
-            if (read == 0)
+            if (rd == 0)
             {
                 m_Userpfd.erase(m_Userpfd.begin() + i);
                 continue;
             }
-            else if (read > 512)
+            else if (rd > 512)
             {
                 IRC_LOGD("%s", "recv: message too long");
                 continue;
