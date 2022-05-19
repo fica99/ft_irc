@@ -7,6 +7,8 @@
 #include "server/commands/parsing/ircparsinghelper.h"
 #include "server/commands/responses/ircresponseerr_erroneusnickname.h"
 #include "server/commands/responses/ircresponseerr_nonicknamegiven.h"
+#include "server/commands/responses/ircresponseerr_nickcollision.h"
+#include "server/commands/responses/ircresponseerr_nicknameinuse.h"
 #include "server/commands/responses/ircresponsesfactory.h"
 
 namespace ircserv
@@ -32,22 +34,42 @@ void IRCNickCommand::Shutdown(void)
 
 bool IRCNickCommand::ProcessCommand(IRCServer *serv)
 {
-    if (ValidateArgs(/*serverclass */))
+    if (ValidateArgs(serv))
     {
-        serv->setNickname(m_Args[0]);
+        IRCResponse* response = GetIRCResponsesFactory().CreateResponse(serv->setNickname(m_Args[0]));
+
+        if (response)
+        {
+            IRCResponseERR_NICKCOLLISION *responseNickCollision = dynamic_cast<IRCResponseERR_NICKCOLLISION*>(response);
+            IRCResponseERR_NICKNAMEINUSE *responseNicknameInUse = dynamic_cast<IRCResponseERR_NICKNAMEINUSE*>(response);
+
+            if (responseNickCollision != NULL)
+            {
+                responseNickCollision->SetNick(m_Args[0]);
+                send(serv->m_Curr->fd, responseNickCollision->GetResponse().c_str(), responseNickCollision->GetResponse().size(), 0);
+            }
+            else if (responseNicknameInUse != NULL)
+            {
+                responseNicknameInUse->SetNick(m_Args[0]);
+                send(serv->m_Curr->fd, responseNicknameInUse->GetResponse().c_str(), responseNicknameInUse->GetResponse().size(), 0);
+            }
+
+            GetIRCResponsesFactory().DestroyResponse(response);
+            return false;
+        }
         return true;
     }
     return false;
 }
 
-bool IRCNickCommand::ValidateArgs(/*serverclass */)
+bool IRCNickCommand::ValidateArgs(IRCServer *serv)
 {
     if (m_Args.empty())
     {
         IRCResponseERR_NONICKNAMEGIVEN* response = dynamic_cast<IRCResponseERR_NONICKNAMEGIVEN*>(
             GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_ERR_NONICKNAMEGIVEN)
         );
-        // send error
+        send(serv->m_Curr->fd, response->GetResponse().c_str(), response->GetResponse().size(), 0);
         GetIRCResponsesFactory().DestroyResponse(response);
         return false;
     }
@@ -61,8 +83,8 @@ bool IRCNickCommand::ValidateArgs(/*serverclass */)
             if (response != NULL)
             {
                 response->SetNick(m_Args[0]);
+                send(serv->m_Curr->fd, response->GetResponse().c_str(), response->GetResponse().size(), 0);
             }
-            // send error
             GetIRCResponsesFactory().DestroyResponse(response);
             return false;
         }

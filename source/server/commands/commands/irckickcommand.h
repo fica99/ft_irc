@@ -20,7 +20,7 @@ public:
     bool ProcessCommand(IRCServer *serv);
 
 private:
-    bool ValidateArgs(/*serverclass */);
+    bool ValidateArgs(IRCServer *serv);
 
 private:
     inline void SetChannel(const std::string& channel) { m_Channel = channel; }

@@ -31,7 +31,7 @@ void IRCUserCommand::Shutdown(void)
 
 bool IRCUserCommand::ProcessCommand(IRCServer *serv)
 {
-    if (ValidateArgs(/*serverclass */))
+    if (ValidateArgs(serv))
     {
         serv->setPrefix(m_Args[0]);
         return true;
@@ -39,7 +39,7 @@ bool IRCUserCommand::ProcessCommand(IRCServer *serv)
     return false;
 }
 
-bool IRCUserCommand::ValidateArgs(/*serverclass */)
+bool IRCUserCommand::ValidateArgs(IRCServer *serv)
 {
     if (m_Args.size() < 4)
     {

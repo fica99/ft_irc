@@ -20,7 +20,7 @@ public:
     bool ProcessCommand(IRCServer *serv);
 
 private:
-    bool ValidateArgs(/*serverclass */);
+    bool ValidateArgs(IRCServer *serv);
 
 private:
     inline void SetQuitMessage(const std::string quitMessage) { m_QuitMessage = quitMessage; }

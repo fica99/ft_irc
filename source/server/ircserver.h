@@ -27,8 +27,8 @@ public:
     void recvFromClient();
 
 public:
-    bool setNickname(const std::string &nickname);
-    bool setPrefix(const std::string &prefix);
+    Enum_IRCResponses setNickname(const std::string &nickname);
+    Enum_IRCResponses setPrefix(const std::string &prefix);
     void sendMessage(const std::string &mes, int fd) const;
     std::string &get_topic() { return m_Topic; }
     Enum_IRCResponses joinCommand(std::string &channel_name);
@@ -41,6 +41,8 @@ public:
 private:
     int	sendError(int fd, int err, const std::vector<std::string> args);
     int	sendReply(int fd, int rpl, const std::vector<std::string> &args);
+public:
+    IRCClient *m_Curr;
 
 private:
     std::string m_Topic;
@@ -49,7 +51,6 @@ private:
     std::vector<struct pollfd> m_Userpfd;
     std::map<int, IRCClient> m_Clients;
     std::map<std::string, IRCChannel> m_Channels;
-    IRCClient *m_Curr;
     IRCCommandsManager m_CommandsManager;
 };
 
