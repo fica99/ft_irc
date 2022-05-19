@@ -87,6 +87,10 @@ Enum_IRCResponses IRCServer::privmsgCommand(std::string &msg, std::string &recei
     return Enum_IRCResponses_ERR_NORECIPIENT;
 }
 
+void IRCServer::noticeCommand(std::string &mes, std::string &reciever) {
+    privmsgCommand(mes, reciever);
+}
+
 IRCServer::IRCServer(uint16_t port)
 {
     memset(&m_Servaddr, 0, sizeof(m_Servaddr));

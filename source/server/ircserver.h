@@ -40,6 +40,7 @@ public:
     Enum_IRCResponses partCommand(std::string &channel);
     Enum_IRCResponses topicCommand(std::string &channel_name);
     Enum_IRCResponses privmsgCommand(std::string &msg, std::string &receiver);
+    void noticeCommand(std::string &mes, std::string &reciever);
 
 private:
     int	sendError(int fd, int err, const std::vector<std::string> args);
