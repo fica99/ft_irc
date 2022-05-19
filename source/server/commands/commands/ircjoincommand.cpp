@@ -30,14 +30,14 @@ void IRCJoinCommand::Shutdown(void)
 
 bool IRCJoinCommand::ProcessCommand(IRCServer *serv)
 {
-    if (ValidateArgs(/*serverclass */))
+    if (ValidateArgs(serv))
     {
         return true;
     }
     return false;
 }
 
-bool IRCJoinCommand::ValidateArgs(/*serverclass */)
+bool IRCJoinCommand::ValidateArgs(IRCServer *serv)
 {
     if (m_Args.empty())
     {

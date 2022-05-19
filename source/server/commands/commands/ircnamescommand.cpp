@@ -29,14 +29,14 @@ void IRCNamesCommand::Shutdown(void)
 
 bool IRCNamesCommand::ProcessCommand(IRCServer *serv)
 {
-    if (ValidateArgs(/*serverclass */))
+    if (ValidateArgs(serv))
     {
         return true;
     }
     return false;
 }
 
-bool IRCNamesCommand::ValidateArgs(/*serverclass */)
+bool IRCNamesCommand::ValidateArgs(IRCServer *serv)
 {
     if (!m_Args.empty())
     {

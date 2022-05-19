@@ -29,14 +29,14 @@ void IRCNoticeCommand::Shutdown(void)
 
 bool IRCNoticeCommand::ProcessCommand(IRCServer *serv)
 {
-    if (ValidateArgs(/*serverclass */))
+    if (ValidateArgs(serv))
     {
         return true;
     }
     return false;
 }
 
-bool IRCNoticeCommand::ValidateArgs(/*serverclass */)
+bool IRCNoticeCommand::ValidateArgs(IRCServer *serv)
 {
     if (m_Args.size() < 2)
     {

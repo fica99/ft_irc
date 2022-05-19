@@ -16,6 +16,7 @@
 #define CHANNEL_MAKE_PRIVATE 2
 
 typedef std::map<std::string, ircserv::IRCChannel>::iterator IRCChannelIter;
+typedef std::map<int, ircserv::IRCClient>::iterator IRCClientIter;
 typedef std::pair<IRCChannelIter, bool> IRCChannelPair;
 
 namespace ircserv
@@ -141,6 +142,7 @@ void IRCServer::acceptConn()
         pfd.events = POLLIN;
         m_Userpfd.push_back(pfd);
         m_Clients.insert(std::make_pair(userFd, cl));
+        IRC_LOGI("%s", "new user connected!");
     }
 }
 
@@ -177,11 +179,6 @@ void IRCServer::recvFromClient()
             }
             std::map<int, IRCClient>::iterator cl = m_Clients.find(m_Userpfd[i].fd);
             m_Curr = &((*cl).second);
-            if (!m_Curr->prefix.empty() || m_Curr->nickname.empty())
-            {
-                //std::vector<std::string> v(0);
-                //sendError(m_Userpfd[i].fd, ERR_NOTREGISTERED, v); //todo
-            }
             m_Curr->inbuf += buf;
             if (strchr(buf, '\n'))
             {
@@ -198,16 +195,24 @@ void IRCServer::sendMessage(const std::string &mes, int fd) const
     send(fd, mes.c_str(), mes.size(), 0);
 }
 
-bool IRCServer::setNickname(const std::string &nickname)
+Enum_IRCResponses IRCServer::setNickname(const std::string &nickname)
 {
+    for (IRCClientIter it = m_Clients.begin(); it != m_Clients.end(); it++) {
+        if (it->second.nickname == nickname) {
+            if (!m_Curr->nickname.empty())
+                return Enum_IRCResponses_ERR_NICKNAMEINUSE;
+            else
+                return Enum_IRCResponses_ERR_NICKCOLLISION;
+        }
+    }
     m_Curr->nickname = nickname;
-    return true;
+    return Enum_IRCResponses_Unknown;
 }
 
-bool IRCServer::setPrefix(const std::string &prefix)
+Enum_IRCResponses IRCServer::setPrefix(const std::string &prefix)
 {
     m_Curr->prefix = prefix;
-    return true;
+    return Enum_IRCResponses_Unknown;
 }
 
 

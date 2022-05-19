@@ -30,14 +30,14 @@ void IRCKickCommand::Shutdown(void)
 
 bool IRCKickCommand::ProcessCommand(IRCServer *serv)
 {
-    if (ValidateArgs(/*serverclass */))
+    if (ValidateArgs(serv))
     {
         return true;
     }
     return false;
 }
 
-bool IRCKickCommand::ValidateArgs(/*serverclass */)
+bool IRCKickCommand::ValidateArgs(IRCServer *serv)
 {
     if (m_Args.size() < 2)
     {
@@ -48,6 +48,7 @@ bool IRCKickCommand::ValidateArgs(/*serverclass */)
         {
             response->SetCommand(EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
         }
+        // server->send(response->GetResponse())
         // send response
         GetIRCResponsesFactory().DestroyResponse(response);
         return false;

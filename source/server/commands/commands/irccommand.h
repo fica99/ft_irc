@@ -23,7 +23,7 @@ public:
     virtual bool ProcessCommand(IRCServer *serv) = 0;
 
 private:
-    virtual bool ValidateArgs(/*serverclass */) = 0;
+    virtual bool ValidateArgs(IRCServer *serv) = 0;
 
 public:
     inline void SetPrefixNick(const std::string& nick) { m_PrefixNick = nick; }

@@ -20,7 +20,7 @@ public:
     bool ProcessCommand(IRCServer *serv);
 
 private:
-    bool ValidateArgs(/*serverclass */);
+    bool ValidateArgs(IRCServer *serv);
 
 private:
     inline void SetUser(const std::string& user) { m_User = user; }

@@ -31,7 +31,7 @@ void IRCOperCommand::Shutdown(void)
 
 bool IRCOperCommand::ProcessCommand(IRCServer *serv)
 {
-    if (ValidateArgs(/*serverclass */))
+    if (ValidateArgs(serv))
     {
         IRCResponseRPL_YOUREOPER* response = dynamic_cast<IRCResponseRPL_YOUREOPER*>(
             GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_RPL_YOUREOPER)
@@ -43,7 +43,7 @@ bool IRCOperCommand::ProcessCommand(IRCServer *serv)
     return false;
 }
 
-bool IRCOperCommand::ValidateArgs(/*serverclass */)
+bool IRCOperCommand::ValidateArgs(IRCServer *serv)
 {
     if (m_Args.size() < 2)
     {

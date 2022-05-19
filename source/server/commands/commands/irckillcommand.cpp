@@ -30,14 +30,14 @@ void IRCKillCommand::Shutdown(void)
 
 bool IRCKillCommand::ProcessCommand(IRCServer *serv)
 {
-    if (ValidateArgs(/*serverclass */))
+    if (ValidateArgs(serv))
     {
         return true;
     }
     return false;
 }
 
-bool IRCKillCommand::ValidateArgs(/*serverclass */)
+bool IRCKillCommand::ValidateArgs(IRCServer *serv)
 {
     if (m_Args.size() < 2)
     {
