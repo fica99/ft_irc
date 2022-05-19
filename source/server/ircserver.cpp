@@ -160,6 +160,7 @@ void IRCServer::recvFromClient()
     {
         if (m_Userpfd[i].revents == POLLIN)
         {
+            memset(buf, 0, strlen(buf));
             int read = recv(m_Userpfd[i].fd, buf, RECV_BUF, 0);
 
             buf[read] = 0;
