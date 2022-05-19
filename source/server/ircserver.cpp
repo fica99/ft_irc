@@ -141,6 +141,7 @@ void IRCServer::AcceptConn()
         fcntl(userFd, F_SETFL, O_NONBLOCK);
         pfd.fd = userFd;
         pfd.events = POLLIN;
+        cl.fd = userFd;
         m_Userpfd.push_back(pfd);
         m_Clients.insert(std::make_pair(userFd, cl));
         IRC_LOGI("%s", "new user connected!");
