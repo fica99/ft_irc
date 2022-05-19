@@ -158,10 +158,11 @@ void IRCServer::RecvFromClient()
     {
         perror("poll");
     }
-    while (ready--)
+    while (ready)
     {
         if (m_Userpfd[i].revents == POLLIN)
         {
+            ready--;
             //memset(buf, 0, strlen(buf));
             int rd = recv(m_Userpfd[i].fd, buf, RECV_BUF, 0);
             if (rd == -1) {
