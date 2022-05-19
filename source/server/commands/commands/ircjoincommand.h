@@ -25,7 +25,9 @@ private:
 
 private:
     inline void SetChannels(const std::vector<std::string>& channels) { m_Channels = channels; }
+    const std::vector<std::string>& GetChannels(void) const { return m_Channels; }
     inline void SetKeys(const std::vector<std::string>& keys) { m_Keys = keys; }
+    const std::vector<std::string>& GetKeys(void) const { return m_Keys; }
 
 private:
     std::vector<std::string> m_Channels;

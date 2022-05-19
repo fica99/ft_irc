@@ -32,13 +32,14 @@ public:
     Enum_IRCResponses userCommand(const std::string &prefix);
     void sendMessage(const std::string &mes, int fd) const;
     std::string &get_topic() { return m_Topic; }
-    Enum_IRCResponses joinCommand(std::string &channel_name);
+    Enum_IRCResponses joinCommand(const std::string &channel_name);
     Enum_IRCResponses modeCommand(int p, std::string &banned, std::string &channel_name);
     Enum_IRCResponses partCommand(std::string &channel);
     Enum_IRCResponses topicCommand(std::string &channel_name);
     Enum_IRCResponses privmsgCommand(std::string &msg, std::string &receiver);
     void sendResponse(std::string mes) const;
     void quitCommand();
+    std::string getTopic(const std::string &channel_name);
 
 private:
     int	sendError(int fd, int err, const std::vector<std::string> args);

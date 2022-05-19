@@ -9,7 +9,7 @@ namespace ircserv
 class IRCChannel
 {
 public:
-    IRCChannel(IRCClient &creator, std::string &name);
+    IRCChannel(IRCClient &creator, const std::string &name);
     
     std::string _name;
 
@@ -22,7 +22,9 @@ public:
     IRCClient& get_owner() { return owner; }
     void ban_user(std::string &nick) { banned.push_back(nick); };
     void send_all(std::string &mes);
-private: 
+    std::string getTopic() { return m_Topic; }
+private:
+    std::string m_Topic;
     IRCClient owner;
     std::list<IRCClient> users;
     std::list<IRCClient> ops;

@@ -23,7 +23,7 @@ namespace ircserv
 {
 
 
-Enum_IRCResponses IRCServer::joinCommand(std::string &channel_name) {
+Enum_IRCResponses IRCServer::joinCommand(const std::string &channel_name) {
     if (m_Channels.size() >= MAX_CHANNELS)
         return Enum_IRCResponses_ERR_TOOMANYCHANNELS;
     IRCChannel tmp(*m_Curr, channel_name);
@@ -33,6 +33,11 @@ Enum_IRCResponses IRCServer::joinCommand(std::string &channel_name) {
         return Enum_IRCResponses_ERR_INVITEONLYCHAN;
 
     return ch.add_user(*m_Curr);
+}
+
+std::string IRCServer::getTopic(const std::string &channel_name) {
+    IRCChannelIter it = m_Channels.find(channel_name);
+    return it->second.getTopic();
 }
 
 Enum_IRCResponses IRCServer::partCommand(std::string &channel) {

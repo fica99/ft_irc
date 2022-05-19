@@ -36,7 +36,7 @@ bool IRCNickCommand::ProcessCommand(IRCServer *serv)
 {
     if (ValidateArgs(serv))
     {
-        IRCResponse* response = GetIRCResponsesFactory().CreateResponse(serv->setNickname(m_Args[0]));
+        IRCResponse* response = GetIRCResponsesFactory().CreateResponse(serv->setNickname(GetNickname()));
 
         if (response)
         {
