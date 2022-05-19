@@ -27,7 +27,7 @@ Begin_Enum_String(Enum_IRCCommands)
 {
     Enum_String(Enum_IRCCommands_Pass, "PASS");
     Enum_String(Enum_IRCCommands_Nick, "NICK");
-    Enum_String(Enum_IRCCommands_Nick, "USER");
+    Enum_String(Enum_IRCCommands_User, "USER");
     Enum_String(Enum_IRCCommands_Oper, "OPER");
     Enum_String(Enum_IRCCommands_Quit, "QUIT");
     Enum_String(Enum_IRCCommands_Join, "JOIN");
