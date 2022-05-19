@@ -24,6 +24,7 @@ private:
 
 private:
     inline void SetNickname(const std::string& nickname) { m_Nickname = nickname; }
+    inline const std::string& GetNickname(void) const { return m_Nickname; }
 private:
     std::string m_Nickname;
 

@@ -9,7 +9,7 @@
 namespace ircserv
 {
 
-IRCChannel::IRCChannel(IRCClient &creator, std::string &name): fprivate(false), owner(creator), _name(name)  {}
+IRCChannel::IRCChannel(IRCClient &creator, const std::string &name): fprivate(false), owner(creator), _name(name)  {}
 
 
 Enum_IRCResponses IRCChannel::add_user(IRCClient &nick) {
