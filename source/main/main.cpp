@@ -2,10 +2,9 @@
 
 #include "programoptions/commandlineoptionschecker.h"
 #include "programoptions/commandlineoptions.h"
-#include "server/ircserver.h"
+#include "ircserver/ircserver.h"
 #include "utils/logs/irclogsinitializer.h"
-#include <signal.h>
-bool work = true;
+
 namespace ircserv
 {
 
@@ -13,23 +12,28 @@ static void Initialize(void)
 {
     IRCLogsInitializer::CreateSingleton();
     CommandLineOptions::CreateSingleton();
+    IRCServer::CreateSingleton();
 }
 
 static void Shutdown(void)
 {
+    IRCServer::DestroySingleton();
     CommandLineOptions::DestroySingleton();
     IRCLogsInitializer::DestroySingleton();
 }
 
 static void ServerLoop()
 {
-    IRCServer serv(GetCommandLineOptions().GetPort());
+    IRCServer& serv = GetIRCServer();
 
+    serv.SetPort(GetCommandLineOptions().GetPort());
+    serv.SetPassword(GetCommandLineOptions().GetPassword());
+    serv.SetIsRunning(true);
     IRC_LOGI("%s", "The server is running...");
-    while (work)
+    while (serv.GetIsRunning())
     {
-        serv.AcceptConn();
-        serv.RecvFromClient();
+        // serv.AcceptConn();
+        // serv.RecvFromClient();
     }
     IRC_LOGI("%s", "The server is stopped");
 }
@@ -41,8 +45,8 @@ static bool CheckCommandLineOptions(int argc, const char **argv)
     {
         checker.Check(argc, argv);
         
-        IRC_LOGI("Port: %d", GetCommandLineOptions().GetPort());
-        IRC_LOGI("Password: %s", GetCommandLineOptions().GetPassword().c_str());
+        IRC_LOGD("Port: %d", GetCommandLineOptions().GetPort());
+        IRC_LOGD("Password: %s", GetCommandLineOptions().GetPassword().c_str());
     }
     catch (const std::exception &x)
     {
@@ -55,16 +59,9 @@ static bool CheckCommandLineOptions(int argc, const char **argv)
 
 }
 
-void	sigHandler(int signum)
-{
-	(void)signum;
-	work = false;
-}
-
 int main(int argc, const char* argv[])
 {
     int exitStatus = EXIT_SUCCESS;
-    signal(SIGINT, &sigHandler);
     ircserv::Initialize();
 
     if (ircserv::CheckCommandLineOptions(argc, argv))
