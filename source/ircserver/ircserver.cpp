@@ -1,6 +1,8 @@
 #include "main/precomp.h"
 
 #include "ircserver/ircserver.h"
+#include "managers/ircclientsmanager.h"
+#include "managers/irccommandsmanager.h"
 
 #include <signal.h>
 #include <sys/types.h>
@@ -32,6 +34,8 @@ void IRCServer::Initialize(void)
     m_IsRunning = false;
     m_Port = 0;
     signal(SIGINT, &SigHandler);
+    IRCClientsManager::CreateSingleton();
+    IRCCommandsManager::CreateSingleton();
 }
 
 IRCServer::~IRCServer()
@@ -43,6 +47,8 @@ IRCServer::~IRCServer()
 
 void IRCServer::Shutdown(void)
 {
+    IRCCommandsManager::DestroySingleton();
+    IRCClientsManager::DestroySingleton();
     m_IsRunning = false;
     m_Port = 0;
 }
@@ -93,22 +99,14 @@ void IRCServer::AcceptNewConnection(void) const
     }
 
     fd = accept(m_ServerFd, (sockaddr *)&m_Servaddr, (socklen_t *)(&addrlen));
-    // if (fd == -1)
-    // {
-    //     IRC_LOGE("accept error: %s", strerror(errno));
-    //     return;
-    // }
     if (fd >= 0)
     {
         // struct pollfd pfd;
-        // IRCClient cl;
 
         // fcntl(userFd, F_SETFL, O_NONBLOCK);
         // pfd.fd = userFd;
-        // pfd.events = POLLIN;
-        // cl.fd = userFd;
-        // m_Userpfd.push_back(pfd);
-        // m_Clients.insert(std::make_pair(userFd, cl));
+        // pfd.events = POLLIN;;
+        GetIRCClientsManager().AddClient(fd);
         IRC_LOGI("%s", "New connection accepted");
     }
 }

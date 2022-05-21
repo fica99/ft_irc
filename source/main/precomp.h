@@ -15,7 +15,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
-// #include <map>
-// #include <list>
+#include <unordered_map>
+#include <list>
+#include <algorithm>
 
 #include "utils/logs/irclogs.h"
