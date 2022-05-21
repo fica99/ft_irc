@@ -82,6 +82,38 @@ void IRCServer::SetPassword_Callback(const std::string& password)
     }
 }
 
+void IRCServer::AcceptNewConnection(void) const
+{
+    int fd;
+    static size_t addrlen = sizeof(struct sockaddr_in);
+
+    if (GetIsRunning() == false)
+    {
+        return;
+    }
+
+    fd = accept(m_ServerFd, (sockaddr *)&m_Servaddr, (socklen_t *)(&addrlen));
+    // if (fd == -1)
+    // {
+    //     IRC_LOGE("accept error: %s", strerror(errno));
+    //     return;
+    // }
+    if (fd >= 0)
+    {
+        // struct pollfd pfd;
+        // IRCClient cl;
+
+        // fcntl(userFd, F_SETFL, O_NONBLOCK);
+        // pfd.fd = userFd;
+        // pfd.events = POLLIN;
+        // cl.fd = userFd;
+        // m_Userpfd.push_back(pfd);
+        // m_Clients.insert(std::make_pair(userFd, cl));
+        IRC_LOGI("%s", "New connection accepted");
+    }
+}
+
+
 bool IRCServer::BindServerFd(void)
 {
     static const int on = 1;

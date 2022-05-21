@@ -32,6 +32,9 @@ public:
     void SetPassword(const std::string& password) { SetPassword_Callback(password); }
     const std::string& GetPassword(void) const { return m_Password; }
 
+public:
+    void AcceptNewConnection(void) const;
+
 private:
     bool BindServerFd(void);
     bool CloseServerFd(void);
