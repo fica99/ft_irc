@@ -23,7 +23,7 @@ IRCServer::IRCServer()
 
 static void SigHandler(int sigNum)
 {
-    (void)sigNum;
+    IRC_LOGD("Received SIGINT(sigNum: %d), server is stopped", sigNum);
     GetIRCServer().SetIsRunning(false);
 }
 
@@ -53,13 +53,16 @@ void IRCServer::SetIsRunning_Callback(bool isRunning)
     {
         if (m_Port != 0)
         {
-            BindServerFd();
-            m_IsRunning = true;
+            if (BindServerFd() == true)
+            {
+                m_IsRunning = true;
+            }
         }
     }
     else
     {
         m_IsRunning = false;
+        CloseServerFd();
     }
 }
 
@@ -79,28 +82,59 @@ void IRCServer::SetPassword_Callback(const std::string& password)
     }
 }
 
-void IRCServer::BindServerFd(void)
+bool IRCServer::BindServerFd(void)
 {
     static const int on = 1;
 
     memset(&m_Servaddr, 0, sizeof(m_Servaddr));
     m_ServerFd = socket(AF_INET, SOCK_STREAM, 0);
+    if (m_ServerFd == -1)
+    {
+        IRC_LOGE("socket error: %s", strerror(errno));
+        return false;
+    }
+
     m_Servaddr.sin_family = AF_INET;
     m_Servaddr.sin_addr.s_addr = INADDR_ANY;
     m_Servaddr.sin_port = htons(m_Port);
 
-    fcntl(m_ServerFd, F_SETFL, O_NONBLOCK);
-    setsockopt(m_ServerFd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
-    if (bind(m_ServerFd, (struct sockaddr *)&m_Servaddr, sizeof(m_Servaddr)) < 0)
+    if (fcntl(m_ServerFd, F_SETFL, O_NONBLOCK) == -1)
     {
-        IRC_LOGE("Bind error: %s", strerror(errno));
+        IRC_LOGE("fcntl error: %s", strerror(errno));
+        return false;
     }
-    listen(m_ServerFd, LISTEN_QUEUE);
+    if (setsockopt(m_ServerFd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int)) == -1)
+    {
+        IRC_LOGE("setsockopt error: %s", strerror(errno));
+        return false;
+    }
+    if (bind(m_ServerFd, (struct sockaddr *)&m_Servaddr, sizeof(m_Servaddr)) == -1)
+    {
+        IRC_LOGE("bind error: %s", strerror(errno));
+        return false;
+    }
+    if (listen(m_ServerFd, LISTEN_QUEUE) != 0)
+    {
+        IRC_LOGE("listen error: %s", strerror(errno));
+        return false;
+    }
+
+    IRC_LOGD("Server socket created, binded and listens! FD: %d", m_ServerFd);
+    return true;
 }
 
-void IRCServer::CloseServerFd(void)
+bool IRCServer::CloseServerFd(void)
 {
-    close(m_ServerFd);
+    if (close(m_ServerFd) == 0)
+    {
+        IRC_LOGD("Server is closed! FD: %d", m_ServerFd);
+    }
+    else
+    {
+        IRC_LOGE("close error: %s", m_ServerFd, strerror(errno));
+        return false;
+    }
+    return true;
 }
 
 }

@@ -2,9 +2,9 @@
 
 #include "programoptions/commandlineoptionschecker.h"
 
-#include "programoptions/commandlineoptions.h"
 #include "programoptions/commandlineoptionpasswordparams.h"
 #include "programoptions/commandlineoptionportparams.h"
+#include "programoptions/commandlineoptions.h"
 #include "utils/memory.h"
 
 namespace ircserv
@@ -75,7 +75,6 @@ void CommandLineOptionsChecker::Check(int argc, const char *argv[])
     {
         ParamsCallback& paramsCallback = m_ParamsCallbacks[i - 1];
         CommandLineOptionParams* params = paramsCallback.first;
-
 
         if (params && params->IsValid(argv[i]))
         {

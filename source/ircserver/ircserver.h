@@ -33,8 +33,8 @@ public:
     const std::string& GetPassword(void) const { return m_Password; }
 
 private:
-    void BindServerFd(void);
-    void CloseServerFd(void);
+    bool BindServerFd(void);
+    bool CloseServerFd(void);
 
 private:
     bool m_IsRunning;
