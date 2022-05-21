@@ -8,7 +8,7 @@ namespace ircserv
 class CommandLineOptionParams
 {
 public:
-    CommandLineOptionParams(const std::string& valueName = "");
+    CommandLineOptionParams(const std::string& valueName);
     virtual ~CommandLineOptionParams();
 private:
     void Initialize(void);

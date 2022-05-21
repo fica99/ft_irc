@@ -29,7 +29,11 @@ static void ServerLoop()
     serv.SetPort(GetCommandLineOptions().GetPort());
     serv.SetPassword(GetCommandLineOptions().GetPassword());
     serv.SetIsRunning(true);
-    IRC_LOGI("%s", "The server is running...");
+    if (!serv.GetIsRunning())
+    {
+        return;
+    }
+    IRC_LOGI("The server is running on port %d...", GetCommandLineOptions().GetPort());
     while (serv.GetIsRunning())
     {
         // serv.AcceptConn();
@@ -45,8 +49,8 @@ static bool CheckCommandLineOptions(int argc, const char **argv)
     {
         checker.Check(argc, argv);
         
-        IRC_LOGD("Port: %d", GetCommandLineOptions().GetPort());
-        IRC_LOGD("Password: %s", GetCommandLineOptions().GetPassword().c_str());
+        IRC_LOGD("Commandline option - port: %d", GetCommandLineOptions().GetPort());
+        IRC_LOGD("Commandline option - password: %s", GetCommandLineOptions().GetPassword().c_str());
     }
     catch (const std::exception &x)
     {
