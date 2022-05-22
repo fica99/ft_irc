@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <string>
 
+#include "ircserver/ircsocket.h"
 #include "utils/singleton.h"
 
 namespace ircserv
@@ -37,15 +38,13 @@ public:
 
 private:
     bool StartServer(void);
-    bool StopServer(void);
+    void StopServer(void);
 
 private:
     bool m_IsRunning;
     uint16_t m_Port;
     std::string m_Password;
-
-private:
-    int m_ListenSockFd;
+    IRCSocket m_ListenSocket;
 };
 
 #define GetIRCServer() IRCServer::GetInstance()

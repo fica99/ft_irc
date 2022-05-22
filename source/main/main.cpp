@@ -33,10 +33,10 @@ static void ServerLoop()
     {
         return;
     }
-    IRC_LOGI("The server is waiting for connections on port %d...", GetCommandLineOptions().GetPort());
+    IRC_LOGI("%s", "The server is waiting for connections...");
     while (serv.GetIsRunning())
     {
-        serv.AcceptNewConnection();
+        // serv.AcceptNewConnection();
     }
     IRC_LOGI("%s", "The server is stopped");
 }

@@ -213,6 +213,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponserpl_youreoper.o \
 	$(OBJDIR)/ircresponsesfactory.o \
 	$(OBJDIR)/ircserver.o \
+	$(OBJDIR)/ircsocket.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/precomp.o \
 	$(OBJDIR)/ircclientsmanager.o \
@@ -449,6 +450,9 @@ $(OBJDIR)/ircresponsesfactory.o: source/ircresponses/ircresponsesfactory.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircserver.o: source/ircserver/ircserver.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircsocket.o: source/ircserver/ircsocket.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: source/main/main.cpp
