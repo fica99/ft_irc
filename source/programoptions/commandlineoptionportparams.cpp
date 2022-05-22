@@ -7,8 +7,8 @@ namespace ircserv
 
 CommandLineOptionPortParams::CommandLineOptionPortParams()
     : CommandLineOptionParams("port")
-    , MIN_PORT(std::numeric_limits<unsigned short int>::min())
-    , MAX_PORT(std::numeric_limits<unsigned short int>::max())
+    , MIN_PORT(std::numeric_limits<uint16_t>::min())
+    , MAX_PORT(std::numeric_limits<uint16_t>::max())
 {
     Initialize();
 }
