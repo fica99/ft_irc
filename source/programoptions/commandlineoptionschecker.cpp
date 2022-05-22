@@ -15,7 +15,7 @@ std::string CommandLineOptionsChecker::m_Usage;
 static void CommandLineCallback_Port(const char *arg)
 {
     std::istringstream ss(arg);
-    unsigned short int port;
+    uint16_t port;
 
     ss >> port;
     GetCommandLineOptions().SetPort(port);

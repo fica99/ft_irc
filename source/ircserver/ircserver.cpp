@@ -4,10 +4,10 @@
 #include "managers/ircclientsmanager.h"
 #include "managers/irccommandsmanager.h"
 
-#include <signal.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <fcntl.h>
+#include <netdb.h>
+#include <signal.h>
 
 #define LISTEN_QUEUE 128
 
@@ -33,9 +33,9 @@ void IRCServer::Initialize(void)
 {
     m_IsRunning = false;
     m_Port = 0;
-    signal(SIGINT, &SigHandler);
     IRCClientsManager::CreateSingleton();
     IRCCommandsManager::CreateSingleton();
+    signal(SIGINT, &SigHandler);
 }
 
 IRCServer::~IRCServer()
@@ -47,28 +47,32 @@ IRCServer::~IRCServer()
 
 void IRCServer::Shutdown(void)
 {
+    SetIsRunning(false);
     IRCCommandsManager::DestroySingleton();
     IRCClientsManager::DestroySingleton();
     m_IsRunning = false;
     m_Port = 0;
+    m_Password.clear();
 }
 
 void IRCServer::SetIsRunning_Callback(bool isRunning)
 {
+    if (isRunning == m_IsRunning)
+    {
+        return;
+    }
+
     if (isRunning == true)
     {
-        if (m_Port != 0)
+        if (StartServer() == true)
         {
-            if (BindServerFd() == true)
-            {
-                m_IsRunning = true;
-            }
+            m_IsRunning = true;
         }
     }
     else
     {
         m_IsRunning = false;
-        CloseServerFd();
+        StopServer();
     }
 }
 
@@ -78,6 +82,10 @@ void IRCServer::SetPort_Callback(unsigned short int port)
     {
         m_Port = port;
     }
+    else
+    {
+        IRC_LOGD("%s", "Cannot change port while server running. Please, stop server");
+    }
 }
 
 void IRCServer::SetPassword_Callback(const std::string& password)
@@ -86,82 +94,105 @@ void IRCServer::SetPassword_Callback(const std::string& password)
     {
         m_Password = password;
     }
+    else
+    {
+        IRC_LOGD("%s", "Cannot change password while server running. Please, stop server");
+    }
 }
 
 void IRCServer::AcceptNewConnection(void) const
 {
     int fd;
-    static size_t addrlen = sizeof(struct sockaddr_in);
+    struct sockaddr_storage theirAddr;
+    socklen_t sinSize = sizeof(theirAddr);
 
     if (GetIsRunning() == false)
     {
         return;
     }
 
-    fd = accept(m_ServerFd, (sockaddr *)&m_Servaddr, (socklen_t *)(&addrlen));
-    if (fd >= 0)
+    fd = accept(m_ListenSockFd, (struct sockaddr *)&theirAddr, &sinSize);
+    if (fd == -1)
     {
-        // struct pollfd pfd;
-
-        // fcntl(userFd, F_SETFL, O_NONBLOCK);
-        // pfd.fd = userFd;
-        // pfd.events = POLLIN;;
-        GetIRCClientsManager().AddClient(fd);
-        IRC_LOGI("%s", "New connection accepted");
+        IRC_LOGD("accept error: %s", strerror(errno));
+        return;
     }
+
+    GetIRCClientsManager().AddClient(fd);
+    IRC_LOGI("%s", "New connection accepted");
 }
 
-
-bool IRCServer::BindServerFd(void)
+bool IRCServer::StartServer(void)
 {
-    static const int on = 1;
+    struct addrinfo hints, *servinfo, *p;
+    int rv;
+    int yes = 1;
+    int sockfd;
+    std::string port;
+    std::stringstream out;
 
-    memset(&m_Servaddr, 0, sizeof(m_Servaddr));
-    m_ServerFd = socket(AF_INET, SOCK_STREAM, 0);
-    if (m_ServerFd == -1)
+    out << m_Port;
+    port = out.str();
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;
+    if ((rv = getaddrinfo(NULL, port.c_str(), &hints, &servinfo)) != 0)
     {
-        IRC_LOGE("socket error: %s", strerror(errno));
+        IRC_LOGE("getaddrinfo error: %s", gai_strerror(rv));
         return false;
     }
 
-    m_Servaddr.sin_family = AF_INET;
-    m_Servaddr.sin_addr.s_addr = INADDR_ANY;
-    m_Servaddr.sin_port = htons(m_Port);
+    for (p = servinfo; p != NULL; p = p->ai_next)
+    {
+        if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
+        {
+            IRC_LOGE("socket error: %s", strerror(errno));
+            continue;
+        }
+        if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
+        {
+            IRC_LOGE("setsockopt error: %s", strerror(errno));
+            return false;
+        }
+        if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1)
+        {
+            close(sockfd);
+            IRC_LOGE("bind error: %s", strerror(errno));
+            continue;
+        }
+        break;
+    }
+    if (p == NULL)
+    {
+        IRC_LOGE("server: %s", "failed to bind");
+        return false;
+    }
 
-    if (fcntl(m_ServerFd, F_SETFL, O_NONBLOCK) == -1)
-    {
-        IRC_LOGE("fcntl error: %s", strerror(errno));
-        return false;
-    }
-    if (setsockopt(m_ServerFd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int)) == -1)
-    {
-        IRC_LOGE("setsockopt error: %s", strerror(errno));
-        return false;
-    }
-    if (bind(m_ServerFd, (struct sockaddr *)&m_Servaddr, sizeof(m_Servaddr)) == -1)
-    {
-        IRC_LOGE("bind error: %s", strerror(errno));
-        return false;
-    }
-    if (listen(m_ServerFd, LISTEN_QUEUE) != 0)
+    m_ListenSockFd = sockfd;
+
+    freeaddrinfo(servinfo);
+
+    if (listen(m_ListenSockFd, LISTEN_QUEUE) != 0)
     {
         IRC_LOGE("listen error: %s", strerror(errno));
         return false;
     }
 
-    IRC_LOGD("Server socket created, binded and listens! FD: %d", m_ServerFd);
+    IRC_LOGD("Server socket created, binded and listens! FD: %d", m_ListenSockFd);
     return true;
 }
 
-bool IRCServer::CloseServerFd(void)
+bool IRCServer::StopServer(void)
 {
-    if (close(m_ServerFd) == 0)
+    if (close(m_ListenSockFd) == 0)
     {
-        IRC_LOGD("Server is closed! FD: %d", m_ServerFd);
+        IRC_LOGD("Listen FD is closed! FD: %d", m_ListenSockFd);
     }
     else
     {
-        IRC_LOGE("close error: %s", m_ServerFd, strerror(errno));
+        IRC_LOGE("close listen FD error: %s! FD: %d", strerror(errno), m_ListenSockFd);
         return false;
     }
     return true;
