@@ -13,18 +13,14 @@ IRCSocket::IRCSocket()
     Initialize();
 }
 
-IRCSocket::IRCSocket(uint16_t port, const std::string address, int sockFd)
+IRCSocket::IRCSocket(int sockFd)
 {
-    Initialize();
-    SetPort(port);
-    SetAddress(address);
     SetSockFd(sockFd);
     SetIsSockOpened(true);
 }
 
 void IRCSocket::Initialize(void)
 {
-    SetSockFd(-1);
     SetIsSockOpened(false);
 }
 
@@ -43,45 +39,37 @@ void IRCSocket::Shutdown(void)
 
 bool IRCSocket::CreateListenSocket(uint16_t port)
 {
-    if (m_IsSockOpened == true)
+    std::string portStr = std::to_string(port);
+    struct addrinfo *servInfo, *p;
+
+    if (GetIsSockOpened() == true)
     {
-        IRC_LOGD("Socket is already opened, please, close it before opening one more time. FD: %d", GetSockFd());
+        IRC_LOGD("%s", "Socket is already opened");
         return false;
     }
 
-    struct addrinfo *servInfo, *p;
-    int optVal = 1;
-    int sockFd;
-    std::string portStr;
-    std::stringstream out;
-
-    out << port;
-    portStr = out.str();
-
-    memset(&m_AddressInfo, 0, sizeof(m_AddressInfo));
-    m_AddressInfo.ai_family = AF_UNSPEC;
-    m_AddressInfo.ai_socktype = SOCK_STREAM;
-    m_AddressInfo.ai_flags = AI_PASSIVE;
-
-    if (Getaddrinfo(portStr.c_str(), &servInfo))
+    if (Getaddrinfo(portStr.c_str(), &servInfo) != 0)
     {
         return false;
     }
 
     for (p = servInfo; p != NULL; p = p->ai_next)
     {
-        if ((sockFd = Socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
+        int sockFd = Socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+        if (sockFd == -1)
         {
             continue;
         }
+
         SetSockFd(sockFd);
-        SetIsSockOpened(true);
-        if (Setsockopt(SOL_SOCKET, SO_REUSEADDR, &optVal) == -1)
+
+        if (Setsockopt(SOL_SOCKET, SO_REUSEADDR) == -1)
         {
             CloseSocket();
-            freeaddrinfo(servInfo);
+            Freeaddrinfo(servInfo);
             return false;
         }
+
         if (Bind(p->ai_addr, p->ai_addrlen) == -1)
         {
             CloseSocket();
@@ -92,12 +80,12 @@ bool IRCSocket::CreateListenSocket(uint16_t port)
 
     if (p == NULL)
     {
-        IRC_LOGE("server: %s", "failed to create socket, set socket options or bind ");
-        freeaddrinfo(servInfo);
+        IRC_LOGE("server: %s", "failed to create socket");
+        Freeaddrinfo(servInfo);
         return false;
     }
 
-    freeaddrinfo(servInfo);
+    Freeaddrinfo(servInfo);
 
     if (listen(GetSockFd(), LISTEN_QUEUE) != 0)
     {
@@ -106,7 +94,6 @@ bool IRCSocket::CreateListenSocket(uint16_t port)
         return false;
     }
 
-    IRC_LOGD("Server socket created, binded and listens! FD: %d", GetSockFd());
     return true;
 }
 
@@ -118,86 +105,86 @@ void IRCSocket::CloseSocket(void)
 
 IRCSocket *IRCSocket::Accept(void)
 {
-    struct sockaddr_storage conAddrInfo;
-    static socklen_t addrSize = sizeof(conAddrInfo);
-    char host[NI_MAXHOST];
-    IRCSocket *conSocket = NULL;
+    struct sockaddr_storage acceptAddrInfo;
+    static socklen_t addrInfoSize = sizeof(acceptAddrInfo);
+    IRCSocket *acceptedSocket = NULL;
 
-    int conSockFd = accept(GetSockFd(), (struct sockaddr *)&conAddrInfo, &addrSize);
-    if (conSockFd < 0)
+    int acceptedSockFd = accept(GetSockFd(), (struct sockaddr *)&acceptAddrInfo, &addrInfoSize);
+    if (acceptedSockFd < 0)
     {
         IRC_LOGE("accept error: %s", strerror(errno));
         return NULL;
     }
-    
-    int status = getnameinfo((struct sockaddr *)&conAddrInfo, addrSize, host, sizeof(host), NULL, 0, NI_NUMERICHOST);
-    if (status < 0)
-    {
-        IRC_LOGE("getnameinfo error: %s", gai_strerror(errno));
-    }
-    else
-    {
-        conSocket = new IRCSocket(GetPort(), host, conSockFd);
-    }
-    return conSocket;
+    return New(IRCSocket)(acceptedSockFd);
 }
 
-int IRCSocket::Select(std::vector<IRCSocket*>& reads, int delaySec)
+static void ProccessSelectedSockets(fd_set& fdSet, std::vector<IRCSocket*>& sockets)
 {
-    if (reads.empty())
+    for (std::vector<IRCSocket*>::iterator it = sockets.begin(); it != sockets.end(); )
     {
-        return -1;
-    }
-
-    int listenSock = reads[0]->GetSockFd();
-    struct timeval tv;
-    fd_set readFds;
-
-    tv.tv_sec = delaySec;
-    tv.tv_usec = 0;
-    
-    FD_ZERO(&readFds);
-
-    int maxSock = 0;
-    for (size_t i = 0; i < reads.size(); ++i)
-    {
-        if (reads[i]->GetSockFd() > maxSock)
+        if (FD_ISSET((*it)->GetSockFd(), &fdSet) == false)
         {
-            maxSock = reads[i]->GetSockFd();
+            it = sockets.erase(it);
         }
-        FD_SET(reads[i]->GetSockFd(), &readFds);
-    }
-
-    int result = select(maxSock + 1, &readFds, NULL, NULL, &tv);
-    
-    if (result < 0)
-    {
-        IRC_LOGE("select error: %s", strerror(errno));
-    }
-    else if (result > 0)
-    {
-        for (std::vector<IRCSocket*>::iterator it = reads.begin(); it != reads.end(); )
+        else
         {
-            if (FD_ISSET((*it)->GetSockFd(), &readFds) == false)
-            {
-                it = reads.erase(it);
-            }
-            else
-            {
-                ++it;
-            }
+            ++it;
+        }
+    }
+}
+
+static int FillFdSet(fd_set& fdSet, const std::vector<IRCSocket*>& sockets)
+{
+    int fdMax = 0;
+
+    FD_ZERO(&fdSet);
+    for (size_t i = 0; i < sockets.size(); ++i)
+    {
+        int sockFd = sockets[i]->GetSockFd();
+        fdMax = std::max(fdMax, sockFd);
+        FD_SET(sockFd, &fdSet);
+    }
+    return fdMax;
+}
+
+int IRCSocket::Select(std::vector<IRCSocket*>& sockets, int delaySec)
+{
+    int result = 0;
+
+    if (!sockets.empty())
+    {
+        fd_set fdSet;
+        int fdMax = FillFdSet(fdSet, sockets);
+        struct timeval tv;
+
+        tv.tv_sec = delaySec;
+        tv.tv_usec = 0;
+
+        result = select(fdMax + 1, &fdSet, NULL, NULL, &tv);
+        if (result < 0)
+        {
+            IRC_LOGE("select error: %s", strerror(errno));
+        }
+        else if (result > 0)
+        {
+            ProccessSelectedSockets(fdSet, sockets);
         }
     }
 
     return result;
 }
 
-
 int IRCSocket::Getaddrinfo(const char *port, struct addrinfo** servInfo)
 {
+    struct addrinfo addressInfo;
     int status;
 
-    if ((status = getaddrinfo(NULL, port, &m_AddressInfo, servInfo)) != 0)
+    memset(&addressInfo, 0, sizeof(addressInfo));
+    addressInfo.ai_family = AF_UNSPEC;
+    addressInfo.ai_socktype = SOCK_STREAM;
+    addressInfo.ai_flags = AI_PASSIVE;
+
+    if ((status = getaddrinfo(NULL, port, &addressInfo, servInfo)) != 0)
     {
         IRC_LOGE("getaddrinfo error: %s", gai_strerror(status));
     }
@@ -215,6 +202,7 @@ void IRCSocket::Freeaddrinfo(struct addrinfo* servInfo)
 int IRCSocket::Socket(int domain, int type, int protocol)
 {
     int status;
+
     status = socket(domain, type, protocol);
     if (status < 0)
     {
@@ -223,10 +211,12 @@ int IRCSocket::Socket(int domain, int type, int protocol)
     return status;
 }
 
-int IRCSocket::Setsockopt(int level, int optname, void* optval)
+int IRCSocket::Setsockopt(int level, int optname)
 {
-    unsigned int len = sizeof(optval);
-    int status = setsockopt(GetSockFd(), level, optname, optval, len);
+    static int optVal = 1;
+    static unsigned int len = sizeof(optVal);
+ 
+    int status = setsockopt(GetSockFd(), level, optname, &optVal, len);
     if (status < 0)
     {
         IRC_LOGE("setsockopt error: %s", strerror(errno));
@@ -245,5 +235,16 @@ int IRCSocket::Bind(const struct sockaddr *address, socklen_t addressLen)
     }
     return status;
 }
+
+void IRCSocket::SetSockFd_Callback(int sockFd)
+{
+    if (GetIsSockOpened() == true)
+    {
+        CloseSocket();
+    }
+    m_SockFd = sockFd;
+    SetIsSockOpened(true);
+}
+
 
 }

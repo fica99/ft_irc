@@ -28,9 +28,7 @@ static void ServerLoop()
 
     serv.SetPort(GetCommandLineOptions().GetPort());
     serv.SetPassword(GetCommandLineOptions().GetPassword());
-    IRC_LOGI("%s", "The server is starting");
     serv.Start();
-    IRC_LOGI("%s", "The server is stopped");
 }
 
 static bool CheckCommandLineOptions(int argc, const char **argv)
