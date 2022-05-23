@@ -1,15 +1,8 @@
 #include "main/precomp.h"
 
 #include "ircserver/ircserver.h"
-#include "managers/ircclientsmanager.h"
-#include "managers/irccommandsmanager.h"
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
 #include <signal.h>
-
-#define LISTEN_QUEUE 128
 
 namespace ircserv
 {
@@ -26,15 +19,13 @@ IRCServer::IRCServer()
 static void SigHandler(int sigNum)
 {
     IRC_LOGD("Received SIGINT(sigNum: %d), server is stopped", sigNum);
-    GetIRCServer().SetIsRunning(false);
+    GetIRCServer().Stop();
 }
 
 void IRCServer::Initialize(void)
 {
     m_IsRunning = false;
     m_Port = 0;
-    IRCClientsManager::CreateSingleton();
-    IRCCommandsManager::CreateSingleton();
     signal(SIGINT, &SigHandler);
 }
 
@@ -47,32 +38,77 @@ IRCServer::~IRCServer()
 
 void IRCServer::Shutdown(void)
 {
-    SetIsRunning(false);
-    IRCCommandsManager::DestroySingleton();
-    IRCClientsManager::DestroySingleton();
-    m_IsRunning = false;
-    m_Port = 0;
-    m_Password.clear();
+    if (GetIsRunning())
+    {
+        Stop();
+    }
 }
 
-void IRCServer::SetIsRunning_Callback(bool isRunning)
+void IRCServer::Start(void)
 {
-    if (isRunning == m_IsRunning)
+    if (GetIsRunning() == true)
     {
         return;
     }
-
-    if (isRunning == true)
+    if (m_ListenSocket.CreateListenSocket(GetPort()) == true)
     {
-        if (StartServer() == true)
-        {
-            m_IsRunning = true;
-        }
+        SetIsRunning(true);
+        ServerLoop();
     }
-    else
+
+}
+
+void IRCServer::Stop(void)
+{
+    if (GetIsRunning() == false)
     {
-        m_IsRunning = false;
-        StopServer();
+        return;
+    }
+    SetIsRunning(false);
+    m_ListenSocket.CloseSocket();
+    for (size_t i = 0; i < m_ConnectionSockets.size(); ++i)
+    {
+        m_ConnectionSockets[i]->CloseSocket();
+        delete m_ConnectionSockets[i];
+    }
+    m_ConnectionSockets.clear();
+}
+
+void IRCServer::ServerLoop(void)
+{
+    IRCSocket *connection;
+
+    IRC_LOGI("%s", "The server is ready and waiting for connections...");
+    while (GetIsRunning())
+    {
+        std::vector<IRCSocket*> reads;
+
+        reads.push_back(&m_ListenSocket);
+        reads.insert(reads.begin() + 1, m_ConnectionSockets.begin(), m_ConnectionSockets.end());
+
+        if (IRCSocket::Select(reads, 0) < 1)
+        {
+            continue;
+        }
+
+        IRC_LOGD("%d socket descriptors changed", reads.size());
+
+        for (size_t i = 0; i < reads.size(); ++i)
+        {
+            if (reads[i] == &m_ListenSocket)
+            {
+                connection = m_ListenSocket.Accept();
+                if (connection != NULL)
+                {
+                    IRC_LOGI("New connection. Address: %s", connection->GetAddress().c_str());
+                    m_ConnectionSockets.push_back(connection);
+                }
+            }
+            else
+            {
+                IRC_LOGI("%s", "test");
+            }
+        }
     }
 }
 
@@ -84,7 +120,7 @@ void IRCServer::SetPort_Callback(unsigned short int port)
     }
     else
     {
-        IRC_LOGD("%s", "Cannot change port while server running. Please, stop server");
+        IRC_LOGD("%s", "Cannot change port while server is running. Please, stop server");
     }
 }
 
@@ -98,38 +134,6 @@ void IRCServer::SetPassword_Callback(const std::string& password)
     {
         IRC_LOGD("%s", "Cannot change password while server running. Please, stop server");
     }
-}
-
-void IRCServer::AcceptNewConnection(void) const
-{
-    // int fd;
-    // struct sockaddr_storage theirAddr;
-    // socklen_t sinSize = sizeof(theirAddr);
-
-    // if (GetIsRunning() == false)
-    // {
-    //     return;
-    // }
-
-    // fd = accept(m_ListenSockFd, (struct sockaddr *)&theirAddr, &sinSize);
-    // if (fd == -1)
-    // {
-    //     IRC_LOGD("accept error: %s", strerror(errno));
-    //     return;
-    // }
-
-    // GetIRCClientsManager().AddClient(fd);
-    // IRC_LOGI("%s", "New connection accepted");
-}
-
-bool IRCServer::StartServer(void)
-{
-    return m_ListenSocket.CreateListenSocket(m_Port);
-}
-
-void IRCServer::StopServer(void)
-{
-    m_ListenSocket.CloseSocket();
 }
 
 }

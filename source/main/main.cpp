@@ -28,16 +28,8 @@ static void ServerLoop()
 
     serv.SetPort(GetCommandLineOptions().GetPort());
     serv.SetPassword(GetCommandLineOptions().GetPassword());
-    serv.SetIsRunning(true);
-    if (!serv.GetIsRunning())
-    {
-        return;
-    }
-    IRC_LOGI("%s", "The server is waiting for connections...");
-    while (serv.GetIsRunning())
-    {
-        // serv.AcceptNewConnection();
-    }
+    IRC_LOGI("%s", "The server is starting");
+    serv.Start();
     IRC_LOGI("%s", "The server is stopped");
 }
 
