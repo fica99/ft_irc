@@ -26,6 +26,7 @@ public:
 
 private:
     void GetAllSockets(std::vector<IRCSocket*>& sockets);
+    std::string ReceiveMsg(IRCSocket *socket);
     void ProcessSelectedSockets(const std::vector<IRCSocket*>& sockets);
     void ServerLoop(void);
 

@@ -24,6 +24,8 @@ public:
     bool CreateListenSocket(uint16_t port);
     void CloseSocket(void);
     IRCSocket *Accept(void);
+    int Send(const std::string& msg);
+    int Recv(std::string& msg);
 
 public:
     static int Select(std::vector<IRCSocket*>& sockets, int delaySec);
@@ -41,10 +43,11 @@ public:
 
 private:
     void SetSockFd_Callback(int sockFd);
+    void SetIsSockOpened_Callback(bool isSockOpened);
 
 private:
     inline void SetSockFd(int sockFd) { SetSockFd_Callback(sockFd); }
-    inline void SetIsSockOpened(bool isSockOpened) { m_IsSockOpened = isSockOpened; }
+    inline void SetIsSockOpened(bool isSockOpened) { SetIsSockOpened_Callback(isSockOpened); }
 
 private:
     bool m_IsSockOpened;
