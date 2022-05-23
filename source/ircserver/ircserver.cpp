@@ -1,6 +1,7 @@
 #include "main/precomp.h"
 
 #include "ircserver/ircserver.h"
+#include "utils/memory.h"
 
 #include <signal.h>
 
@@ -18,7 +19,7 @@ IRCServer::IRCServer()
 
 static void SigHandler(int sigNum)
 {
-    IRC_LOGD("Received SIGINT(sigNum: %d), server is stopped", sigNum);
+    IRC_LOGD("Received signal! Signal number: %d", sigNum);
     GetIRCServer().Stop();
 }
 
@@ -65,51 +66,79 @@ void IRCServer::Stop(void)
         return;
     }
     SetIsRunning(false);
-    m_ListenSocket.CloseSocket();
-    for (size_t i = 0; i < m_ConnectionSockets.size(); ++i)
+    for (size_t i = 0; i < m_AcceptedSockets.size(); ++i)
     {
-        m_ConnectionSockets[i]->CloseSocket();
-        delete m_ConnectionSockets[i];
+        m_AcceptedSockets[i]->CloseSocket();
+        Delete(m_AcceptedSockets[i]);
     }
-    m_ConnectionSockets.clear();
+    m_AcceptedSockets.clear();
+    m_ListenSocket.CloseSocket();
 }
 
-void IRCServer::ServerLoop(void)
+void IRCServer::GetAllSockets(std::vector<IRCSocket*>& sockets)
+{
+    sockets.push_back(&m_ListenSocket);
+    sockets.insert(sockets.begin() + 1, m_AcceptedSockets.begin(), m_AcceptedSockets.end());
+}
+
+void IRCServer::ProcessSelectedSockets(const std::vector<IRCSocket*>& sockets)
 {
     IRCSocket *connection;
 
-    IRC_LOGI("%s", "The server is ready and waiting for connections...");
-    while (GetIsRunning())
+    for (size_t i = 0; i < sockets.size(); ++i)
     {
-        std::vector<IRCSocket*> reads;
-
-        reads.push_back(&m_ListenSocket);
-        reads.insert(reads.begin() + 1, m_ConnectionSockets.begin(), m_ConnectionSockets.end());
-
-        if (IRCSocket::Select(reads, 0) < 1)
+        if (sockets[i] == &m_ListenSocket)
         {
-            continue;
+            connection = m_ListenSocket.Accept();
+            if (connection != NULL)
+            {
+                IRC_LOGI("%s", "New connection accepted");
+                m_AcceptedSockets.push_back(connection);
+            }
         }
-
-        IRC_LOGD("%d socket descriptors changed", reads.size());
-
-        for (size_t i = 0; i < reads.size(); ++i)
+        else
         {
-            if (reads[i] == &m_ListenSocket)
-            {
-                connection = m_ListenSocket.Accept();
-                if (connection != NULL)
-                {
-                    IRC_LOGI("New connection. Address: %s", connection->GetAddress().c_str());
-                    m_ConnectionSockets.push_back(connection);
-                }
-            }
-            else
-            {
-                IRC_LOGI("%s", "test");
-            }
+            
         }
     }
+}
+
+
+void IRCServer::ServerLoop(void)
+{
+    std::vector<IRCSocket*> sockets;
+    int socketsSelected;
+
+    IRC_LOGI("%s", "The server is waiting for connections...");
+    while (GetIsRunning())
+    {
+        GetAllSockets(sockets);
+        socketsSelected = IRCSocket::Select(sockets, 0);
+        if (socketsSelected > 0)
+        {
+            IRC_LOGD("%d sockets selected", socketsSelected);
+            ProcessSelectedSockets(sockets);
+        }
+        sockets.clear();
+    }
+}
+
+void IRCServer::SetIsRunning_Callback(bool isRunning)
+{
+    if (m_IsRunning == isRunning)
+    {
+        return;
+    }
+
+    if (isRunning == true)
+    {
+        IRC_LOGI("%s", "Server is started");
+    }
+    else
+    {
+        IRC_LOGI("%s", "Server is stopped");
+    }
+    m_IsRunning = isRunning;
 }
 
 void IRCServer::SetPort_Callback(unsigned short int port)
