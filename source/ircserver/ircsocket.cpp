@@ -4,6 +4,7 @@
 #include "utils/memory.h"
 
 #define LISTEN_QUEUE 128
+#define RECV_BUF 512
 
 namespace ircserv
 {
@@ -117,6 +118,46 @@ IRCSocket *IRCSocket::Accept(void)
     }
     return New(IRCSocket)(acceptedSockFd);
 }
+
+int IRCSocket::Send(const std::string& msg)
+{
+    size_t total = 0;
+    size_t bytesleft = msg.size();
+    int n;
+
+    while(total < msg.size())
+    {
+        n = send(GetSockFd(), msg.c_str() + total, bytesleft, 0);
+        if (n == -1)
+        {
+            IRC_LOGE("send error: %s", strerror(errno));
+            break;
+        }
+        total += n;
+        bytesleft -= n;
+    }
+    IRC_LOGD("Total bytes sent: %d", total);
+    return (n == -1) ? -1 : 0;
+}
+
+int IRCSocket::Recv(std::string& msg)
+{
+    char buff[RECV_BUF + 1];
+
+    int nbytes = recv(GetSockFd(), buff, RECV_BUF, 0);
+    if (nbytes < 0)
+    {
+        IRC_LOGE("recv error: %s", strerror(errno));
+    }
+    else
+    {
+        buff[nbytes] = '\0';
+        msg.assign(buff);
+        IRC_LOGD("Total bytes received: %d", nbytes);
+    }
+    return nbytes;
+}
+
 
 static void ProccessSelectedSockets(fd_set& fdSet, std::vector<IRCSocket*>& sockets)
 {
@@ -245,6 +286,25 @@ void IRCSocket::SetSockFd_Callback(int sockFd)
     m_SockFd = sockFd;
     SetIsSockOpened(true);
 }
+
+void IRCSocket::SetIsSockOpened_Callback(bool isSockOpened)
+{
+    if (isSockOpened == m_IsSockOpened)
+    {
+        return;
+    }
+
+    if (isSockOpened == true)
+    {
+        IRC_LOGD("%s", "Socket is opened");
+    }
+    else
+    {
+        IRC_LOGD("%s", "Socket is closed");
+    }
+    m_IsSockOpened = isSockOpened;
+}
+
 
 
 }

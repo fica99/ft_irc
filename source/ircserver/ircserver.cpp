@@ -81,9 +81,33 @@ void IRCServer::GetAllSockets(std::vector<IRCSocket*>& sockets)
     sockets.insert(sockets.begin() + 1, m_AcceptedSockets.begin(), m_AcceptedSockets.end());
 }
 
+std::string IRCServer::ReceiveMsg(IRCSocket *socket)
+{
+    std::string msg;
+    int nbytes;
+
+    if (socket != NULL)
+    {
+        nbytes = socket->Recv(msg);
+        if (nbytes == 0)
+        {
+            socket->CloseSocket();
+            std::vector<IRCSocket*>::iterator it = std::find(m_AcceptedSockets.begin(), m_AcceptedSockets.end(), socket);
+            if (it != m_AcceptedSockets.end())
+            {
+                Delete(*it);
+                m_AcceptedSockets.erase(it);
+                IRC_LOGI("%s", "Connection is closed");
+            }
+        }
+    }
+    return msg;
+}
+
 void IRCServer::ProcessSelectedSockets(const std::vector<IRCSocket*>& sockets)
 {
     IRCSocket *connection;
+    std::string msg;
 
     for (size_t i = 0; i < sockets.size(); ++i)
     {
@@ -98,11 +122,10 @@ void IRCServer::ProcessSelectedSockets(const std::vector<IRCSocket*>& sockets)
         }
         else
         {
-            
+            msg = ReceiveMsg(sockets[i]);
         }
     }
 }
-
 
 void IRCServer::ServerLoop(void)
 {
@@ -118,6 +141,7 @@ void IRCServer::ServerLoop(void)
         {
             IRC_LOGD("%d sockets selected", socketsSelected);
             ProcessSelectedSockets(sockets);
+            IRC_LOGD("Total number of connections: %d", m_AcceptedSockets.size());
         }
         sockets.clear();
     }
