@@ -24,30 +24,21 @@ public:
     bool CreateListenSocket(uint16_t port);
     void CloseSocket(void);
     IRCSocket *Accept(void);
-    int Send(const std::string& msg);
     int Recv(std::string& msg);
+    int Send(const std::string& msg);
 
 public:
     static int Select(std::vector<IRCSocket*>& sockets, int delaySec);
 
 private:
-    int Getaddrinfo(const char *port, struct addrinfo** servInfo);
-    void Freeaddrinfo(struct addrinfo* servInfo);
-    int Socket(int domain, int type, int protocol);
-    int Setsockopt(int level, int optname);
-    int Bind(const struct sockaddr *address, socklen_t addressLen);
-
-public:
-    inline int GetSockFd(void) const { return m_SockFd; }
-    inline bool GetIsSockOpened(void) const { return m_IsSockOpened; }
-
-private:
     void SetSockFd_Callback(int sockFd);
     void SetIsSockOpened_Callback(bool isSockOpened);
 
-private:
-    inline void SetSockFd(int sockFd) { SetSockFd_Callback(sockFd); }
+public:
     inline void SetIsSockOpened(bool isSockOpened) { SetIsSockOpened_Callback(isSockOpened); }
+    inline bool GetIsSockOpened(void) const { return m_IsSockOpened; }
+    inline void SetSockFd(int sockFd) { SetSockFd_Callback(sockFd); }
+    inline int GetSockFd(void) const { return m_SockFd; }
 
 private:
     bool m_IsSockOpened;
