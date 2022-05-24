@@ -26,6 +26,7 @@ public:
 
 private:
     void GetAllSockets(std::vector<IRCSocket*>& sockets);
+    void CloseConnection(IRCSocket *socket);
     std::string ReceiveMsg(IRCSocket *socket);
     void ProcessSelectedSockets(const std::vector<IRCSocket*>& sockets);
     void ServerLoop(void);
@@ -40,8 +41,6 @@ public:
     inline uint16_t GetPort(void) const { return m_Port; }
     inline void SetPassword(const std::string& password) { SetPassword_Callback(password); }
     inline const std::string& GetPassword(void) const { return m_Password; }
-
-private:
     inline void SetIsRunning(bool isRunning) { SetIsRunning_Callback(isRunning); }
     inline bool GetIsRunning(void) const { return m_IsRunning; }
 

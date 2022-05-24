@@ -21,6 +21,7 @@ static void SigHandler(int sigNum)
 {
     IRC_LOGD("Received signal! Signal number: %d", sigNum);
     GetIRCServer().Stop();
+    exit(sigNum);
 }
 
 void IRCServer::Initialize(void)
@@ -77,8 +78,20 @@ void IRCServer::Stop(void)
 
 void IRCServer::GetAllSockets(std::vector<IRCSocket*>& sockets)
 {
+    sockets.clear();
     sockets.push_back(&m_ListenSocket);
     sockets.insert(sockets.begin() + 1, m_AcceptedSockets.begin(), m_AcceptedSockets.end());
+}
+
+void IRCServer::CloseConnection(IRCSocket *socket)
+{
+    socket->CloseSocket();
+    std::vector<IRCSocket*>::iterator it = std::find(m_AcceptedSockets.begin(), m_AcceptedSockets.end(), socket);
+    if (it != m_AcceptedSockets.end())
+    {
+        Delete(*it);
+        m_AcceptedSockets.erase(it);
+    }
 }
 
 std::string IRCServer::ReceiveMsg(IRCSocket *socket)
@@ -91,14 +104,7 @@ std::string IRCServer::ReceiveMsg(IRCSocket *socket)
         nbytes = socket->Recv(msg);
         if (nbytes == 0)
         {
-            socket->CloseSocket();
-            std::vector<IRCSocket*>::iterator it = std::find(m_AcceptedSockets.begin(), m_AcceptedSockets.end(), socket);
-            if (it != m_AcceptedSockets.end())
-            {
-                Delete(*it);
-                m_AcceptedSockets.erase(it);
-                IRC_LOGI("%s", "Connection is closed");
-            }
+            CloseConnection(socket);
         }
     }
     return msg;
@@ -116,7 +122,6 @@ void IRCServer::ProcessSelectedSockets(const std::vector<IRCSocket*>& sockets)
             connection = m_ListenSocket.Accept();
             if (connection != NULL)
             {
-                IRC_LOGI("%s", "New connection accepted");
                 m_AcceptedSockets.push_back(connection);
             }
         }
@@ -136,13 +141,12 @@ void IRCServer::ServerLoop(void)
     while (GetIsRunning())
     {
         GetAllSockets(sockets);
-        socketsSelected = IRCSocket::Select(sockets, 0);
+        socketsSelected = IRCSocket::Select(sockets, 1);
         if (socketsSelected > 0)
         {
-            IRC_LOGD("%d sockets selected", socketsSelected);
             ProcessSelectedSockets(sockets);
-            IRC_LOGD("Total number of connections: %d", m_AcceptedSockets.size());
         }
+        IRC_LOGI("Total number of connections: %d", m_AcceptedSockets.size());
         sockets.clear();
     }
 }
@@ -154,6 +158,7 @@ void IRCServer::SetIsRunning_Callback(bool isRunning)
         return;
     }
 
+    m_IsRunning = isRunning;
     if (isRunning == true)
     {
         IRC_LOGI("%s", "Server is started");
@@ -162,7 +167,6 @@ void IRCServer::SetIsRunning_Callback(bool isRunning)
     {
         IRC_LOGI("%s", "Server is stopped");
     }
-    m_IsRunning = isRunning;
 }
 
 void IRCServer::SetPort_Callback(unsigned short int port)
