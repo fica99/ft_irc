@@ -27,7 +27,7 @@ void IRCPassCommand::Shutdown(void)
 {
 }
 
-bool IRCPassCommand::ProcessCommand(void)
+bool IRCPassCommand::ProcessCommand(IRCSocket *socket)
 {
     if (ValidateArgs())
     {

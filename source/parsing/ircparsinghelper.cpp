@@ -11,7 +11,7 @@ const std::string IRCParsingHelper::IRCSymbolsDefinition::SPECIAL_ASCII = "-[]\\
 const std::string IRCParsingHelper::IRCSymbolsDefinition::WHITE_ASCII = " \r\n";
 const std::string IRCParsingHelper::IRCSymbolsDefinition::NON_CHSTRING_ASCII = " \a\r\n,";
 const std::string IRCParsingHelper::IRCSymbolsDefinition::SPACE_ASCII = " ";
-const std::string IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII = "\r\n";
+const std::string IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII = "\n";
 
 bool IRCParsingHelper::IsSymbolLetter(char symb)
 {

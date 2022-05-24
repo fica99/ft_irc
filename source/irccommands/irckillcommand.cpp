@@ -28,7 +28,7 @@ void IRCKillCommand::Shutdown(void)
 {
 }
 
-bool IRCKillCommand::ProcessCommand(void)
+bool IRCKillCommand::ProcessCommand(IRCSocket *socket)
 {
     if (ValidateArgs())
     {

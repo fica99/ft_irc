@@ -17,7 +17,7 @@ private:
     void Shutdown(void);
 
 public:
-    bool ProcessCommand(void);
+    bool ProcessCommand(IRCSocket *socket);
 
 private:
     bool ValidateArgs(void);

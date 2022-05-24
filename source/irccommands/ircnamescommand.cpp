@@ -27,7 +27,7 @@ void IRCNamesCommand::Shutdown(void)
 {
 }
 
-bool IRCNamesCommand::ProcessCommand(void)
+bool IRCNamesCommand::ProcessCommand(IRCSocket *socket)
 {
     if (ValidateArgs())
     {
