@@ -8,6 +8,8 @@
 namespace ircserv
 {
 
+class IRCSocket;
+
 class IRCCommandsManager
 {
 public:
@@ -19,7 +21,7 @@ private:
     void Shutdown(void);
 
 public:
-    void ProcessCommand(const std::string& message);
+    void ProcessCommand(const std::string& message, IRCSocket *socket);
 private:
     IRCLexer m_Lexer;
     IRCParser m_Parser;
@@ -27,6 +29,5 @@ private:
 };
 
 #define GetIRCCommandsManager() IRCCommandsManager::GetInstance()
-
 
 }

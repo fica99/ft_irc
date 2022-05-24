@@ -31,7 +31,7 @@ void IRCNickCommand::Shutdown(void)
 {
 }
 
-bool IRCNickCommand::ProcessCommand(void)
+bool IRCNickCommand::ProcessCommand(IRCSocket *socket)
 {
     if (ValidateArgs())
     {

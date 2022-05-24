@@ -1,6 +1,7 @@
 #include "main/precomp.h"
 
 #include "ircserver/ircserver.h"
+#include "managers/irccommandsmanager.h"
 #include "utils/memory.h"
 
 #include <signal.h>
@@ -128,6 +129,7 @@ void IRCServer::ProcessSelectedSockets(const std::vector<IRCSocket*>& sockets)
         else
         {
             msg = ReceiveMsg(sockets[i]);
+            GetIRCCommandsManager().ProcessCommand(msg, sockets[i]);
         }
     }
 }

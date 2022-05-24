@@ -3,6 +3,7 @@
 #include "programoptions/commandlineoptionschecker.h"
 #include "programoptions/commandlineoptions.h"
 #include "ircserver/ircserver.h"
+#include "managers/irccommandsmanager.h"
 #include "utils/logs/irclogsinitializer.h"
 
 namespace ircserv
@@ -12,12 +13,14 @@ static void Initialize(void)
 {
     IRCLogsInitializer::CreateSingleton();
     CommandLineOptions::CreateSingleton();
+    IRCCommandsManager::CreateSingleton();
     IRCServer::CreateSingleton();
 }
 
 static void Shutdown(void)
 {
     IRCServer::DestroySingleton();
+    IRCCommandsManager::DestroySingleton();
     CommandLineOptions::DestroySingleton();
     IRCLogsInitializer::DestroySingleton();
 }

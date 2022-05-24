@@ -29,7 +29,7 @@ void IRCOperCommand::Shutdown(void)
 {
 }
 
-bool IRCOperCommand::ProcessCommand(void)
+bool IRCOperCommand::ProcessCommand(IRCSocket *socket)
 {
     if (ValidateArgs())
     {

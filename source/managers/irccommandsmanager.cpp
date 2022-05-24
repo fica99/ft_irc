@@ -32,7 +32,7 @@ void IRCCommandsManager::Shutdown(void)
 {
 }
 
-void IRCCommandsManager::ProcessCommand(const std::string& message)
+void IRCCommandsManager::ProcessCommand(const std::string& message, IRCSocket *socket)
 {
     IRC_LOGD("Processing raw message: %s", message.c_str());
     std::vector<IRCToken*> tokens = m_Lexer.Tokenize(message);
@@ -40,7 +40,7 @@ void IRCCommandsManager::ProcessCommand(const std::string& message)
     if (command != NULL)
     {
         IRC_LOGD("Got command from message: %s", EnumString<Enum_IRCCommands>::From(command->GetCommandEnum()).c_str());
-        command->ProcessCommand();
+        command->ProcessCommand(socket);
     } else
     {
         IRC_LOGD("Invalid command message: %s", message.c_str());

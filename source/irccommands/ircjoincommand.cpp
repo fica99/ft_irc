@@ -33,7 +33,7 @@ void IRCJoinCommand::Shutdown(void)
 {
 }
 
-bool IRCJoinCommand::ProcessCommand(void)
+bool IRCJoinCommand::ProcessCommand(IRCSocket *socket)
 {
     // if (ValidateArgs(serv))
     // {
