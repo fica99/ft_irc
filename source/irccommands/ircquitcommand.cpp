@@ -3,7 +3,7 @@
 #include "irccommands/ircquitcommand.h"
 #include "irccommands/irccommands.h"
 
-#include "ircresponses/ircresponsesfactory.h"
+#include "managers/ircclientsmanager.h"
 
 namespace ircserv
 {
@@ -30,7 +30,7 @@ bool IRCQuitCommand::ProcessCommand(IRCSocket *socket)
 {
     if (ValidateArgs(socket))
     {
-        // serv->quitCommand();
+        GetIRCClientsManager().Quit(socket, GetQuitMessage());
         return true;
     }
     return false;
@@ -38,10 +38,10 @@ bool IRCQuitCommand::ProcessCommand(IRCSocket *socket)
 
 bool IRCQuitCommand::ValidateArgs(IRCSocket *socket)
 {
-    // if (!m_Args.empty())
-    // {
-    //     SetQuitMessage(m_Args[0]);
-    // }
+    if (!GetArgs().empty())
+    {
+        SetQuitMessage(GetArgs()[0]);
+    }
     return true;
 }
 
