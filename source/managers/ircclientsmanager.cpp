@@ -36,7 +36,7 @@ void IRCClientsManager::Shutdown(void)
     m_SocketClientsMap.clear();
 }
 
-void IRCClientsManager::EraseClient(IRCSocket *socket)
+void IRCClientsManager::Quit(IRCSocket *socket, const std::string& quitMessage)
 {
     std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.find(socket);
     if (it != m_SocketClientsMap.end())
@@ -45,6 +45,31 @@ void IRCClientsManager::EraseClient(IRCSocket *socket)
         m_SocketClientsMap.erase(it);
         IRC_LOGD("%s", "Client erased");
     }
+}
+
+bool IRCClientsManager::Pass(IRCSocket *socket, const std::string& password)
+{
+    std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.find(socket);
+    IRCClient *client;
+
+    if (it != m_SocketClientsMap.end())
+    {
+        client = it->second;
+    }
+    else
+    {
+        client = New(IRCClient);
+        m_SocketClientsMap[socket] = client;
+    }
+    if (client->GetIsRegistered())
+    {
+        return false;
+    }
+    else
+    {
+        client->SetPassword(password);
+    }
+    return true;
 }
 
 
