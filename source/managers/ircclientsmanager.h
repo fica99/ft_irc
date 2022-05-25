@@ -1,11 +1,8 @@
 #pragma once
 
 #include <unordered_map>
-#include <list>
-#include <vector>
-#include <poll.h>
-
 #include "ircclient/ircclient.h"
+#include "ircserver/ircsocket.h"
 #include "utils/singleton.h"
 
 namespace ircserv
@@ -22,15 +19,10 @@ private:
     void Shutdown(void);
 
 public:
-    void AddClient(int fd);
-    void RemoveClient(int fd);
-    inline IRCClient* GetClient(int fd) const { return *(m_FdClientsMap.at(fd)); }
-    inline pollfd* GetPollFdsData(void) { return m_PollFds.data(); }
+    void EraseClient(IRCSocket *socket);
 
 private:
-    std::unordered_map<int, std::list<IRCClient*>::iterator> m_FdClientsMap;
-    std::list<IRCClient*> m_Clients;
-    std::vector<struct pollfd> m_PollFds;
+    std::unordered_map<IRCSocket*, IRCClient*> m_SocketClientsMap;
 };
 
 #define GetIRCClientsManager() IRCClientsManager::GetInstance()

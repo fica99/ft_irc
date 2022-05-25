@@ -98,15 +98,10 @@ void IRCServer::CloseConnection(IRCSocket *socket)
 std::string IRCServer::ReceiveMsg(IRCSocket *socket)
 {
     std::string msg;
-    int nbytes;
 
     if (socket != NULL)
     {
-        nbytes = socket->Recv(msg);
-        if (nbytes == 0)
-        {
-            CloseConnection(socket);
-        }
+        socket->Recv(msg);
     }
     return msg;
 }

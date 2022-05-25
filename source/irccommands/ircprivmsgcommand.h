@@ -21,7 +21,7 @@ public:
     bool ProcessCommand(IRCSocket *socket);
 
 private:
-    bool ValidateArgs(void);
+    bool ValidateArgs(IRCSocket *socket);
 
 private:
     void SendERR_NORECIPIENT(/*serverclass */);

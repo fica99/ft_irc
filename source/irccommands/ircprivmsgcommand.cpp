@@ -31,14 +31,14 @@ void IRCPrivmsgCommand::Shutdown(void)
 
 bool IRCPrivmsgCommand::ProcessCommand(IRCSocket *socket)
 {
-    if (ValidateArgs())
+    if (ValidateArgs(socket))
     {
         return true;
     }
     return false;
 }
 
-bool IRCPrivmsgCommand::ValidateArgs(void)
+bool IRCPrivmsgCommand::ValidateArgs(IRCSocket *socket)
 {
     // if (m_Args.empty())
     // {

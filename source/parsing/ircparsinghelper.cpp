@@ -11,7 +11,7 @@ const std::string IRCParsingHelper::IRCSymbolsDefinition::SPECIAL_ASCII = "-[]\\
 const std::string IRCParsingHelper::IRCSymbolsDefinition::WHITE_ASCII = " \r\n";
 const std::string IRCParsingHelper::IRCSymbolsDefinition::NON_CHSTRING_ASCII = " \a\r\n,";
 const std::string IRCParsingHelper::IRCSymbolsDefinition::SPACE_ASCII = " ";
-const std::string IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII = "\n";
+const std::string IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII = "\r\n";
 
 bool IRCParsingHelper::IsSymbolLetter(char symb)
 {
@@ -132,14 +132,21 @@ bool IRCParsingHelper::IsLetterCommand(const std::string& command)
 std::vector<std::string> IRCParsingHelper::Split(std::string line, const std::string& delim)
 {
     std::vector<std::string> parts;
+    std::string substr;
     size_t pos = 0;
 
     while ((pos = line.find(delim)) != line.npos)
     {
-        parts.push_back(line.substr(0, pos));
+        if (pos != 0)
+        {
+            parts.push_back(line.substr(0, pos));
+        }
         line.erase(0, pos + delim.size());
     }
-    parts.push_back(line);
+    if (!line.empty())
+    {
+        parts.push_back(line);
+    }
     return parts;
 }
 

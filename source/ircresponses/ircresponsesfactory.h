@@ -16,8 +16,8 @@ private:
     void Shutdown(void);
 
 public:
-    IRCResponse* CreateResponse(Enum_IRCResponses responseType);
-    void DestroyResponse(IRCResponse* response);
+    static IRCResponse* CreateResponse(Enum_IRCResponses responseType);
+    static void DestroyResponse(IRCResponse* response);
 };
 
 }

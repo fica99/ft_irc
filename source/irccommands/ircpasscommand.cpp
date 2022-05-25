@@ -5,6 +5,8 @@
 
 #include "ircresponses/ircresponseerr_needmoreparams.h"
 #include "ircresponses/ircresponsesfactory.h"
+#include "ircserver/ircsocket.h"
+#include "managers/ircclientsmanager.h"
 
 namespace ircserv
 {
@@ -29,29 +31,30 @@ void IRCPassCommand::Shutdown(void)
 
 bool IRCPassCommand::ProcessCommand(IRCSocket *socket)
 {
-    if (ValidateArgs())
+    if (ValidateArgs(socket))
     {
         return true;
     }
     return false;
 }
 
-bool IRCPassCommand::ValidateArgs(void)
+bool IRCPassCommand::ValidateArgs(IRCSocket *socket)
 {
-    // if (m_Args.empty())
-    // {
-    //     IRCResponseERR_NEEDMOREPARAMS* response = dynamic_cast<IRCResponseERR_NEEDMOREPARAMS*>(
-    //         GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_ERR_NEEDMOREPARAMS)
-    //     );
-    //     if (response != NULL)
-    //     {
-    //         response->SetCommand(EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
-    //     }
-    //     // send response
-    //     GetIRCResponsesFactory().DestroyResponse(response);
-    //     return false;
-    // }
-    // SetPassword(m_Args[0]);
+    if (GetArgs().empty())
+    {
+        IRCResponseERR_NEEDMOREPARAMS* response = dynamic_cast<IRCResponseERR_NEEDMOREPARAMS*>(
+            IRCResponsesFactory::CreateResponse(Enum_IRCResponses_ERR_NEEDMOREPARAMS)
+        );
+        if (response != NULL)
+        {
+            response->SetCommand(EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+        }
+        socket->Send(response->GetResponse());
+        IRC_LOGD("Send ERR_NEEDMOREPARAM for %s command! Response: %s", EnumString<Enum_IRCCommands>::From(GetCommandEnum()).c_str(), response->GetResponse().c_str());
+        IRCResponsesFactory::DestroyResponse(response);
+        return false;
+    }
+    SetPassword(GetArgs()[0]);
     return true;
 }
 

@@ -227,14 +227,7 @@ int IRCSocket::Recv(std::string& msg)
     {
         buff[nbytes] = '\0';
         msg.assign(buff);
-        if (nbytes == 0)
-        {
-            IRC_LOGI("%s", "Received closing connection");
-        }
-        else
-        {
-            IRC_LOGI("%s", "Message received");
-        }
+        IRC_LOGI("%s", "Message received");
         IRC_LOGD("Total bytes received: %d", nbytes);
     }
     return nbytes;

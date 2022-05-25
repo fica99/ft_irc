@@ -52,7 +52,7 @@ bool IRCUserCommand::ProcessCommand(IRCSocket *socket)
     return false;
 }
 
-bool IRCUserCommand::ValidateArgs(void)
+bool IRCUserCommand::ValidateArgs(IRCSocket *socket)
 {
     IRC_LOGD("%s", "User command");
     // if (m_Args.size() < 4)

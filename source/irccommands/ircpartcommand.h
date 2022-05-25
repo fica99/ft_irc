@@ -21,7 +21,7 @@ public:
     bool ProcessCommand(IRCSocket *socket);
 
 private:
-    bool ValidateArgs(void);
+    bool ValidateArgs(IRCSocket *socket);
 
 private:
     inline void SetChannels(const std::vector<std::string>& channels) { m_Channels = channels; }

@@ -23,10 +23,10 @@ private:
 public:
     void Start(void);
     void Stop(void);
+    void CloseConnection(IRCSocket *socket);
 
 private:
     void GetAllSockets(std::vector<IRCSocket*>& sockets);
-    void CloseConnection(IRCSocket *socket);
     std::string ReceiveMsg(IRCSocket *socket);
     void ProcessSelectedSockets(const std::vector<IRCSocket*>& sockets);
     void ServerLoop(void);

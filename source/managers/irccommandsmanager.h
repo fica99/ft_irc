@@ -21,7 +21,7 @@ private:
     void Shutdown(void);
 
 public:
-    void ProcessCommand(const std::string& message, IRCSocket *socket);
+    void ProcessCommand(std::string message, IRCSocket *socket);
 private:
     IRCLexer m_Lexer;
     IRCParser m_Parser;
