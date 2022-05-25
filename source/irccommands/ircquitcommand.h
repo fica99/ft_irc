@@ -24,6 +24,8 @@ private:
 
 private:
     inline void SetQuitMessage(const std::string quitMessage) { m_QuitMessage = quitMessage; }
+    inline const std::string& GetQuitMessage(void) const { return m_QuitMessage; }
+
 
 private:
     std::string m_QuitMessage;

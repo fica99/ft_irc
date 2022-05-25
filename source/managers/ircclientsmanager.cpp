@@ -1,5 +1,6 @@
 #include "main/precomp.h"
 
+#include "ircserver/ircserver.h"
 #include "managers/ircclientsmanager.h"
 #include "utils/memory.h"
 
@@ -43,7 +44,8 @@ void IRCClientsManager::Quit(IRCSocket *socket, const std::string& quitMessage)
     {
         Delete(it->second);
         m_SocketClientsMap.erase(it);
-        IRC_LOGD("%s", "Client erased");
+        GetIRCServer().CloseConnection(socket);
+        IRC_LOGI("%s", "Client disconnected");
     }
 }
 
