@@ -4,6 +4,7 @@
 #include "irccommands/irccommands.h"
 
 #include "ircresponses/ircresponseerr_needmoreparams.h"
+#include "ircresponses/ircresponseerr_alreadyregistered.h"
 #include "ircresponses/ircresponsesfactory.h"
 #include "ircserver/ircsocket.h"
 #include "managers/ircclientsmanager.h"
@@ -33,6 +34,14 @@ bool IRCPassCommand::ProcessCommand(IRCSocket *socket)
 {
     if (ValidateArgs(socket))
     {
+        if (GetIRCClientsManager().Pass(socket, GetPassword()) == false)
+        {
+            IRCResponse* response = IRCResponsesFactory::CreateResponse(Enum_IRCResponses_ERR_ALREADYREGISTRED);
+            socket->Send(response->GetResponse());
+            IRC_LOGD("Send ERR_ALREADYREGISTRED for %s command! Response: %s", EnumString<Enum_IRCCommands>::From(GetCommandEnum()).c_str(), response->GetResponse().c_str());
+            IRCResponsesFactory::DestroyResponse(response);
+            return false;
+        }
         return true;
     }
     return false;

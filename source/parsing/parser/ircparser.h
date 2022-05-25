@@ -5,7 +5,6 @@
 
 #include "irccommands/irccommand.h"
 #include "irccommands/irccommands.h"
-#include "irccommands/irccommandsfactory.h"
 #include "parsing/tokens/irccommandtoken.h"
 #include "parsing/tokens/irctoken.h"
 
@@ -30,7 +29,6 @@ private:
     Enum_IRCCommands GetCommandEnum(IRCCommandToken *commandToken);
     std::vector<std::string> GetArgs(const std::vector<IRCToken*>& tokens);
 private:
-    IRCCommandsFactory m_CommandsFactory;
 };
 
 }

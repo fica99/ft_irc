@@ -2,6 +2,7 @@
 
 #include "parsing/parser/ircparser.h"
 
+#include "irccommands/irccommandsfactory.h"
 #include "parsing/tokens/ircargtoken.h"
 #include "parsing/tokens/ircprefixtoken.h"
 
@@ -52,7 +53,7 @@ IRCCommand* IRCParser::CreateCommand(const std::vector<IRCToken*>& tokens)
                 return NULL;
             }
             
-            command = m_CommandsFactory.CreateCommand(GetCommandEnum(commandToken));
+            command = IRCCommandsFactory::CreateCommand(GetCommandEnum(commandToken));
             if (command != NULL)
             {
                 if (prefixToken != NULL)
@@ -70,14 +71,6 @@ IRCCommand* IRCParser::CreateCommand(const std::vector<IRCToken*>& tokens)
         IRC_LOGD("%s", "No tokens in message");
     }
     return command;
-}
-
-void IRCParser::DestroyCommand(IRCCommand* command)
-{
-    if (command != NULL)
-    {
-        m_CommandsFactory.DestroyCommand(command);
-    }
 }
 
 Enum_IRCCommands IRCParser::GetCommandEnum(IRCCommandToken *commandToken)

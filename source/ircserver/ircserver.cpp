@@ -124,7 +124,7 @@ void IRCServer::ProcessSelectedSockets(const std::vector<IRCSocket*>& sockets)
         else
         {
             msg = ReceiveMsg(sockets[i]);
-            GetIRCCommandsManager().ProcessCommand(msg, sockets[i]);
+            GetIRCCommandsManager().ProcessCommands(msg, sockets[i]);
         }
     }
 }

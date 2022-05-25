@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace ircserv
 {
 
@@ -13,10 +15,14 @@ private:
     void Shutdown(void);
 
 public:
-    void SetFd(int fd) { m_Fd = fd; }
+    inline void SetIsRegistered(bool isRegistered) { m_IsRegistered = isRegistered; };
+    inline bool GetIsRegistered(void) const { return m_IsRegistered; }
+    inline void SetPassword(const std::string& password) { m_Password = password; }
+    inline const std::string& GetPassword(void) { return m_Password; }
 
 private:
-    int m_Fd;
+    bool m_IsRegistered;
+    std::string m_Password;
 };
 
 

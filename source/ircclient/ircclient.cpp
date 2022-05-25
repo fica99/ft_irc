@@ -5,13 +5,14 @@
 namespace ircserv
 {
 
-IRCClient::IRCClient() : m_Fd(0)
+IRCClient::IRCClient()
 {
     Initialize();
 }
 
 void IRCClient::Initialize(void)
 {
+    m_IsRegistered = false;
 }
 
 IRCClient::~IRCClient()

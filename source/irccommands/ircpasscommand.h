@@ -24,6 +24,7 @@ private:
 
 private:
     inline void SetPassword(const std::string& password) { m_Password = password; }
+    inline const std::string GetPassword(void) const { return m_Password; }
 
 private:
     std::string m_Password;

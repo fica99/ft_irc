@@ -3,6 +3,7 @@
 #include "managers/irccommandsmanager.h"
 
 #include "irccommands/irccommand.h"
+#include "irccommands/irccommandsfactory.h"
 #include "ircserver/ircserver.h"
 #include "managers/ircclientsmanager.h"
 #include "parsing/tokens/irctoken.h"
@@ -37,40 +38,40 @@ void IRCCommandsManager::Shutdown(void)
     IRCClientsManager::DestroySingleton();
 }
 
-static void EraseClient(IRCSocket *socket)
+static void ProcessCommand(IRCCommand *command, IRCSocket *socket)
 {
-    IRC_LOGI("%s", "Received closing connection with client");
-    GetIRCClientsManager().EraseClient(socket);
-    GetIRCServer().CloseConnection(socket);
+    if (command != NULL)
+    {
+        IRC_LOGD("Received command: %s", EnumString<Enum_IRCCommands>::From(command->GetCommandEnum()).c_str());
+        command->ProcessCommand(socket);
+    } else
+    {
+        IRC_LOGI("%s", "Unknown command received");
+    }
 }
 
-void IRCCommandsManager::ProcessCommand(std::string message, IRCSocket *socket)
+void IRCCommandsManager::ProcessCommands(std::string message, IRCSocket *socket)
 {
     std::vector<std::string> messages;
-
+    IRCCommand* command;
 
     IRC_LOGD("Processing raw message: %s", message.c_str());
     messages = IRCParsingHelper::Split(message, IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII);
     if (message.empty())
     {
-        EraseClient(socket);
+        command = IRCCommandsFactory::CreateCommand(Enum_IRCCommands_Quit);
+        ProcessCommand(command, socket);
+        IRCCommandsFactory::DestroyCommand(command);
         return;
     }
     for (size_t i = 0; i < messages.size(); ++i)
     {
         IRC_LOGD("Processing splitted message: %s", messages[i].c_str());
         std::vector<IRCToken*> tokens = m_Lexer.Tokenize(messages[i]);
-        IRCCommand* command = m_Parser.CreateCommand(tokens);
-        if (command != NULL)
-        {
-            IRC_LOGD("Received command: %s", EnumString<Enum_IRCCommands>::From(command->GetCommandEnum()).c_str());
-            command->ProcessCommand(socket);
-        } else
-        {
-            IRC_LOGI("%s", "Unknown command received");
-        }
+        command = m_Parser.CreateCommand(tokens);
+        ProcessCommand(command, socket);
         m_Lexer.DestroyTokens(tokens);
-        m_Parser.DestroyCommand(command);
+        IRCCommandsFactory::DestroyCommand(command);
     }
 }
 

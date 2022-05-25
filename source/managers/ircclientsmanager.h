@@ -19,7 +19,8 @@ private:
     void Shutdown(void);
 
 public:
-    void EraseClient(IRCSocket *socket);
+    void Quit(IRCSocket *socket, const std::string& quitMessage);
+    bool Pass(IRCSocket *socket, const std::string& password);
 
 private:
     std::unordered_map<IRCSocket*, IRCClient*> m_SocketClientsMap;

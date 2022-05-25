@@ -19,8 +19,8 @@ private:
     void Shutdown(void);
 
 public:
-    IRCCommand* CreateCommand(Enum_IRCCommands commandType);
-    void DestroyCommand(IRCCommand* command);
+    static IRCCommand* CreateCommand(Enum_IRCCommands commandType);
+    static void DestroyCommand(IRCCommand* command);
 };
 
 }
