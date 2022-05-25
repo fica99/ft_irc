@@ -34,7 +34,7 @@ std::string IRCResponseRPL_YOUREOPER::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " :You are now an IRC operator";
+    response += " :You are now an IRC operator\n";
     return response;
 }
 

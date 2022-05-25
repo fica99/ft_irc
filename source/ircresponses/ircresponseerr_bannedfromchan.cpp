@@ -34,7 +34,7 @@ std::string IRCResponseERR_BANNEDFROMCHAN::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + m_Channel + " :Cannot join channel (+b)";
+    response += " " + m_Channel + " :Cannot join channel (+b)\n\n";
     return response;
 }
 

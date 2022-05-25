@@ -34,7 +34,7 @@ std::string IRCResponseERR_NEEDMOREPARAMS::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + m_Command + " :Not enough parameters";
+    response += " " + m_Command + " :Not enough parameters\n";
     return response;
 }
 

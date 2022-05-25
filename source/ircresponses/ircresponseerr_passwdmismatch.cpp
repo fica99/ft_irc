@@ -34,7 +34,7 @@ std::string IRCResponseERR_PASSWDMISMATCH::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " :Password incorrect";
+    response += " :Password incorrect\n";
     return response;
 }
 

@@ -34,7 +34,7 @@ std::string IRCResponseERR_NICKCOLLISION::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + m_Nick + " :Nickname collision KILL";
+    response += " " + m_Nick + " :Nickname collision KILL\n";
     return response;
 }
 

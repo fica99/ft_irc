@@ -34,7 +34,7 @@ std::string IRCResponseERR_BADCHANNELKEY::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + m_Channel + " :Cannot join channel (+k)";
+    response += " " + m_Channel + " :Cannot join channel (+k)\n\n";
     return response;
 }
 

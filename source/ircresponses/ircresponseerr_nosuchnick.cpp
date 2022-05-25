@@ -34,7 +34,7 @@ std::string IRCResponseERR_NOSUCHNICK::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + m_Nickname + " :No such nick/channel";
+    response += " " + m_Nickname + " :No such nick/channel\n";
     return response;
 }
 

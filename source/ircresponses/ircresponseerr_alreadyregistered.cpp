@@ -34,7 +34,7 @@ std::string IRCResponseERR_ALREADYREGISTERED::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " :You may not reregister";
+    response += " :You may not reregister\n\n";
     return response;
 }
 

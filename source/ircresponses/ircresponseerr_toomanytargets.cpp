@@ -34,7 +34,7 @@ std::string IRCResponseERR_TOOMANYTARGETS::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + m_Target + " :Duplicate recipients. No message delivered";
+    response += " " + m_Target + " :Duplicate recipients. No message delivered\n";
     return response;
 }
 
