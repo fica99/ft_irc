@@ -30,14 +30,14 @@ void IRCPartCommand::Shutdown(void)
 
 bool IRCPartCommand::ProcessCommand(IRCSocket *socket)
 {
-    if (ValidateArgs())
+    if (ValidateArgs(socket))
     {
         return true;
     }
     return false;
 }
 
-bool IRCPartCommand::ValidateArgs(void)
+bool IRCPartCommand::ValidateArgs(IRCSocket *socket)
 {
     // if (m_Args.empty())
     // {

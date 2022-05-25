@@ -31,7 +31,7 @@ void IRCOperCommand::Shutdown(void)
 
 bool IRCOperCommand::ProcessCommand(IRCSocket *socket)
 {
-    if (ValidateArgs())
+    if (ValidateArgs(socket))
     {
         // IRCResponseRPL_YOUREOPER* response = dynamic_cast<IRCResponseRPL_YOUREOPER*>(
         //     GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_RPL_YOUREOPER)
@@ -43,7 +43,7 @@ bool IRCOperCommand::ProcessCommand(IRCSocket *socket)
     return false;
 }
 
-bool IRCOperCommand::ValidateArgs(void)
+bool IRCOperCommand::ValidateArgs(IRCSocket *socket)
 {
     // if (m_Args.size() < 2)
     // {

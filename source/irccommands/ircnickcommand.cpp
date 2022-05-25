@@ -31,9 +31,9 @@ void IRCNickCommand::Shutdown(void)
 {
 }
 
-bool IRCNickCommand::ProcessCommand(IRCSocket *socket)
+bool IRCNickCommand::ProcessCommand(IRCSocket* socket)
 {
-    if (ValidateArgs())
+    if (ValidateArgs(socket))
     {
         // IRCResponse* response = GetIRCResponsesFactory().CreateResponse(serv->setNickname(GetNickname()));
 
@@ -61,7 +61,7 @@ bool IRCNickCommand::ProcessCommand(IRCSocket *socket)
     return false;
 }
 
-bool IRCNickCommand::ValidateArgs(void)
+bool IRCNickCommand::ValidateArgs(IRCSocket* socket)
 {
     // if (m_Args.empty())
     // {

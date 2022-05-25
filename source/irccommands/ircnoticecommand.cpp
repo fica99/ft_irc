@@ -29,14 +29,14 @@ void IRCNoticeCommand::Shutdown(void)
 
 bool IRCNoticeCommand::ProcessCommand(IRCSocket *socket)
 {
-    if (ValidateArgs())
+    if (ValidateArgs(socket))
     {
         return true;
     }
     return false;
 }
 
-bool IRCNoticeCommand::ValidateArgs(void)
+bool IRCNoticeCommand::ValidateArgs(IRCSocket *socket)
 {
     // if (m_Args.size() < 2)
     // {

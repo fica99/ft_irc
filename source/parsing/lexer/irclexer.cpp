@@ -29,16 +29,15 @@ void IRCLexer::Shutdown(void)
 {
 }
 
-std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
+std::vector<IRCToken*> IRCLexer::Tokenize(std::string& msg)
 {
     std::vector<IRCToken*> tokens;
     IRCToken* token;
-    std::string msg = line;
     static const size_t crlfLength = IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII.size();
 
-    if (msg.empty() || msg.size() > 512)
+    if (msg.empty())
     {
-        IRC_LOGD("Invalid message size: %d. Message should be greater then 0 and less then 512", msg.size());
+        IRC_LOGD("%s", "Invalid empty message");
         return tokens;
     }
 
@@ -66,7 +65,7 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
     }
     tokens.push_back(token);
 
-    while (msg.size() > crlfLength)
+    while (!msg.empty())
     {
         token = GetArgToken(msg);
         if (token == NULL)
@@ -76,13 +75,6 @@ std::vector<IRCToken*> IRCLexer::Tokenize(const std::string& line)
             return tokens;
         }
         tokens.push_back(token);
-    }
-
-    if (msg.size() != crlfLength ||
-        msg.compare(msg.size() - crlfLength, crlfLength, IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII))
-    {
-        IRC_LOGD("%s", "No CRLF symbols at the end of message");
-        DestroyTokens(tokens);
     }
 
     return tokens;

@@ -30,14 +30,14 @@ void IRCKillCommand::Shutdown(void)
 
 bool IRCKillCommand::ProcessCommand(IRCSocket *socket)
 {
-    if (ValidateArgs())
+    if (ValidateArgs(socket))
     {
         return true;
     }
     return false;
 }
 
-bool IRCKillCommand::ValidateArgs(void)
+bool IRCKillCommand::ValidateArgs(IRCSocket *socket)
 {
     // if (m_Args.size() < 2)
     // {

@@ -3,8 +3,6 @@
 #include "managers/ircclientsmanager.h"
 #include "utils/memory.h"
 
-#include <fcntl.h>
-
 namespace ircserv
 {
 
@@ -30,50 +28,24 @@ IRCClientsManager::~IRCClientsManager()
 
 void IRCClientsManager::Shutdown(void)
 {
-    m_FdClientsMap.clear();
-    for (std::list<IRCClient*>::iterator it = m_Clients.begin(); it != m_Clients.end(); ++it)
+    for (std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.begin(); it != m_SocketClientsMap.end(); )
     {
-        Delete(*it);
+        Delete(it->second);
+        it = m_SocketClientsMap.erase(it);
     }
-    m_Clients.clear();
-    m_PollFds.clear();
+    m_SocketClientsMap.clear();
 }
 
-void IRCClientsManager::AddClient(int fd)
+void IRCClientsManager::EraseClient(IRCSocket *socket)
 {
-    std::unordered_map<int, std::list<IRCClient*>::iterator>::iterator it = m_FdClientsMap.find(fd);
-
-    if (it != m_FdClientsMap.end())
+    std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.find(socket);
+    if (it != m_SocketClientsMap.end())
     {
-        return;
+        Delete(it->second);
+        m_SocketClientsMap.erase(it);
+        IRC_LOGD("%s", "Client erased");
     }
-
-    IRCClient *client = New(IRCClient);
-    client->SetFd(fd);
-    m_Clients.push_back(client);
-    
-    m_FdClientsMap[fd] = --m_Clients.end();
-
-    struct pollfd pollFd;
-    fcntl(fd, F_SETFL, O_NONBLOCK);
-    pollFd.fd = fd;
-    pollFd.events = POLLIN;
-    m_PollFds.push_back(pollFd);
 }
 
-void IRCClientsManager::RemoveClient(int fd)
-{
-    std::unordered_map<int, std::list<IRCClient*>::iterator>::iterator it = m_FdClientsMap.find(fd);
-
-    if (it == m_FdClientsMap.end())
-    {
-        return;
-    }
-
-    Delete(*(it->second));
-    m_PollFds.erase(m_PollFds.begin() + std::distance(m_Clients.begin(), it->second));
-    m_Clients.erase(it->second);
-    m_FdClientsMap.erase(it);
-}
 
 }

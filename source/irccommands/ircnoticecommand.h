@@ -20,7 +20,7 @@ public:
     bool ProcessCommand(IRCSocket *socket);
 
 private:
-    bool ValidateArgs(void);
+    bool ValidateArgs(IRCSocket *socket);
 
 private:
     inline void SetNickname(const std::string& nickname) { m_Nickname = nickname; }

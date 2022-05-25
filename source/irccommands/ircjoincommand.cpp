@@ -85,7 +85,7 @@ bool IRCJoinCommand::ProcessCommand(IRCSocket *socket)
     return false;
 }
 
-bool IRCJoinCommand::ValidateArgs(void)
+bool IRCJoinCommand::ValidateArgs(IRCSocket *socket)
 {
     // if (m_Args.empty())
     // {

@@ -28,7 +28,7 @@ void IRCQuitCommand::Shutdown(void)
 
 bool IRCQuitCommand::ProcessCommand(IRCSocket *socket)
 {
-    if (ValidateArgs())
+    if (ValidateArgs(socket))
     {
         // serv->quitCommand();
         return true;
@@ -36,7 +36,7 @@ bool IRCQuitCommand::ProcessCommand(IRCSocket *socket)
     return false;
 }
 
-bool IRCQuitCommand::ValidateArgs(void)
+bool IRCQuitCommand::ValidateArgs(IRCSocket *socket)
 {
     // if (!m_Args.empty())
     // {
