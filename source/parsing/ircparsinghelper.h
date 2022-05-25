@@ -18,6 +18,7 @@ struct IRCSymbolsDefinition
     static const std::string NON_CHSTRING_ASCII;
     static const std::string SPACE_ASCII;
     static const std::string CRLF_ASCII;
+    static const std::string LF_ASCII;
 };
 
 bool IsSymbolLetter(char symb);

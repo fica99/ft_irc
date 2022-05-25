@@ -34,7 +34,7 @@ std::string IRCResponseERR_CHANOPRIVSNEEDED::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + m_Channel + " :You're not channel operator";
+    response += " " + m_Channel + " :You're not channel operator\n";
     return response;
 }
 

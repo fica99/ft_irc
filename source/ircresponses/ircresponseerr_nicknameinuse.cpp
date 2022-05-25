@@ -34,7 +34,7 @@ std::string IRCResponseERR_NICKNAMEINUSE::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + m_Nick + " :Nickname is already in use";
+    response += " " + m_Nick + " :Nickname is already in use\n";
     return response;
 }
 

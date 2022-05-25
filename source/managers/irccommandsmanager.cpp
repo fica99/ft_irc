@@ -56,7 +56,6 @@ void IRCCommandsManager::ProcessCommands(std::string message, IRCSocket *socket)
     IRCCommand* command;
 
     IRC_LOGD("Processing raw message: %s", message.c_str());
-    messages = IRCParsingHelper::Split(message, IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII);
     if (message.empty())
     {
         command = IRCCommandsFactory::CreateCommand(Enum_IRCCommands_Quit);
@@ -64,6 +63,16 @@ void IRCCommandsManager::ProcessCommands(std::string message, IRCSocket *socket)
         IRCCommandsFactory::DestroyCommand(command);
         return;
     }
+
+    if (message.find(IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII) != message.npos)
+    {
+        messages = IRCParsingHelper::Split(message, IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII);
+    }
+    else if (message.find(IRCParsingHelper::IRCSymbolsDefinition::LF_ASCII) != message.npos)
+    {
+        messages = IRCParsingHelper::Split(message, IRCParsingHelper::IRCSymbolsDefinition::LF_ASCII);
+    }
+
     for (size_t i = 0; i < messages.size(); ++i)
     {
         IRC_LOGD("Processing splitted message: %s", messages[i].c_str());

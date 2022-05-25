@@ -34,7 +34,7 @@ std::string IRCResponseERR_CANNOTSENDTOCHAN::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + m_ChannelName + " :Cannot send to channel";
+    response += " " + m_ChannelName + " :Cannot send to channel\n";
     return response;
 }
 

@@ -34,7 +34,7 @@ std::string IRCResponseERR_CANTKILLSERVER::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " :You cant kill a server!";
+    response += " :You cant kill a server!\n";
     return response;
 }
 

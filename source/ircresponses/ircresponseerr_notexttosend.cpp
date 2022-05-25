@@ -34,7 +34,7 @@ std::string IRCResponseERR_NOTEXTTOSEND::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " :No text to send";
+    response += " :No text to send\n";
     return response;
 }
 
