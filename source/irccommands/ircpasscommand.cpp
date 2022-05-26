@@ -37,8 +37,11 @@ bool IRCPassCommand::ProcessCommand(IRCSocket *socket)
         if (GetIRCClientsManager().Pass(socket, GetPassword()) == false)
         {
             IRCResponse* response = IRCResponsesFactory::CreateResponse(Enum_IRCResponses_ERR_ALREADYREGISTRED);
-            socket->Send(response->GetResponse());
-            IRC_LOGD("Send ERR_ALREADYREGISTRED for %s command! Response: %s", EnumString<Enum_IRCCommands>::From(GetCommandEnum()).c_str(), response->GetResponse().c_str());
+            if (response != NULL && socket != NULL)
+            {
+                socket->Send(response->GetResponse());
+                IRC_LOGD("Send %s response for %s command! Response: %s", EnumString<Enum_IRCResponses>::From(response->GetResponseEnum()).c_str(), EnumString<Enum_IRCCommands>::From(GetCommandEnum()).c_str(), response->GetResponse().c_str());
+            }
             IRCResponsesFactory::DestroyResponse(response);
             return false;
         }
@@ -57,9 +60,12 @@ bool IRCPassCommand::ValidateArgs(IRCSocket *socket)
         if (response != NULL)
         {
             response->SetCommand(EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+            if (socket != NULL)
+            {
+                socket->Send(response->GetResponse());
+                IRC_LOGD("Send %s response for %s command! Response: %s", EnumString<Enum_IRCResponses>::From(response->GetResponseEnum()).c_str(), EnumString<Enum_IRCCommands>::From(GetCommandEnum()).c_str(), response->GetResponse().c_str());
+            }
         }
-        socket->Send(response->GetResponse());
-        IRC_LOGD("Send ERR_NEEDMOREPARAM for %s command! Response: %s", EnumString<Enum_IRCCommands>::From(GetCommandEnum()).c_str(), response->GetResponse().c_str());
         IRCResponsesFactory::DestroyResponse(response);
         return false;
     }
