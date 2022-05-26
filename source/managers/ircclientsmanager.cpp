@@ -78,6 +78,10 @@ Enum_IRCResponses IRCClientsManager::Nick(IRCSocket *socket, const std::string& 
         {
             Quit(socket, "");
         }
+        else
+        {
+            
+        }
     }
     return Enum_IRCResponses_Unknown;
 }
