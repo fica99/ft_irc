@@ -175,6 +175,10 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             response = NULL;
             break;
     }
+    if (response != NULL)
+    {
+        response->SetPrefix("IRC");
+    }
     return response;
 }
 

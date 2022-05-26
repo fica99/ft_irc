@@ -92,6 +92,7 @@ void IRCServer::CloseConnection(IRCSocket *socket)
     {
         Delete(*it);
         m_AcceptedSockets.erase(it);
+        IRC_LOGI("%s", "Connection closed");
     }
 }
 

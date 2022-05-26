@@ -26,7 +26,7 @@ public:
 
 private:
     IRCClient *FindOrCreateClient(IRCSocket *socket);
-    IRCClient *FindClientByNickname(const std::string& nickname);
+    IRCClient *FindClientByNickname(const std::string& nickname) const;
 
 
 private:
