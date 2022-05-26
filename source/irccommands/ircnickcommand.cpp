@@ -1,14 +1,15 @@
 #include "main/precomp.h"
 
 #include "irccommands/ircnickcommand.h"
-#include "irccommands/irccommands.h"
 
+#include "irccommands/irccommands.h"
 #include "parsing/ircparsinghelper.h"
 #include "ircresponses/ircresponseerr_erroneusnickname.h"
 #include "ircresponses/ircresponseerr_nonicknamegiven.h"
 #include "ircresponses/ircresponseerr_nickcollision.h"
 #include "ircresponses/ircresponseerr_nicknameinuse.h"
 #include "ircresponses/ircresponsesfactory.h"
+#include "ircserver/ircsocket.h"
 
 namespace ircserv
 {
@@ -63,35 +64,35 @@ bool IRCNickCommand::ProcessCommand(IRCSocket* socket)
 
 bool IRCNickCommand::ValidateArgs(IRCSocket* socket)
 {
-    // if (m_Args.empty())
-    // {
-    //     IRCResponseERR_NONICKNAMEGIVEN* response = dynamic_cast<IRCResponseERR_NONICKNAMEGIVEN*>(
-    //         GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_ERR_NONICKNAMEGIVEN)
-    //     );
-    //     if (response != NULL)
-    //     {
-    //         serv->sendResponse(response->GetResponse());
-    //     }
-    //     GetIRCResponsesFactory().DestroyResponse(response);
-    //     return false;
-    // }
-    // else
-    // {
-    //     if (!IRCParsingHelper::IsNick(m_Args[0]))
-    //     {
-    //         IRCResponseERR_ERRONEUSNICKNAME* response = dynamic_cast<IRCResponseERR_ERRONEUSNICKNAME*>(
-    //             GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_ERR_ERRONEUSNICKNAME)
-    //         );
-    //         if (response != NULL)
-    //         {
-    //             response->SetNick(m_Args[0]);
-    //             serv->sendResponse(response->GetResponse());
-    //         }
-    //         GetIRCResponsesFactory().DestroyResponse(response);
-    //         return false;
-    //     }
-    //     SetNickname(m_Args[0]);
-    // }
+    if (GetArgs().empty())
+    {
+        IRCResponse* response = IRCResponsesFactory::CreateResponse(Enum_IRCResponses_ERR_NONICKNAMEGIVEN);
+        if (response != NULL && socket != NULL)
+        {
+            socket->Send(response->GetResponse());
+            IRC_LOGD("Send %s response for %s command! Response: %s", EnumString<Enum_IRCResponses>::From(response->GetResponseEnum()).c_str(), EnumString<Enum_IRCCommands>::From(GetCommandEnum()).c_str(), response->GetResponse().c_str());
+        }
+        IRCResponsesFactory::DestroyResponse(response);
+        return false;
+    }
+    else
+    {
+        if (!IRCParsingHelper::IsNick(GetArgs()[0]))
+        {
+            IRCResponseERR_ERRONEUSNICKNAME* response = dynamic_cast<IRCResponseERR_ERRONEUSNICKNAME*>(
+                IRCResponsesFactory::CreateResponse(Enum_IRCResponses_ERR_ERRONEUSNICKNAME)
+            );
+            if (response != NULL && socket != NULL)
+            {
+                response->SetNick(GetArgs()[0]);
+                socket->Send(response->GetResponse());
+                IRC_LOGD("Send %s response for %s command! Response: %s", EnumString<Enum_IRCResponses>::From(response->GetResponseEnum()).c_str(), EnumString<Enum_IRCCommands>::From(GetCommandEnum()).c_str(), response->GetResponse().c_str());
+            }
+            IRCResponsesFactory::DestroyResponse(response);
+            return false;
+        }
+        SetNickname(GetArgs()[0]);
+    }
     return true;
 }
 

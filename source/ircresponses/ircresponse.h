@@ -22,8 +22,9 @@ public:
 public:
     inline void SetPrefix(const std::string& prefix) { m_Prefix = prefix; }
 
-protected:
+public:
     inline Enum_IRCResponses GetResponseEnum(void) const { return m_ResponseEnum; }
+protected:
     inline const std::string& GetPrefix(void) const { return m_Prefix; }
 
 private:
