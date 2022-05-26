@@ -44,9 +44,9 @@ void IRCClientsManager::Quit(IRCSocket *socket, const std::string& quitMessage)
     {
         Delete(it->second);
         m_SocketClientsMap.erase(it);
-        GetIRCServer().CloseConnection(socket);
-        IRC_LOGI("%s", "Client disconnected");
+        IRC_LOGD("%s", "Client disconnected");
     }
+    GetIRCServer().CloseConnection(socket);
 }
 
 bool IRCClientsManager::Pass(IRCSocket *socket, const std::string& password)
@@ -100,9 +100,9 @@ IRCClient *IRCClientsManager::FindOrCreateClient(IRCSocket *socket)
     return client;
 }
 
-IRCClient *IRCClientsManager::FindClientByNickname(const std::string& nickname)
+IRCClient *IRCClientsManager::FindClientByNickname(const std::string& nickname) const
 {
-    for ( std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.begin(); it != m_SocketClientsMap.end(); ++it)
+    for ( std::unordered_map<IRCSocket*, IRCClient*>::const_iterator it = m_SocketClientsMap.begin(); it != m_SocketClientsMap.end(); ++it)
     {
         if (it->second->GetNickname() == nickname)
         {

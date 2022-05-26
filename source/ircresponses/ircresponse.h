@@ -20,7 +20,7 @@ public:
     virtual std::string GetResponse(void) const = 0;
 
 public:
-    inline void SetPrefix(const std::string& prefix) { m_Prefix = prefix; }
+    inline void SetPrefix(const std::string& prefix) { m_Prefix = ":" + prefix; }
 
 public:
     inline Enum_IRCResponses GetResponseEnum(void) const { return m_ResponseEnum; }
