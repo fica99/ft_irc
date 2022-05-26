@@ -29,6 +29,7 @@
 #include "ircresponses/ircresponseerr_toomanytargets.h"
 #include "ircresponses/ircresponseerr_wildtoplevel.h"
 #include "ircresponses/ircresponserpl_away.h"
+#include "ircresponses/ircresponserpl_endofmotd.h"
 #include "ircresponses/ircresponserpl_endofnames.h"
 #include "ircresponses/ircresponserpl_list.h"
 #include "ircresponses/ircresponserpl_listend.h"
@@ -148,6 +149,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_RPL_AWAY:
             response = New(IRCResponseRPL_AWAY)();
+            break;
+        case Enum_IRCResponses_RPL_ENDOFMOTD:
+            response = New(IRCResponseRPL_ENDOFMOTD)();
             break;
         case Enum_IRCResponses_RPL_ENDOFNAMES:
             response = New(IRCResponseRPL_ENDOFNAMES)();
