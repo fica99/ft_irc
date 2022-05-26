@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include "ircresponses/ircresponses.h"
 #include "ircclient/ircclient.h"
 #include "ircserver/ircsocket.h"
 #include "utils/singleton.h"
@@ -21,6 +22,12 @@ private:
 public:
     void Quit(IRCSocket *socket, const std::string& quitMessage);
     bool Pass(IRCSocket *socket, const std::string& password);
+    Enum_IRCResponses Nick(IRCSocket *socket, const std::string& nickname);
+
+private:
+    IRCClient *FindOrCreateClient(IRCSocket *socket);
+    IRCClient *FindClientByNickname(const std::string& nickname);
+
 
 private:
     std::unordered_map<IRCSocket*, IRCClient*> m_SocketClientsMap;

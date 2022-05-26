@@ -12,7 +12,6 @@ IRCClient::IRCClient()
 
 void IRCClient::Initialize(void)
 {
-    m_IsRegistered = false;
 }
 
 IRCClient::~IRCClient()
