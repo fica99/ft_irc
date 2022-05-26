@@ -16,6 +16,9 @@ enum Enum_IRCResponses
     Enum_IRCResponses_RPL_TOPIC = 332,
     Enum_IRCResponses_RPL_NAMREPLY = 353,
     Enum_IRCResponses_RPL_ENDOFNAMES = 366,
+    Enum_IRCResponses_RPL_MOTD = 372,
+    Enum_IRCResponses_RPL_MOTDSTART = 375,
+    Enum_IRCResponses_RPL_ENDOFMOTD = 376,
     Enum_IRCResponses_RPL_YOUREOPER = 381,
     Enum_IRCResponses_ERR_NOSUCHNICK = 401,
     Enum_IRCResponses_ERR_NOSUCHSERVER = 402,
@@ -56,6 +59,9 @@ Begin_Enum_String(Enum_IRCResponses)
     Enum_String(Enum_IRCResponses_RPL_TOPIC, "332");
     Enum_String(Enum_IRCResponses_RPL_NAMREPLY, "353");
     Enum_String(Enum_IRCResponses_RPL_ENDOFNAMES, "366");
+    Enum_String(Enum_IRCResponses_RPL_MOTD, "372");
+    Enum_String(Enum_IRCResponses_RPL_MOTDSTART, "375");
+    Enum_String(Enum_IRCResponses_RPL_ENDOFMOTD, "376");
     Enum_String(Enum_IRCResponses_RPL_YOUREOPER, "381");
     Enum_String(Enum_IRCResponses_ERR_NOSUCHNICK, "401");
     Enum_String(Enum_IRCResponses_ERR_NOSUCHSERVER, "402");
