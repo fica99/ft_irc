@@ -208,6 +208,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponserpl_listend.o \
 	$(OBJDIR)/ircresponserpl_liststart.o \
 	$(OBJDIR)/ircresponserpl_motd.o \
+	$(OBJDIR)/ircresponserpl_motdstart.o \
 	$(OBJDIR)/ircresponserpl_namreply.o \
 	$(OBJDIR)/ircresponserpl_topic.o \
 	$(OBJDIR)/ircresponserpl_umodeis.o \
@@ -436,6 +437,9 @@ $(OBJDIR)/ircresponserpl_liststart.o: source/ircresponses/ircresponserpl_liststa
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponserpl_motd.o: source/ircresponses/ircresponserpl_motd.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_motdstart.o: source/ircresponses/ircresponserpl_motdstart.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponserpl_namreply.o: source/ircresponses/ircresponserpl_namreply.cpp
