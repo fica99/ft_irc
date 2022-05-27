@@ -12,6 +12,7 @@
 #include "ircresponses/ircresponseerr_erroneusnickname.h"
 #include "ircresponses/ircresponseerr_inviteonlychan.h"
 #include "ircresponses/ircresponseerr_needmoreparams.h"
+#include "ircresponses/ircresponseerr_nickcollision.h"
 #include "ircresponses/ircresponseerr_nicknameinuse.h"
 #include "ircresponses/ircresponseerr_nomotd.h"
 #include "ircresponses/ircresponseerr_nonicknamegiven.h"
@@ -101,6 +102,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_ERR_NICKNAMEINUSE:
             response = New(IRCResponseERR_NICKNAMEINUSE)();
+            break;
+        case Enum_IRCResponses_ERR_NICKCOLLISION:
+            response = New(IRCResponseERR_NICKCOLLISION)();
             break;
         case Enum_IRCResponses_ERR_NOMOTD:
             response = New(IRCResponseERR_NOMOTD)();
