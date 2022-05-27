@@ -21,9 +21,13 @@ public:
 
 public:
     inline void SetServer(const std::string& server) { m_Server = server; }
+    inline const std::string& GetServer(void) const { return m_Server; }
+    inline void SetNick(const std::string& nick) { m_Nick = nick; }
+    inline const std::string& GetNick(void) const { return m_Nick; }
 
 private:
     std::string m_Server;
+    std::string m_Nick;
 };
 
 }

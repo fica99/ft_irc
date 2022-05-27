@@ -27,7 +27,6 @@ bool IsSymbolSpace(char symb);
 
 bool IsUser(const std::string& user);
 bool IsNick(const std::string& nick);
-bool IsRealname(const std::string& realname);
 bool IsChannel(const std::string& channel);
 bool IsChannels(const std::string& channelsStr);
 
