@@ -87,6 +87,27 @@ Enum_IRCResponses IRCClientsManager::Nick(IRCSocket *socket, const std::string& 
     return Enum_IRCResponses_Unknown;
 }
 
+Enum_IRCResponses IRCClientsManager::User(IRCSocket *socket, const std::string& username, const std::string& realname)
+{
+    IRCClient *client = FindOrCreateClient(socket);
+    if (client->GetIsRegistered())
+    {
+        return Enum_IRCResponses_ERR_ALREADYREGISTRED;
+    }
+    client->SetUsername(username);
+    client->SetRealname(realname);
+    if (client->GetPassword() != GetIRCServer().GetPassword())
+    {
+        Quit(socket, "");
+    }
+    else if (client->GetIsRegistered())
+    {
+        return Enum_IRCResponses_RPL_MOTD;
+    }
+    return Enum_IRCResponses_Unknown;
+}
+
+
 IRCClient *IRCClientsManager::FindOrCreateClient(IRCSocket *socket)
 {
     IRCClient *client = FindClient(socket);

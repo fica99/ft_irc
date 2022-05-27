@@ -53,18 +53,6 @@ bool IRCParsingHelper::IsNick(const std::string& nick)
     return pos == nick.npos;
 }
 
-bool IRCParsingHelper::IsRealname(const std::string& realname)
-{
-    size_t pos;
-
-    if (realname.empty())
-    {
-        return false;
-    }
-    pos = realname.find_first_of(IRCSymbolsDefinition::SPACE_ASCII);
-    return pos != realname.npos;
-}
-
 bool IRCParsingHelper::IsChannel(const std::string& channel)
 {
     size_t pos = 0;

@@ -67,6 +67,17 @@ std::vector<IRCToken*> IRCLexer::Tokenize(std::string& msg)
 
     while (!msg.empty())
     {
+        if (!IRCParsingHelper::IsSymbolSpace(msg[0]))
+        {
+            IRC_LOGD("%s", "Before argument token should be space");
+            DestroyTokens(tokens);
+            return tokens;
+        }
+        msg.erase(0, msg.find_first_not_of(IRCParsingHelper::IRCSymbolsDefinition::SPACE_ASCII));
+        if (msg.empty())
+        {
+            break;
+        }
         token = GetArgToken(msg);
         if (token == NULL)
         {
@@ -232,14 +243,6 @@ IRCToken* IRCLexer::GetArgToken(std::string& msg)
     IRCArgToken* token;
     size_t pos;
     std::string arg;
-
-    if (msg.empty() || !IRCParsingHelper::IsSymbolSpace(msg[0]))
-    {
-        IRC_LOGD("%s", "Before argument token should be space");
-        return NULL;
-    }
-    pos = msg.find_first_not_of(IRCParsingHelper::IRCSymbolsDefinition::SPACE_ASCII);
-    msg.erase(0, pos);
 
     if (!msg.empty() && msg[0] == ':')
     {

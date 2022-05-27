@@ -23,12 +23,12 @@ public:
     void Quit(IRCSocket *socket, const std::string& quitMessage);
     bool Pass(IRCSocket *socket, const std::string& password);
     Enum_IRCResponses Nick(IRCSocket *socket, const std::string& nickname);
+    Enum_IRCResponses User(IRCSocket *socket, const std::string& username, const std::string& realname);
 
 public:
     IRCClient *FindOrCreateClient(IRCSocket *socket);
     IRCClient *FindClient(IRCSocket *socket);
     IRCClient *FindClientByNickname(const std::string& nickname) const;
-
 
 private:
     std::unordered_map<IRCSocket*, IRCClient*> m_SocketClientsMap;
