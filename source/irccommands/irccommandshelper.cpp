@@ -6,6 +6,7 @@
 #include "ircresponses/ircresponseerr_erroneusnickname.h"
 #include "ircresponses/ircresponseerr_needmoreparams.h"
 #include "ircresponses/ircresponseerr_nicknameinuse.h"
+#include "ircresponses/ircresponseerr_nomotd.h"
 #include "ircresponses/ircresponserpl_endofmotd.h"
 #include "ircresponses/ircresponserpl_motd.h"
 #include "ircresponses/ircresponserpl_motdstart.h"
@@ -112,9 +113,22 @@ void IRCCommandsHelper::SendRPL_MOTD(IRCSocket *socket, const std::string& filen
     }
     else
     {
-        // add no motd error
+        SendERR_NOMOTD(socket);
     }
 }
+
+void IRCCommandsHelper::SendERR_NOMOTD(IRCSocket *socket)
+{
+    IRCResponseERR_NOMOTD *response = dynamic_cast<IRCResponseERR_NOMOTD*>(
+        IRCResponsesFactory::CreateResponse(Enum_IRCResponses_ERR_NOMOTD)
+    );
+    if (response != NULL)
+    {
+        response->Send(socket);
+    }
+    IRCResponsesFactory::DestroyResponse(response);
+}
+
 
 void IRCCommandsHelper::SendMOTD(IRCSocket *socket, const std::string server, const std::string& filename)
 {

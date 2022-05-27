@@ -19,6 +19,7 @@ void SendERR_NICKNAMEINUSE(IRCSocket *socket, const std::string& nick);
 void SendRPL_MOTDSTART(IRCSocket *socket, const std::string server);
 void SendRPL_ENDOFMOTD(IRCSocket *socket);
 void SendRPL_MOTD(IRCSocket *socket, const std::string& filename);
+void SendERR_NOMOTD(IRCSocket *socket);
 void SendMOTD(IRCSocket *socket, const std::string server, const std::string& filename);
 
 }
