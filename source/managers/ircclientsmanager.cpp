@@ -89,14 +89,9 @@ Enum_IRCResponses IRCClientsManager::Nick(IRCSocket *socket, const std::string& 
 
 IRCClient *IRCClientsManager::FindOrCreateClient(IRCSocket *socket)
 {
-    IRCClient *client;
-    std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.find(socket);
-    
-    if (it != m_SocketClientsMap.end())
-    {
-        client = it->second;
-    }
-    else
+    IRCClient *client = FindClient(socket);
+
+    if (client == NULL)
     {
         client = New(IRCClient);
         m_SocketClientsMap[socket] = client;
@@ -104,6 +99,19 @@ IRCClient *IRCClientsManager::FindOrCreateClient(IRCSocket *socket)
     }
     return client;
 }
+
+IRCClient *IRCClientsManager::FindClient(IRCSocket *socket)
+{
+    IRCClient *client = NULL;
+    std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.find(socket);
+    
+    if (it != m_SocketClientsMap.end())
+    {
+        client = it->second;
+    }
+    return client;
+}
+
 
 IRCClient *IRCClientsManager::FindClientByNickname(const std::string& nickname) const
 {

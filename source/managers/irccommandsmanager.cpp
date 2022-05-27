@@ -4,6 +4,7 @@
 
 #include "irccommands/irccommand.h"
 #include "irccommands/irccommandsfactory.h"
+#include "irccommands/irccommandshelper.h"
 #include "ircserver/ircserver.h"
 #include "managers/ircclientsmanager.h"
 #include "parsing/tokens/irctoken.h"
@@ -38,14 +39,24 @@ void IRCCommandsManager::Shutdown(void)
     IRCClientsManager::DestroySingleton();
 }
 
-static void ProcessCommand(IRCCommand *command, IRCSocket *socket)
+static void ProcessCommand(IRCCommand *command, IRCSocket *socket, const std::string& message)
 {
+
     if (command != NULL)
     {
         IRC_LOGD("Received command: %s", EnumString<Enum_IRCCommands>::From(command->GetCommandEnum()).c_str());
         command->ProcessCommand(socket);
-    } else
+    }
+    else
     {
+        IRCClient *client = GetIRCClientsManager().FindClient(socket);
+        if (client != NULL)
+        {
+            if (client->GetIsRegistered())
+            {
+                IRCCommandsHelper::SendERR_UNKNOWNCOMMAND(socket, message);
+            }
+        }
         IRC_LOGI("%s", "Unknown command received");
     }
 }
@@ -59,7 +70,7 @@ void IRCCommandsManager::ProcessCommands(std::string message, IRCSocket *socket)
     if (message.empty())
     {
         command = IRCCommandsFactory::CreateCommand(Enum_IRCCommands_Quit);
-        ProcessCommand(command, socket);
+        ProcessCommand(command, socket, "");
         IRCCommandsFactory::DestroyCommand(command);
         return;
     }
@@ -78,7 +89,7 @@ void IRCCommandsManager::ProcessCommands(std::string message, IRCSocket *socket)
         IRC_LOGD("Processing splitted message: %s", messages[i].c_str());
         std::vector<IRCToken*> tokens = m_Lexer.Tokenize(messages[i]);
         command = m_Parser.CreateCommand(tokens);
-        ProcessCommand(command, socket);
+        ProcessCommand(command, socket, messages[i]);
         m_Lexer.DestroyTokens(tokens);
         IRCCommandsFactory::DestroyCommand(command);
     }

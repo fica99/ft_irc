@@ -35,7 +35,7 @@ std::string IRCResponseRPL_LIST::GetResponse(void) const
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
     // add visiable
-    response += " " + m_Channel + " :" + m_Topic;
+    response += " " + m_Channel + " :" + m_Topic + "\n";
     return response;
 }
 

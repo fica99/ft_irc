@@ -24,8 +24,9 @@ public:
     bool Pass(IRCSocket *socket, const std::string& password);
     Enum_IRCResponses Nick(IRCSocket *socket, const std::string& nickname);
 
-private:
+public:
     IRCClient *FindOrCreateClient(IRCSocket *socket);
+    IRCClient *FindClient(IRCSocket *socket);
     IRCClient *FindClientByNickname(const std::string& nickname) const;
 
 

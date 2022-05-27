@@ -21,6 +21,7 @@ void SendRPL_ENDOFMOTD(IRCSocket *socket);
 void SendRPL_MOTD(IRCSocket *socket, const std::string& filename);
 void SendERR_NOMOTD(IRCSocket *socket);
 void SendMOTD(IRCSocket *socket, const std::string server, const std::string& filename);
+void SendERR_UNKNOWNCOMMAND(IRCSocket *socket, const std::string& command);
 
 }
 
