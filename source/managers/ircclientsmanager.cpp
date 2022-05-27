@@ -71,6 +71,7 @@ Enum_IRCResponses IRCClientsManager::Nick(IRCSocket *socket, const std::string& 
         return Enum_IRCResponses_ERR_NICKNAMEINUSE;
     }
     IRCClient *client = FindOrCreateClient(socket);
+    const std::string& prevNickname = client->GetNickname();
     client->SetNickname(nickname);
     if (client->GetIsRegistered() == true)
     {
@@ -78,9 +79,9 @@ Enum_IRCResponses IRCClientsManager::Nick(IRCSocket *socket, const std::string& 
         {
             Quit(socket, "");
         }
-        else
+        else if (prevNickname.empty() == true)
         {
-            
+            return Enum_IRCResponses_RPL_MOTD;
         }
     }
     return Enum_IRCResponses_Unknown;
