@@ -34,7 +34,7 @@ std::string IRCResponseRPL_AWAY::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + m_Nick + " :" + m_AwayMessage;
+    response += " " + m_Nick + " :" + m_AwayMessage + "\n";
     return response;
 }
 

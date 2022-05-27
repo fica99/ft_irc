@@ -7,6 +7,7 @@
 #include "ircresponses/ircresponseerr_needmoreparams.h"
 #include "ircresponses/ircresponseerr_nicknameinuse.h"
 #include "ircresponses/ircresponseerr_nomotd.h"
+#include "ircresponses/ircresponseerr_unknowncommand.h"
 #include "ircresponses/ircresponserpl_endofmotd.h"
 #include "ircresponses/ircresponserpl_motd.h"
 #include "ircresponses/ircresponserpl_motdstart.h"
@@ -136,6 +137,20 @@ void IRCCommandsHelper::SendMOTD(IRCSocket *socket, const std::string server, co
     IRCCommandsHelper::SendRPL_MOTD(socket, filename);
     IRCCommandsHelper::SendRPL_ENDOFMOTD(socket);
 }
+
+void IRCCommandsHelper::SendERR_UNKNOWNCOMMAND(IRCSocket *socket, const std::string& command)
+{
+    IRCResponseERR_UNKNOWNCOMMAND *response = dynamic_cast<IRCResponseERR_UNKNOWNCOMMAND*>(
+        IRCResponsesFactory::CreateResponse(Enum_IRCResponses_ERR_UNKNOWNCOMMAND)
+    );
+    if (response != NULL)
+    {
+        response->SetCommand(command);
+        response->Send(socket);
+    }
+    IRCResponsesFactory::DestroyResponse(response);
+}
+
 
 
 }

@@ -51,7 +51,7 @@ std::string IRCResponseRPL_NAMREPLY::GetResponse(void) const
             response += " ";
         }
     }
-    return response;
+    return response + '\n';
 }
 
 

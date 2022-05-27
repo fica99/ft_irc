@@ -34,7 +34,7 @@ std::string IRCResponseRPL_MOTDSTART::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " :- " + m_Server + " Message of the day - ";
+    response += " :- " + m_Server + " Message of the day - \n";
     return response;
 }
 
