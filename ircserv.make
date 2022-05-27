@@ -188,6 +188,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponseerr_inviteonlychan.o \
 	$(OBJDIR)/ircresponseerr_needmoreparams.o \
 	$(OBJDIR)/ircresponseerr_nicknameinuse.o \
+	$(OBJDIR)/ircresponseerr_nomotd.o \
 	$(OBJDIR)/ircresponseerr_nonicknamegiven.o \
 	$(OBJDIR)/ircresponseerr_nooperhost.o \
 	$(OBJDIR)/ircresponseerr_noprivileges.o \
@@ -378,6 +379,9 @@ $(OBJDIR)/ircresponseerr_needmoreparams.o: source/ircresponses/ircresponseerr_ne
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_nicknameinuse.o: source/ircresponses/ircresponseerr_nicknameinuse.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_nomotd.o: source/ircresponses/ircresponseerr_nomotd.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_nonicknamegiven.o: source/ircresponses/ircresponseerr_nonicknamegiven.cpp
