@@ -3,6 +3,7 @@
 #include <string>
 
 #include "ircresponses/ircresponses.h"
+#include "ircserver/ircsocket.h"
 
 namespace ircserv
 {
@@ -17,6 +18,7 @@ private:
     void Shutdown(void);
 
 public:
+    void Send(IRCSocket *socket);
     virtual std::string GetResponse(void) const = 0;
 
 public:
