@@ -34,6 +34,10 @@ std::string IRCResponseRPL_UMODEIS::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " " + m_UserModeString + '\n';
     return response;
 }

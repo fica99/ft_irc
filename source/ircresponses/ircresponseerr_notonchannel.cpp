@@ -34,6 +34,10 @@ std::string IRCResponseERR_NOTONCHANNEL::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " " + m_Channel + " :You're not on that channel\n";
     return response;
 }

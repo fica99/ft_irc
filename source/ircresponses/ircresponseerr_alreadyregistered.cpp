@@ -34,6 +34,10 @@ std::string IRCResponseERR_ALREADYREGISTERED::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " :You may not reregister\n";
     return response;
 }

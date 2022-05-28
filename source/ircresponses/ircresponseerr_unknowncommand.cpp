@@ -34,6 +34,10 @@ std::string IRCResponseERR_UNKNOWNCOMMAND::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " " + m_Command + " :Unknown command\n";
     return response;
 }

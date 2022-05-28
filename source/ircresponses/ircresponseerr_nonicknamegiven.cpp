@@ -34,6 +34,10 @@ std::string IRCResponseERR_NONICKNAMEGIVEN::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " :No nickname given\n";
     return response;
 }

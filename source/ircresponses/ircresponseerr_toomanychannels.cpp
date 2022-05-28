@@ -34,6 +34,10 @@ std::string IRCResponseERR_TOOMANYCHANNELS::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " " + m_ChannelName + " :You have joined too many channels\n";
     return response;
 }

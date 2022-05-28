@@ -34,6 +34,10 @@ std::string IRCResponseERR_NOSUCHSERVER::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " " + m_ServerName + " :No such server\n";
     return response;
 }

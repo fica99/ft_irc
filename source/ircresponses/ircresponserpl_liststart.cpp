@@ -34,6 +34,10 @@ std::string IRCResponseRPL_LISTSTART::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " Channel :Users  Name\n";
     return response;
 }

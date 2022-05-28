@@ -34,6 +34,10 @@ std::string IRCResponseERR_NOOPERHOST::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " :No O-lines for your host\n";
     return response;
 }

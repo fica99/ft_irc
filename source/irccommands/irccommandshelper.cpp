@@ -2,6 +2,7 @@
 
 #include "irccommands/irccommandshelper.h"
 
+#include "ircclient/ircclient.h"
 #include "ircresponses/ircresponse.h"
 #include "ircresponses/ircresponseerr_erroneusnickname.h"
 #include "ircresponses/ircresponseerr_needmoreparams.h"
@@ -13,6 +14,7 @@
 #include "ircresponses/ircresponserpl_motdstart.h"
 #include "ircresponses/ircresponses.h"
 #include "ircresponses/ircresponsesfactory.h"
+#include "managers/ircclientsmanager.h"
 
 namespace ircserv
 {
@@ -22,6 +24,8 @@ void IRCCommandsHelper::SendResponseWithoutParams(IRCSocket *socket, Enum_IRCRes
     IRCResponse* response = IRCResponsesFactory::CreateResponse(responseEnum);
     if (response != NULL)
     {
+        IRCClient* client = GetIRCClientsManager().FindClient(socket);
+        response->SetNickname(client ? client->GetNickname() : "");
         response->Send(socket);
     }
     IRCResponsesFactory::DestroyResponse(response);
@@ -35,6 +39,8 @@ void IRCCommandsHelper::SendERR_NEEDMOREPARAMS(IRCSocket *socket, Enum_IRCComman
     );
     if (response != NULL)
     {
+        IRCClient* client = GetIRCClientsManager().FindClient(socket);
+        response->SetNickname(client ? client->GetNickname() : "");
         response->SetCommand(command);
         response->Send(socket);
     }
@@ -48,6 +54,8 @@ void IRCCommandsHelper::SendERR_ERRONEUSNICKNAME(IRCSocket *socket, const std::s
     );
     if (response != NULL)
     {
+        IRCClient* client = GetIRCClientsManager().FindClient(socket);
+        response->SetNickname(client ? client->GetNickname() : "");
         response->SetNick(nick);
         response->Send(socket);
     }
@@ -61,40 +69,30 @@ void IRCCommandsHelper::SendERR_NICKNAMEINUSE(IRCSocket *socket, const std::stri
     );
     if (response != NULL)
     {
+        IRCClient* client = GetIRCClientsManager().FindClient(socket);
+        response->SetNickname(client ? client->GetNickname() : "");
         response->SetNick(nick);
         response->Send(socket);
     }
     IRCResponsesFactory::DestroyResponse(response);
 }
 
-void IRCCommandsHelper::SendRPL_MOTDSTART(IRCSocket *socket, const std::string& nick, const std::string server)
+void IRCCommandsHelper::SendRPL_MOTDSTART(IRCSocket *socket, const std::string server)
 {
     IRCResponseRPL_MOTDSTART *response = dynamic_cast<IRCResponseRPL_MOTDSTART*>(
         IRCResponsesFactory::CreateResponse(Enum_IRCResponses_RPL_MOTDSTART)
     );
     if (response != NULL)
     {
-        response->SetNick(nick);
+        IRCClient* client = GetIRCClientsManager().FindClient(socket);
+        response->SetNickname(client ? client->GetNickname() : "");
         response->SetServer(server);
         response->Send(socket);
     }
     IRCResponsesFactory::DestroyResponse(response);
 }
 
-void IRCCommandsHelper::SendRPL_ENDOFMOTD(IRCSocket *socket, const std::string& nick)
-{
-    IRCResponseRPL_ENDOFMOTD *response = dynamic_cast<IRCResponseRPL_ENDOFMOTD*>(
-        IRCResponsesFactory::CreateResponse(Enum_IRCResponses_RPL_ENDOFMOTD)
-    );
-    if (response != NULL)
-    {
-        response->SetNick(nick);
-        response->Send(socket);
-    }
-    IRCResponsesFactory::DestroyResponse(response);
-}
-
-void IRCCommandsHelper::SendRPL_MOTD(IRCSocket *socket, const std::string& nick, const std::string& filename)
+void IRCCommandsHelper::SendRPL_MOTD(IRCSocket *socket, const std::string& filename)
 {
     std::ifstream file(filename);
     std::string line;
@@ -108,8 +106,9 @@ void IRCCommandsHelper::SendRPL_MOTD(IRCSocket *socket, const std::string& nick,
             );
             if (response != NULL)
             {
+                IRCClient* client = GetIRCClientsManager().FindClient(socket);
+                response->SetNickname(client ? client->GetNickname() : "");
                 response->SetText(line);
-                response->SetNick(nick);
                 response->Send(socket);
             }
             IRCResponsesFactory::DestroyResponse(response);
@@ -117,29 +116,16 @@ void IRCCommandsHelper::SendRPL_MOTD(IRCSocket *socket, const std::string& nick,
     }
     else
     {
-        SendERR_NOMOTD(socket, nick);
+        SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_NOMOTD);
     }
 }
 
-void IRCCommandsHelper::SendERR_NOMOTD(IRCSocket *socket, const std::string& nick)
-{
-    IRCResponseERR_NOMOTD *response = dynamic_cast<IRCResponseERR_NOMOTD*>(
-        IRCResponsesFactory::CreateResponse(Enum_IRCResponses_ERR_NOMOTD)
-    );
-    if (response != NULL)
-    {
-        response->SetNick(nick);
-        response->Send(socket);
-    }
-    IRCResponsesFactory::DestroyResponse(response);
-}
 
-
-void IRCCommandsHelper::SendMOTD(IRCSocket *socket, const std::string server, const std::string& nick, const std::string& filename)
+void IRCCommandsHelper::SendMOTD(IRCSocket *socket, const std::string server, const std::string& filename)
 {
-    IRCCommandsHelper::SendRPL_MOTDSTART(socket, nick, server);
-    IRCCommandsHelper::SendRPL_MOTD(socket, nick, filename);
-    IRCCommandsHelper::SendRPL_ENDOFMOTD(socket, nick);
+    IRCCommandsHelper::SendRPL_MOTDSTART(socket, server);
+    IRCCommandsHelper::SendRPL_MOTD(socket, filename);
+    SendResponseWithoutParams(socket, Enum_IRCResponses_RPL_ENDOFMOTD);
     IRC_LOGD("%s", "Client registered");
 }
 
@@ -150,12 +136,12 @@ void IRCCommandsHelper::SendERR_UNKNOWNCOMMAND(IRCSocket *socket, const std::str
     );
     if (response != NULL)
     {
+        IRCClient* client = GetIRCClientsManager().FindClient(socket);
+        response->SetNickname(client ? client->GetNickname() : "");
         response->SetCommand(command);
         response->Send(socket);
     }
     IRCResponsesFactory::DestroyResponse(response);
 }
-
-
 
 }

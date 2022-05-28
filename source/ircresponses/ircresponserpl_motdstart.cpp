@@ -34,7 +34,11 @@ std::string IRCResponseRPL_MOTDSTART::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + GetNick() + " :- " + GetServer() + " Message of the day - \n";
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
+    response += " :- " + GetServer() + " Message of the day - \n";
     return response;
 }
 

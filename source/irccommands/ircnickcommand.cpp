@@ -2,7 +2,6 @@
 
 #include "irccommands/ircnickcommand.h"
 
-#include "ircclient/ircclient.h"
 #include "irccommands/irccommands.h"
 #include "irccommands/irccommandshelper.h"
 #include "ircresponses/ircresponses.h"
@@ -44,8 +43,7 @@ bool IRCNickCommand::ProcessCommand(IRCSocket* socket)
         }
         else if (enumResponse == Enum_IRCResponses_RPL_MOTD)
         {
-            IRCClient* client = GetIRCClientsManager().FindClient(socket);
-            IRCCommandsHelper::SendMOTD(socket, "IRC", client->GetNickname(), "./conf/IRC.motd");
+            IRCCommandsHelper::SendMOTD(socket, "IRC", "./conf/IRC.motd");
         }
         return true;
     }

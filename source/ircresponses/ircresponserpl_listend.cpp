@@ -34,6 +34,10 @@ std::string IRCResponseRPL_LISTEND::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " :End of /LIST\n";
     return response;
 }

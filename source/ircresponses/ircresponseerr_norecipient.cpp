@@ -34,6 +34,10 @@ std::string IRCResponseERR_NORECIPIENT::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " :No recipient given (" + m_Command + ")\n";
     return response;
 }
