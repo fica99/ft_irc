@@ -24,12 +24,15 @@ public:
     inline const std::string& GetUsername(void) const { return m_Username; }
     inline void SetRealname(const std::string& realname) { m_Realname = realname; }
     inline const std::string& GetRealname(void) const { return m_Realname; }
+    inline void SetIsOper(bool isOper) { m_IsOper = isOper; }
+    inline const bool GetIsOper(void) const { return m_IsOper; }
 
 private:
     std::string m_Password;
     std::string m_Nickname;
     std::string m_Username;
     std::string m_Realname;
+    bool m_IsOper;
 };
 
 

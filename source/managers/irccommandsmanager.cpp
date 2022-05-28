@@ -24,7 +24,6 @@ IRCCommandsManager::IRCCommandsManager()
 
 void IRCCommandsManager::Initialize(void)
 {
-    IRCClientsManager::CreateSingleton();
 }
 
 IRCCommandsManager::~IRCCommandsManager()
@@ -36,7 +35,6 @@ IRCCommandsManager::~IRCCommandsManager()
 
 void IRCCommandsManager::Shutdown(void)
 {
-    IRCClientsManager::DestroySingleton();
 }
 
 static void ProcessCommand(IRCCommand *command, IRCSocket *socket, const std::string& message)

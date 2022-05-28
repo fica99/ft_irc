@@ -12,6 +12,7 @@ IRCClient::IRCClient()
 
 void IRCClient::Initialize(void)
 {
+    m_IsOper = false;
 }
 
 IRCClient::~IRCClient()

@@ -1,12 +1,12 @@
 #include "main/precomp.h"
 
 #include "irccommands/ircopercommand.h"
-#include "irccommands/irccommands.h"
 
-#include "parsing/ircparsinghelper.h"
-#include "ircresponses/ircresponseerr_needmoreparams.h"
-#include "ircresponses/ircresponserpl_youreoper.h"
-#include "ircresponses/ircresponsesfactory.h"
+#include "irccommands/irccommands.h"
+#include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponses.h"
+#include "ircserver/ircsocket.h"
+#include "managers/ircclientsmanager.h"
 
 namespace ircserv
 {
@@ -33,40 +33,25 @@ bool IRCOperCommand::ProcessCommand(IRCSocket *socket)
 {
     if (ValidateArgs(socket))
     {
-        // IRCResponseRPL_YOUREOPER* response = dynamic_cast<IRCResponseRPL_YOUREOPER*>(
-        //     GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_RPL_YOUREOPER)
-        // );
-        // // send response
-        // GetIRCResponsesFactory().DestroyResponse(response);
-        return true;
+        Enum_IRCResponses responseEnum = GetIRCClientsManager().Oper(socket, GetUser(), GetPassword());
+        IRCCommandsHelper::SendResponseWithoutParams(socket, responseEnum);
+        return responseEnum == Enum_IRCResponses_RPL_YOUREOPER;
     }
     return false;
 }
 
 bool IRCOperCommand::ValidateArgs(IRCSocket *socket)
 {
-    // if (m_Args.size() < 2)
-    // {
-    //     IRCResponseERR_NEEDMOREPARAMS* response = dynamic_cast<IRCResponseERR_NEEDMOREPARAMS*>(
-    //         GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_ERR_NEEDMOREPARAMS)
-    //     );
-    //     if (response != NULL)
-    //     {
-    //         response->SetCommand(EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
-    //     }
-    //     // send response
-    //     GetIRCResponsesFactory().DestroyResponse(response);
-    //     return false;
-    // }
-    // else
-    // {
-    //     if (!IRCParsingHelper::IsUser(m_Args[0]))
-    //     {
-    //         return false;
-    //     }
-    //     SetUser(m_Args[1]);
-    //     SetPassword(m_Args[1]);
-    // }
+    if (GetArgs().size() < 2)
+    {
+        IRCCommandsHelper::SendERR_NEEDMOREPARAMS(socket, GetCommandEnum());
+        return false;
+    }
+    else
+    {
+        SetUser(GetArgs()[0]);
+        SetPassword(GetArgs()[1]);
+    }
     return true;
 }
 

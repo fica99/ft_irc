@@ -110,6 +110,30 @@ Enum_IRCResponses IRCClientsManager::User(IRCSocket *socket, const std::string& 
     return Enum_IRCResponses_Unknown;
 }
 
+Enum_IRCResponses IRCClientsManager::Oper(IRCSocket *socket, const std::string& user, const std::string& password)
+{
+    IRCClient *client = FindClient(socket);
+    if (client == NULL)
+    {
+        return Enum_IRCResponses_ERR_ALREADYREGISTRED;
+    }
+
+    if (!m_OpersMap.empty())
+    {
+        std::unordered_map<std::string, std::string>::iterator it = m_OpersMap.find(user);
+        if (it != m_OpersMap.end())
+        {
+            if (password == it->second)
+            {
+                client->SetIsOper(true);
+                return Enum_IRCResponses_RPL_YOUREOPER;
+            }
+        }
+        return Enum_IRCResponses_ERR_PASSWDMISMATCH;
+    }
+    return Enum_IRCResponses_ERR_NOOPERHOST;
+}
+
 
 IRCClient *IRCClientsManager::FindOrCreateClient(IRCSocket *socket)
 {
@@ -148,5 +172,11 @@ IRCClient *IRCClientsManager::FindClientByNickname(const std::string& nickname) 
     }
     return NULL;
 }
+
+void IRCClientsManager::AddOper(const std::string& user, const std::string& password)
+{
+    m_OpersMap[user] = password;
+}
+
 
 }

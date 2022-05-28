@@ -37,6 +37,7 @@ enum Enum_IRCResponses
     Enum_IRCResponses_ERR_NICKNAMEINUSE = 433,
     Enum_IRCResponses_ERR_NICKCOLLISION = 436,
     Enum_IRCResponses_ERR_NOTONCHANNEL = 442,
+    Enum_IRCResponses_ERR_NOTREGISTERED = 451,
     Enum_IRCResponses_ERR_NEEDMOREPARAMS = 461,
     Enum_IRCResponses_ERR_ALREADYREGISTRED = 462,
     Enum_IRCResponses_ERR_PASSWDMISMATCH = 464,
@@ -82,6 +83,7 @@ Begin_Enum_String(Enum_IRCResponses)
     Enum_String(Enum_IRCResponses_ERR_NICKNAMEINUSE, "433");
     Enum_String(Enum_IRCResponses_ERR_NICKCOLLISION, "436");
     Enum_String(Enum_IRCResponses_ERR_NOTONCHANNEL, "442");
+    Enum_String(Enum_IRCResponses_ERR_NOTREGISTERED, "451");
     Enum_String(Enum_IRCResponses_ERR_NEEDMOREPARAMS, "461");
     Enum_String(Enum_IRCResponses_ERR_ALREADYREGISTRED, "462");
     Enum_String(Enum_IRCResponses_ERR_PASSWDMISMATCH, "464");
