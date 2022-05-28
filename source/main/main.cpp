@@ -31,6 +31,7 @@ static void ServerLoop()
 
     serv.SetPort(GetCommandLineOptions().GetPort());
     serv.SetPassword(GetCommandLineOptions().GetPassword());
+    serv.SetServerName("IRC");
     serv.Start();
 }
 

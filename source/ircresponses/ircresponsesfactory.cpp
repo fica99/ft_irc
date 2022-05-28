@@ -2,6 +2,7 @@
 
 #include "ircresponses/ircresponsesfactory.h"
 
+#include "ircserver/ircserver.h"
 #include "ircresponses/ircresponseerr_alreadyregistered.h"
 #include "ircresponses/ircresponseerr_badchannelkey.h"
 #include "ircresponses/ircresponseerr_bannedfromchan.h"
@@ -197,7 +198,7 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
     }
     if (response != NULL)
     {
-        response->SetPrefix("IRC");
+        response->SetPrefix(GetIRCServer().GetServerName());
     }
     return response;
 }
