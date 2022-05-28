@@ -34,6 +34,10 @@ std::string IRCResponseERR_NOTOPLEVEL::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " " + m_Mask + " :No toplevel domain specified\n";
     return response;
 }

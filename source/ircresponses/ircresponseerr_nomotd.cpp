@@ -34,7 +34,11 @@ std::string IRCResponseERR_NOMOTD::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
-    response += " " + GetNick() + " :MOTD File is missing\n";
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
+    response += " :MOTD File is missing\n";
     return response;
 }
 

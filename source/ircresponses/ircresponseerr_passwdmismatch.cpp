@@ -34,6 +34,10 @@ std::string IRCResponseERR_PASSWDMISMATCH::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " :Password incorrect\n";
     return response;
 }

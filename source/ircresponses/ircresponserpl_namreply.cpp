@@ -34,6 +34,10 @@ std::string IRCResponseRPL_NAMREPLY::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " " + m_Channel + " :";
     for (size_t i = 0; i < m_Nicks.size(); ++i)
     {

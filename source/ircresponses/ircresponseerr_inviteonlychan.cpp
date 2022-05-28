@@ -34,6 +34,10 @@ std::string IRCResponseERR_INVITEONLYCHAN::GetResponse(void) const
         response += " ";
     }
     response += EnumString<Enum_IRCResponses>::From(GetResponseEnum());
+    if (!GetNickname().empty())
+    {
+        response += " " + GetNickname();
+    }
     response += " " + m_Channel + " :Cannot join channel (+i)\n";
     return response;
 }
