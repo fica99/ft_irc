@@ -19,7 +19,7 @@ private:
     void Shutdown(void);
 
 public:
-    std::vector<IRCToken*> Tokenize(std::string& msg);
+    std::vector<IRCToken*> Tokenize(std::string msg);
     void DestroyTokens(std::vector<IRCToken*>& tokens);
 private:
     IRCToken* GetPrefixToken(std::string& msg);

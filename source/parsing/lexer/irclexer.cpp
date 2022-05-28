@@ -29,7 +29,7 @@ void IRCLexer::Shutdown(void)
 {
 }
 
-std::vector<IRCToken*> IRCLexer::Tokenize(std::string& msg)
+std::vector<IRCToken*> IRCLexer::Tokenize(std::string msg)
 {
     std::vector<IRCToken*> tokens;
     IRCToken* token;

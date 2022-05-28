@@ -96,13 +96,16 @@ Enum_IRCResponses IRCClientsManager::User(IRCSocket *socket, const std::string& 
     }
     client->SetUsername(username);
     client->SetRealname(realname);
-    if (client->GetPassword() != GetIRCServer().GetPassword())
+    if (client->GetIsRegistered() == true)
     {
-        Quit(socket, "");
-    }
-    else if (client->GetIsRegistered())
-    {
-        return Enum_IRCResponses_RPL_MOTD;
+        if (client->GetPassword() != GetIRCServer().GetPassword())
+        {
+            Quit(socket, "");
+        }
+        else
+        {
+            return Enum_IRCResponses_RPL_MOTD;
+        }
     }
     return Enum_IRCResponses_Unknown;
 }
