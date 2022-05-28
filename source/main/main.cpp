@@ -3,6 +3,7 @@
 #include "programoptions/commandlineoptionschecker.h"
 #include "programoptions/commandlineoptions.h"
 #include "ircserver/ircserver.h"
+#include "managers/ircchannelsmanager.h"
 #include "managers/ircclientsmanager.h"
 #include "managers/irccommandsmanager.h"
 #include "utils/logs/irclogsinitializer.h"
@@ -15,6 +16,7 @@ static void Initialize(void)
     IRCLogsInitializer::CreateSingleton();
     CommandLineOptions::CreateSingleton();
     IRCClientsManager::CreateSingleton();
+    IRCChannelsManager::CreateSingleton();
     IRCCommandsManager::CreateSingleton();
     IRCServer::CreateSingleton();
 }
@@ -23,6 +25,7 @@ static void Shutdown(void)
 {
     IRCServer::DestroySingleton();
     IRCCommandsManager::DestroySingleton();
+    IRCChannelsManager::DestroySingleton();
     IRCClientsManager::DestroySingleton();
     CommandLineOptions::DestroySingleton();
     IRCLogsInitializer::DestroySingleton();

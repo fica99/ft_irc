@@ -115,7 +115,7 @@ Enum_IRCResponses IRCClientsManager::Oper(IRCSocket *socket, const std::string& 
     IRCClient *client = FindClient(socket);
     if (client == NULL)
     {
-        return Enum_IRCResponses_ERR_ALREADYREGISTRED;
+        return Enum_IRCResponses_ERR_NOTREGISTERED;
     }
 
     if (!m_OpersMap.empty())

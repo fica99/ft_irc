@@ -159,6 +159,7 @@ all: prebuild prelink $(TARGET)
 endif
 
 OBJECTS := \
+	$(OBJDIR)/ircchannel.o \
 	$(OBJDIR)/ircclient.o \
 	$(OBJDIR)/irccommand.o \
 	$(OBJDIR)/irccommandsfactory.o \
@@ -223,6 +224,7 @@ OBJECTS := \
 	$(OBJDIR)/ircsocket.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/precomp.o \
+	$(OBJDIR)/ircchannelsmanager.o \
 	$(OBJDIR)/ircclientsmanager.o \
 	$(OBJDIR)/irccommandsmanager.o \
 	$(OBJDIR)/ircparsinghelper.o \
@@ -297,6 +299,9 @@ else
 $(OBJECTS): | $(OBJDIR)
 endif
 
+$(OBJDIR)/ircchannel.o: source/ircchannel/ircchannel.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircclient.o: source/ircclient/ircclient.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -487,6 +492,9 @@ $(OBJDIR)/main.o: source/main/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/precomp.o: source/main/precomp.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircchannelsmanager.o: source/managers/ircchannelsmanager.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircclientsmanager.o: source/managers/ircclientsmanager.cpp

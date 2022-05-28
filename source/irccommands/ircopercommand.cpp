@@ -31,6 +31,13 @@ void IRCOperCommand::Shutdown(void)
 
 bool IRCOperCommand::ProcessCommand(IRCSocket *socket)
 {
+    IRCClient *client = GetIRCClientsManager().FindClient(socket);
+    if (client == NULL)
+    {
+        IRCCommandsHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_NOTREGISTERED);
+        return false;
+    }
+
     if (ValidateArgs(socket))
     {
         Enum_IRCResponses responseEnum = GetIRCClientsManager().Oper(socket, GetUser(), GetPassword());

@@ -8,6 +8,7 @@
 #include "ircresponses/ircresponseerr_needmoreparams.h"
 #include "ircresponses/ircresponseerr_nicknameinuse.h"
 #include "ircresponses/ircresponseerr_nomotd.h"
+#include "ircresponses/ircresponseerr_nosuchchannel.h"
 #include "ircresponses/ircresponseerr_unknowncommand.h"
 #include "ircresponses/ircresponserpl_endofmotd.h"
 #include "ircresponses/ircresponserpl_motd.h"
@@ -139,6 +140,21 @@ void IRCCommandsHelper::SendERR_UNKNOWNCOMMAND(IRCSocket *socket, const std::str
         IRCClient* client = GetIRCClientsManager().FindClient(socket);
         response->SetNickname(client ? client->GetNickname() : "");
         response->SetCommand(command);
+        response->Send(socket);
+    }
+    IRCResponsesFactory::DestroyResponse(response);
+}
+
+void IRCCommandsHelper::SendERR_NOSUCHCHANNEL(IRCSocket *socket, const std::string& channelName)
+{
+    IRCResponseERR_NOSUCHCHANNEL *response = dynamic_cast<IRCResponseERR_NOSUCHCHANNEL*>(
+        IRCResponsesFactory::CreateResponse(Enum_IRCResponses_ERR_NOSUCHCHANNEL)
+    );
+    if (response != NULL)
+    {
+        IRCClient* client = GetIRCClientsManager().FindClient(socket);
+        response->SetNickname(client ? client->GetNickname() : "");
+        response->SetChannelName(channelName);
         response->Send(socket);
     }
     IRCResponsesFactory::DestroyResponse(response);
