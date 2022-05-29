@@ -12,8 +12,7 @@ IRCClient::IRCClient()
 
 void IRCClient::Initialize(void)
 {
-    m_IsOper = false;
-    m_NumberJoinedChannels = 0;
+    m_Modes = 0;
 }
 
 IRCClient::~IRCClient()

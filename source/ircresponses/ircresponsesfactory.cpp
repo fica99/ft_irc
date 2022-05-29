@@ -2,7 +2,6 @@
 
 #include "ircresponses/ircresponsesfactory.h"
 
-#include "ircserver/ircserver.h"
 #include "ircresponses/ircresponseerr_alreadyregistered.h"
 #include "ircresponses/ircresponseerr_badchannelkey.h"
 #include "ircresponses/ircresponseerr_bannedfromchan.h"
@@ -69,145 +68,385 @@ void IRCResponsesFactory::Shutdown(void)
 {
 }
 
-IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
+IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType, const std::string& arg1, const std::string& arg2)
 {
     IRCResponse* response = NULL;
     switch (responseType)
     {
         case Enum_IRCResponses_ERR_ALREADYREGISTRED:
-            response = New(IRCResponseERR_ALREADYREGISTERED)();
+        {
+            IRCResponseERR_ALREADYREGISTERED* dynamicResponse = New(IRCResponseERR_ALREADYREGISTERED)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_BADCHANNELKEY:
-            response = New(IRCResponseERR_BADCHANNELKEY)();
+        {
+            IRCResponseERR_BADCHANNELKEY* dynamicResponse = New(IRCResponseERR_BADCHANNELKEY)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_BANNEDFROMCHAN:
-            response = New(IRCResponseERR_BANNEDFROMCHAN)();
+        {
+            IRCResponseERR_BANNEDFROMCHAN* dynamicResponse = New(IRCResponseERR_BANNEDFROMCHAN)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_CANNOTSENDTOCHAN:
-            response = New(IRCResponseERR_CANNOTSENDTOCHAN)();
+        {
+            IRCResponseERR_CANNOTSENDTOCHAN* dynamicResponse = New(IRCResponseERR_CANNOTSENDTOCHAN)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannelName(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_CANTKILLSERVER:
-            response = New(IRCResponseERR_CANTKILLSERVER)();
+        {
+            IRCResponseERR_CANTKILLSERVER* dynamicResponse = New(IRCResponseERR_CANTKILLSERVER)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_CHANNELISFULL:
-            response = New(IRCResponseERR_CHANNELISFULL)();
+        {
+            IRCResponseERR_CHANNELISFULL* dynamicResponse = New(IRCResponseERR_CHANNELISFULL)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_CHANOPRIVSNEEDED:
-            response = New(IRCResponseERR_CHANOPRIVSNEEDED)();
+        {
+            IRCResponseERR_CHANOPRIVSNEEDED* dynamicResponse = New(IRCResponseERR_CHANOPRIVSNEEDED)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_ERRONEUSNICKNAME:
-            response = New(IRCResponseERR_ERRONEUSNICKNAME)();
+        {
+            IRCResponseERR_ERRONEUSNICKNAME* dynamicResponse = New(IRCResponseERR_ERRONEUSNICKNAME)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetNick(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_INVITEONLYCHAN:
-            response = New(IRCResponseERR_INVITEONLYCHAN)();
+        {
+            IRCResponseERR_INVITEONLYCHAN* dynamicResponse = New(IRCResponseERR_INVITEONLYCHAN)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NEEDMOREPARAMS:
-            response = New(IRCResponseERR_NEEDMOREPARAMS)();
+        {
+            IRCResponseERR_NEEDMOREPARAMS* dynamicResponse = New(IRCResponseERR_NEEDMOREPARAMS)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetCommand(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NICKNAMEINUSE:
-            response = New(IRCResponseERR_NICKNAMEINUSE)();
+        {
+            IRCResponseERR_NICKNAMEINUSE* dynamicResponse = New(IRCResponseERR_NICKNAMEINUSE)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetNick(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NICKCOLLISION:
-            response = New(IRCResponseERR_NICKCOLLISION)();
+        {
+            IRCResponseERR_NICKCOLLISION* dynamicResponse = New(IRCResponseERR_NICKCOLLISION)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetNick(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NOMOTD:
-            response = New(IRCResponseERR_NOMOTD)();
+        {
+            IRCResponseERR_NOMOTD* dynamicResponse = New(IRCResponseERR_NOMOTD)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NONICKNAMEGIVEN:
-            response = New(IRCResponseERR_NONICKNAMEGIVEN)();
+        {
+            IRCResponseERR_NONICKNAMEGIVEN* dynamicResponse = New(IRCResponseERR_NONICKNAMEGIVEN)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NOOPERHOST:
-            response = New(IRCResponseERR_NOOPERHOST)();
+        {
+            IRCResponseERR_NOOPERHOST* dynamicResponse = New(IRCResponseERR_NOOPERHOST)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NOPRIVILEGES:
-            response = New(IRCResponseERR_NOPRIVILEGES)();
+        {
+            IRCResponseERR_NOPRIVILEGES* dynamicResponse = New(IRCResponseERR_NOPRIVILEGES)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NORECIPIENT:
-            response = New(IRCResponseERR_NORECIPIENT)();
+        {
+            IRCResponseERR_NORECIPIENT* dynamicResponse = New(IRCResponseERR_NORECIPIENT)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetCommand(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NOSUCHCHANNEL:
-            response = New(IRCResponseERR_NOSUCHCHANNEL)();
+        {
+            IRCResponseERR_NOSUCHCHANNEL* dynamicResponse = New(IRCResponseERR_NOSUCHCHANNEL)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannelName(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NOSUCHNICK:
-            response = New(IRCResponseERR_NOSUCHNICK)();
+        {
+            IRCResponseERR_NOSUCHNICK* dynamicResponse = New(IRCResponseERR_NOSUCHNICK)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetNickname(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NOSUCHSERVER:
-            response = New(IRCResponseERR_NOSUCHSERVER)();
+        {
+            IRCResponseERR_NOSUCHSERVER* dynamicResponse = New(IRCResponseERR_NOSUCHSERVER)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetServerName(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NOTEXTTOSEND:
-            response = New(IRCResponseERR_NOTEXTTOSEND)();
+        {
+            IRCResponseERR_NOTEXTTOSEND* dynamicResponse = New(IRCResponseERR_NOTEXTTOSEND)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NOTONCHANNEL:
-            response = New(IRCResponseERR_NOTONCHANNEL)();
+        {
+            IRCResponseERR_NOTONCHANNEL* dynamicResponse = New(IRCResponseERR_NOTONCHANNEL)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NOTOPLEVEL:
-            response = New(IRCResponseERR_NOTOPLEVEL)();
+        {
+            IRCResponseERR_NOTOPLEVEL* dynamicResponse = New(IRCResponseERR_NOTOPLEVEL)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetMask(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_NOTREGISTERED:
-            response = New(IRCResponseERR_NOTREGISTERED)();
+        {
+            IRCResponseERR_NOTREGISTERED* dynamicResponse = New(IRCResponseERR_NOTREGISTERED)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_PASSWDMISMATCH:
-            response = New(IRCResponseERR_PASSWDMISMATCH)();
+        {
+            IRCResponseERR_PASSWDMISMATCH* dynamicResponse = New(IRCResponseERR_PASSWDMISMATCH)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_TOOMANYCHANNELS:
-            response = New(IRCResponseERR_TOOMANYCHANNELS)();
+        {
+            IRCResponseERR_TOOMANYCHANNELS* dynamicResponse = New(IRCResponseERR_TOOMANYCHANNELS)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannelName(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_TOOMANYTARGETS:
-            response = New(IRCResponseERR_TOOMANYTARGETS)();
+        {
+            IRCResponseERR_TOOMANYTARGETS* dynamicResponse = New(IRCResponseERR_TOOMANYTARGETS)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetTarget(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_WILDTOPLEVEL:
-            response = New(IRCResponseERR_WILDTOPLEVEL)();
+        {
+            IRCResponseERR_WILDTOPLEVEL* dynamicResponse = New(IRCResponseERR_WILDTOPLEVEL)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetMask(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_ERR_UNKNOWNCOMMAND:
-            response = New(IRCResponseERR_UNKNOWNCOMMAND)();
+        {
+            IRCResponseERR_UNKNOWNCOMMAND* dynamicResponse = New(IRCResponseERR_UNKNOWNCOMMAND)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetCommand(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_AWAY:
-            response = New(IRCResponseRPL_AWAY)();
+        {
+            IRCResponseRPL_AWAY* dynamicResponse = New(IRCResponseRPL_AWAY)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetNick(arg1);
+                dynamicResponse->SetAwayMessage(arg2);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_ENDOFMOTD:
-            response = New(IRCResponseRPL_ENDOFMOTD)();
+        {
+            IRCResponseRPL_ENDOFMOTD* dynamicResponse = New(IRCResponseRPL_ENDOFMOTD)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_ENDOFNAMES:
-            response = New(IRCResponseRPL_ENDOFNAMES)();
+        {
+            IRCResponseRPL_ENDOFNAMES* dynamicResponse = New(IRCResponseRPL_ENDOFNAMES)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_LIST:
-            response = New(IRCResponseRPL_LIST)();
+        {
+            IRCResponseRPL_LIST* dynamicResponse = New(IRCResponseRPL_LIST)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+                dynamicResponse->SetTopic(arg2);
+                // FIX this
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_LISTEND:
-            response = New(IRCResponseRPL_LISTEND)();
+        {
+            IRCResponseRPL_LISTEND* dynamicResponse = New(IRCResponseRPL_LISTEND)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_LISTSTART:
-            response = New(IRCResponseRPL_LISTSTART)();
+        {
+            IRCResponseRPL_LISTSTART* dynamicResponse = New(IRCResponseRPL_LISTSTART)();
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_MOTD:
-            response = New(IRCResponseRPL_MOTD)();
+        {
+            IRCResponseRPL_MOTD* dynamicResponse = New(IRCResponseRPL_MOTD)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetText(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_MOTDSTART:
-            response = New(IRCResponseRPL_MOTDSTART)();
+        {
+            IRCResponseRPL_MOTDSTART* dynamicResponse = New(IRCResponseRPL_MOTDSTART)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetServer(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_NAMREPLY:
-            response = New(IRCResponseRPL_NAMREPLY)();
+        {
+            IRCResponseRPL_NAMREPLY* dynamicResponse = New(IRCResponseRPL_NAMREPLY)();
+            // FIX this
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_NOTOPIC:
-            response = New(IRCResponseRPL_NOTOPIC)();
+        {
+            IRCResponseRPL_NOTOPIC* dynamicResponse = New(IRCResponseRPL_NOTOPIC)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_TOPIC:
-            response = New(IRCResponseRPL_TOPIC)();
+        {
+            IRCResponseRPL_TOPIC* dynamicResponse = New(IRCResponseRPL_TOPIC)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+                dynamicResponse->SetTopic(arg2);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_UMODEIS:
-            response = New(IRCResponseRPL_UMODEIS)();
+        {
+            IRCResponseRPL_UMODEIS* dynamicResponse = New(IRCResponseRPL_UMODEIS)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetUserModeString(arg1);
+            }
+            response = dynamicResponse;
             break;
+        }
         case Enum_IRCResponses_RPL_YOUREOPER:
-            response = New(IRCResponseRPL_YOUREOPER)();
+        {
+            IRCResponseRPL_YOUREOPER* dynamicResponse = New(IRCResponseRPL_YOUREOPER)();
+            response = dynamicResponse;
             break;
+        }
         default:
             response = NULL;
             break;
     }
-    if (response != NULL)
-    {
-        response->SetPrefix(GetIRCServer().GetServerName());
-    }
+
     return response;
 }
 

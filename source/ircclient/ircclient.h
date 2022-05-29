@@ -1,9 +1,17 @@
 #pragma once
 
 #include <string>
+#include <unordered_set>
+
+#define INVISIBLE       0b00000001
+#define RECEIVENOTICE   0b00000010
+#define RECEIVEWALLOPS  0b00000100
+#define IRCOPERATOR     0b00001000
 
 namespace ircserv
 {
+
+class IRCChannel;
 
 class IRCClient
 {
@@ -24,19 +32,23 @@ public:
     inline const std::string& GetUsername(void) const { return m_Username; }
     inline void SetRealname(const std::string& realname) { m_Realname = realname; }
     inline const std::string& GetRealname(void) const { return m_Realname; }
-    inline void SetIsOper(bool isOper) { m_IsOper = isOper; }
-    inline const bool GetIsOper(void) const { return m_IsOper; }
-    inline void LeaveChannel(void) { --m_NumberJoinedChannels; }
-    inline void JoinChannel(void) { ++m_NumberJoinedChannels; }
-    inline size_t GetNumberJoinedChannels(void) const { return m_NumberJoinedChannels; }
+    inline void SetModes(uint8_t modes) { m_Modes |= modes; }
+    inline void UnsetModes(uint8_t modes) { m_Modes &= ~modes; }
+    inline uint8_t GetModes(void) const { return m_Modes; }
+    inline const std::unordered_set<IRCChannel*>& GetJoinedChannels(void) const { return m_JoinedChannels; }
+
+public:
+    inline bool JoinChannel(IRCChannel *channel) { return m_JoinedChannels.insert(channel).second; }
+    inline void LeaveChannel(IRCChannel *channel) { m_JoinedChannels.erase(m_JoinedChannels.find(channel)); } 
 
 private:
     std::string m_Password;
     std::string m_Nickname;
     std::string m_Username;
     std::string m_Realname;
-    bool m_IsOper;
-    size_t m_NumberJoinedChannels;
+    uint8_t m_Modes;
+    std::unordered_set<IRCChannel*> m_JoinedChannels;
+
 };
 
 

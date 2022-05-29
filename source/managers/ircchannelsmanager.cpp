@@ -3,11 +3,7 @@
 #include "managers/ircchannelsmanager.h"
 
 #include "ircclient/ircclient.h"
-#include "managers/ircclientsmanager.h"
 #include "utils/memory.h"
-
-#define MAX_NB_USERS_IN_CHANNEL 40
-#define MAX_NB_JOINED_CHANNELS 10
 
 namespace ircserv
 {
@@ -36,96 +32,48 @@ void IRCChannelsManager::Shutdown(void)
 {
     for (std::unordered_map<std::string, IRCChannel*>::iterator it = m_ChannelsMap.begin(); it != m_ChannelsMap.end(); )
     {
-        Delete(it->second);
-        it = m_ChannelsMap.erase(it);
+        RemoveChannel(it->first);
     }
     m_ChannelsMap.clear();
 }
 
-Enum_IRCResponses IRCChannelsManager::Join(IRCSocket *socket, const std::string& channelName, const std::string& key)
-{
-    IRCChannel *channel = FindChannel(channelName);
+// Enum_IRCResponses IRCChannelsManager::Join(IRCSocket *socket, const std::string& channelName, const std::string& key)
+// {
 
-    if (channel == NULL)
-    {
-        IRCClient *client = GetIRCClientsManager().FindClient(socket);
-        if (client == NULL)
-        {
-            return Enum_IRCResponses_Unknown;
-        }
+// }
 
-        if (client->GetNumberJoinedChannels() >= MAX_NB_JOINED_CHANNELS)
-        {
-            return Enum_IRCResponses_ERR_TOOMANYCHANNELS;
-        }
+// Enum_IRCResponses IRCChannelsManager::Part(IRCSocket *socket, const std::string& channelName)
+// {
+//     if (IsInChannel(channelName, socket))
+//     {
+//         return Enum_IRCResponses_ERR_NOTONCHANNEL;
+//     }
+//     IRCChannel *channel = FindChannel(channelName);
+//     if (channel)
+//     {
+//         channel->RemoveUser(socket);
+//         if (channel->GetUsers().empty())
+//         {
+//             RemoveChannel(channelName);
+//         }
+//     }
+//     return Enum_IRCResponses_Unknown;
+// }
 
-        channel = CreateChannel(channelName);
-        if (channel == NULL)
-        {
-            return Enum_IRCResponses_Unknown;
-        }
-
-        channel->SetKey(key);
-        channel->SetOperator(socket);
-    }
-
-    if (channel->GetUsers().size() >= MAX_NB_USERS_IN_CHANNEL)
-    {
-        return Enum_IRCResponses_ERR_CHANNELISFULL;
-    }
-
-    if (channel->GetIsInviteOnly())
-    {
-        return Enum_IRCResponses_ERR_INVITEONLYCHAN;
-    }
-    
-    if (channel->GetKey() != key)
-    {
-        return Enum_IRCResponses_ERR_BADCHANNELKEY;
-    }
-
-    if (channel->AddUser(socket) == false)
-    {
-        return Enum_IRCResponses_Unknown;
-    }
-    // add check mask
-    return Enum_IRCResponses_RPL_TOPIC;
-}
-
-Enum_IRCResponses IRCChannelsManager::Part(IRCSocket *socket, const std::string& channelName)
-{
-    if (IsInChannel(channelName, socket))
-    {
-        return Enum_IRCResponses_ERR_NOTONCHANNEL;
-    }
-    IRCChannel *channel = FindChannel(channelName);
-    if (channel)
-    {
-        channel->RemoveUser(socket);
-        if (channel->GetUsers().empty())
-        {
-            RemoveChannel(channelName);
-        }
-    }
-    return Enum_IRCResponses_Unknown;
-}
-
-Enum_IRCResponses IRCChannelsManager::Topic(IRCSocket *socket, const std::string& channelName, const std::string& topic)
-{
-    if (IsInChannel(channelName, socket))
-    {
-        return Enum_IRCResponses_ERR_NOTONCHANNEL;
-    }
-    IRCChannel *channel = FindChannel(channelName);
-    if (channel)
-    {
-        channel->SetTopic(topic);
-        return Enum_IRCResponses_RPL_TOPIC;
-    }
-    return Enum_IRCResponses_Unknown;
-}
-
-
+// Enum_IRCResponses IRCChannelsManager::Topic(IRCSocket *socket, const std::string& channelName, const std::string& topic)
+// {
+//     if (IsInChannel(channelName, socket))
+//     {
+//         return Enum_IRCResponses_ERR_NOTONCHANNEL;
+//     }
+//     IRCChannel *channel = FindChannel(channelName);
+//     if (channel)
+//     {
+//         channel->SetTopic(topic);
+//         return Enum_IRCResponses_RPL_TOPIC;
+//     }
+//     return Enum_IRCResponses_Unknown;
+// }
 
 IRCChannel* IRCChannelsManager::FindChannel(const std::string& channelName) const
 {
@@ -143,50 +91,54 @@ IRCChannel* IRCChannelsManager::FindChannel(const std::string& channelName) cons
     return channel;
 }
 
-IRCChannel* IRCChannelsManager::CreateChannel(const std::string& channelName)
-{
-    IRCChannel *channel;
-
-    channel = New(IRCChannel);
-    if (channel != NULL)
-    {
-        channel->SetName(channelName);
-        m_ChannelsMap[channelName] = channel;
-        IRC_LOGI("%s channel created", channelName.c_str());
-    }
-    return channel;
-}
-
-void IRCChannelsManager::RemoveChannel(const std::string channelName)
-{
-    IRCChannel *channel = FindChannel(channelName);
-    if (channel)
-    {
-        Delete(channel);
-        m_ChannelsMap.erase(m_ChannelsMap.find(channelName));
-        IRC_LOGI("%s channel removed", channelName.c_str());
-    }
-}
 
 IRCChannel* IRCChannelsManager::FindOrCreateChannel(const std::string& channelName)
 {
     IRCChannel *channel = FindChannel(channelName);
     if (channel == NULL)
     {
-        channel = CreateChannel(channelName);
+        channel = New(IRCChannel);
+        if (channel != NULL)
+        {
+            channel->SetName(channelName);
+            m_ChannelsMap[channelName] = channel;
+            IRC_LOGI("%s channel created", channelName.c_str());
+        }
     }
     return channel;
 }
 
-bool IRCChannelsManager::IsInChannel(const std::string& channelName, IRCSocket *socket) const
+
+void IRCChannelsManager::RemoveChannel(const std::string& channelName)
 {
     IRCChannel *channel = FindChannel(channelName);
-    if (channel == NULL)
+    if (channel)
     {
-        return false;
+        for (std::unordered_set<IRCClient*>::iterator it = channel->GetClients().begin(); it != channel->GetClients().end(); ++it)
+        {
+            IRCClient *client = *it;
+            if (client)
+            {
+                client->LeaveChannel(channel);
+                channel->RemoveClient(client);
+                channel->RemoveOper(client);
+            }
+        }
+        Delete(channel);
+        m_ChannelsMap.erase(m_ChannelsMap.find(channelName));
+        IRC_LOGI("%s channel removed", channelName.c_str());
     }
-    return channel->GetUsers().find(socket) != channel->GetUsers().end();
 }
+
+// bool IRCChannelsManager::IsInChannel(const std::string& channelName, IRCSocket *socket) const
+// {
+//     IRCChannel *channel = FindChannel(channelName);
+//     if (channel == NULL)
+//     {
+//         return false;
+//     }
+//     return channel->GetUsers().find(socket) != channel->GetUsers().end();
+// }
 
 
 

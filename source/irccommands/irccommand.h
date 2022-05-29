@@ -21,9 +21,6 @@ private:
 public:
     virtual bool ProcessCommand(IRCSocket *socket) = 0;
 
-private:
-    virtual bool ValidateArgs(IRCSocket *socket) = 0;
-
 public:
     inline void SetCommandEnum(Enum_IRCCommands commandEnum) { m_CommandEnum = commandEnum; }
     inline Enum_IRCCommands GetCommandEnum(void) const { return m_CommandEnum; }

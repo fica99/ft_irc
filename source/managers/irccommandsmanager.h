@@ -25,7 +25,6 @@ public:
 private:
     IRCLexer m_Lexer;
     IRCParser m_Parser;
-    IRCResponsesFactory m_ResponsesFactory;
 };
 
 #define GetIRCCommandsManager() IRCCommandsManager::GetInstance()

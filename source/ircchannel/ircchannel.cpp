@@ -2,9 +2,6 @@
 
 #include "ircchannel/ircchannel.h"
 
-#include "ircclient/ircclient.h"
-#include "managers/ircclientsmanager.h"
-
 namespace ircserv
 {
 
@@ -15,7 +12,7 @@ IRCChannel::IRCChannel()
 
 void IRCChannel::Initialize(void)
 {
-    m_IsInviteOnly = false;
+    m_Modes = 0;
 }
 
 IRCChannel::~IRCChannel()
@@ -27,29 +24,44 @@ void IRCChannel::Shutdown(void)
 {
 }
 
-bool IRCChannel::AddUser(IRCSocket* user)
+bool IRCChannel::JoinClient(IRCClient* client)
 {
-    bool isInserted = m_Users.insert(user).second;
+    bool isInserted = m_Clients.insert(client).second;
     if (isInserted)
     {
-        IRCClient *client = GetIRCClientsManager().FindClient(user);
         if (client)
         {
-            client->JoinChannel();
+            client->JoinChannel(this);
         }
     }
     return isInserted;
 }
 
-void IRCChannel::RemoveUser(IRCSocket* user)
+void IRCChannel::RemoveClient(IRCClient* client)
 {
-    m_Users.erase(m_Users.find(user));
-    IRCClient *client = GetIRCClientsManager().FindClient(user);
-    if (client)
+    std::unordered_set<IRCClient*>::iterator it = m_Clients.find(client);
+    if (it != m_Clients.end())
     {
-        client->LeaveChannel();
+        if (client)
+        {
+            client->LeaveChannel(this);
+        }
+        m_Clients.erase(it);
     }
 }
 
+void IRCChannel::AddOper(IRCClient* oper)
+{
+    m_Opers.insert(oper);
+}
+
+void IRCChannel::RemoveOper(IRCClient* oper)
+{
+    std::unordered_set<IRCClient*>::iterator it = m_Opers.find(oper);
+    if (it != m_Clients.end())
+    {
+        m_Clients.erase(it);
+    }
+}
 
 }

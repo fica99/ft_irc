@@ -1,8 +1,10 @@
 #include "main/precomp.h"
 
 #include "irccommands/ircquitcommand.h"
-#include "irccommands/irccommands.h"
 
+#include "irccommands/irccommands.h"
+#include "ircserver/ircserver.h"
+#include "ircserver/ircsocket.h"
 #include "managers/ircclientsmanager.h"
 
 namespace ircserv
@@ -28,20 +30,8 @@ void IRCQuitCommand::Shutdown(void)
 
 bool IRCQuitCommand::ProcessCommand(IRCSocket *socket)
 {
-    if (ValidateArgs(socket))
-    {
-        GetIRCClientsManager().Quit(socket, GetQuitMessage());
-        return true;
-    }
-    return false;
-}
-
-bool IRCQuitCommand::ValidateArgs(IRCSocket *socket)
-{
-    if (!GetArgs().empty())
-    {
-        SetQuitMessage(GetArgs()[0]);
-    }
+    GetIRCClientsManager().EraseClient(socket);
+    GetIRCServer().CloseConnection(socket);
     return true;
 }
 

@@ -2,13 +2,14 @@
 
 #include "irccommands/ircusercommand.h"
 
+#include "ircclient/ircclient.h"
 #include "irccommands/irccommands.h"
 #include "irccommands/irccommandshelper.h"
 #include "ircresponses/ircresponses.h"
 #include "ircserver/ircserver.h"
 #include "ircserver/ircsocket.h"
 #include "managers/ircclientsmanager.h"
-#include "parsing/ircparsinghelper.h"
+#include "managers/irccommandsmanager.h"
 
 namespace ircserv
 {
@@ -31,21 +32,31 @@ void IRCUserCommand::Shutdown(void)
 {
 }
 
+
 bool IRCUserCommand::ProcessCommand(IRCSocket *socket)
 {
     if (ValidateArgs(socket))
     {
-        Enum_IRCResponses responseEnum = GetIRCClientsManager().User(socket, GetUsername(), GetRealname());
-       if (responseEnum == Enum_IRCResponses_ERR_ALREADYREGISTRED)
+        IRCClient *client = GetIRCClientsManager().FindOrCreateClient(socket);
+        if (client->GetIsRegistered())
         {
-            IRCCommandsHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_ALREADYREGISTRED);
+            IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_ALREADYREGISTRED);
             return false;
         }
-        else if (responseEnum == Enum_IRCResponses_RPL_MOTD)
+        client->SetUsername(GetUsername());
+        client->SetRealname(GetRealname());
+        if (client->GetIsRegistered() == true)
         {
-            IRCCommandsHelper::SendMOTD(socket, GetIRCServer().GetServerName(), "./conf/IRC.motd");
+            if (client->GetPassword() != GetIRCServer().GetPassword())
+            {
+                GetIRCCommandsManager().ProcessCommands("QUIT\n\r", socket);
+            }
+            else
+            {
+                IRCCommandsHelper::SendMOTD(socket, GetIRCServer().GetServerName(), "./conf/IRC.motd");
+                return true;
+            }
         }
-        return true;
     }
     return false;
 }
@@ -54,7 +65,7 @@ bool IRCUserCommand::ValidateArgs(IRCSocket *socket)
 {
     if (GetArgs().size() < 4)
     {
-        IRCCommandsHelper::SendERR_NEEDMOREPARAMS(socket, GetCommandEnum());
+        IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
         return false;
     }
     else

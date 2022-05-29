@@ -16,6 +16,7 @@
 #include "irccommands/ircpasscommand.h"
 #include "irccommands/ircprivmsgcommand.h"
 #include "irccommands/ircquitcommand.h"
+#include "irccommands/irctopiccommand.h"
 #include "irccommands/ircusercommand.h"
 
 namespace ircserv
@@ -82,6 +83,9 @@ IRCCommand* IRCCommandsFactory::CreateCommand(Enum_IRCCommands commandType)
             break;
         case Enum_IRCCommands_Kill:
             command = New(IRCKillCommand)();
+            break;
+        case Enum_IRCCommands_Topic:
+            command = New(IRCTopicCommand)();
             break;
         default:
             command = NULL;
