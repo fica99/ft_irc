@@ -113,5 +113,17 @@ bool IRCClientsManager::IsOper(const std::string& user, const std::string& passw
     return false;
 }
 
+std::vector<IRCClient*> IRCClientsManager::GetAllClients(void) const
+{
+    std::vector<IRCClient*> clients;
+
+    for (std::unordered_map<IRCSocket*, IRCClient*>::const_iterator it = m_SocketClientsMap.begin(); it != m_SocketClientsMap.end(); ++it)
+    {
+        clients.push_back(it->second);
+    }
+    return clients;
+}
+
+
 
 }

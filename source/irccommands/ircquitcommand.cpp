@@ -30,6 +30,7 @@ void IRCQuitCommand::Shutdown(void)
 
 bool IRCQuitCommand::ProcessCommand(IRCSocket *socket)
 {
+    // add quiting all channels
     GetIRCClientsManager().EraseClient(socket);
     GetIRCServer().CloseConnection(socket);
     return true;

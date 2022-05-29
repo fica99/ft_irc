@@ -25,8 +25,8 @@ public:
     IRCChannel* FindChannel(const std::string& channelName) const;
     IRCChannel* FindOrCreateChannel(const std::string& channelName);
     void RemoveChannel(const std::string& channelName);
+    std::vector<std::string> GetChannelsNames(void) const;
 
-    // bool IsInChannel(const std::string& channelName, IRCSocket *socket) const;
 private:
     std::unordered_map<std::string, IRCChannel*> m_ChannelsMap;
 };

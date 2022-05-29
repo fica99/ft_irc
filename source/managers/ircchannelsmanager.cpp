@@ -130,16 +130,16 @@ void IRCChannelsManager::RemoveChannel(const std::string& channelName)
     }
 }
 
-// bool IRCChannelsManager::IsInChannel(const std::string& channelName, IRCSocket *socket) const
-// {
-//     IRCChannel *channel = FindChannel(channelName);
-//     if (channel == NULL)
-//     {
-//         return false;
-//     }
-//     return channel->GetUsers().find(socket) != channel->GetUsers().end();
-// }
+std::vector<std::string> IRCChannelsManager::GetChannelsNames(void) const
+{
+    std::vector<std::string> channels;
 
+    for (std::unordered_map<std::string, IRCChannel*>::const_iterator it = m_ChannelsMap.begin(); it != m_ChannelsMap.end(); ++it)
+    {
+        channels.push_back(it->first);
+    }
+    return channels;
+}
 
 
 }

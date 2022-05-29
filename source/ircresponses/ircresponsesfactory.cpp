@@ -401,7 +401,6 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType,
         case Enum_IRCResponses_RPL_NAMREPLY:
         {
             IRCResponseRPL_NAMREPLY* dynamicResponse = New(IRCResponseRPL_NAMREPLY)();
-            // FIX this
             response = dynamicResponse;
             break;
         }

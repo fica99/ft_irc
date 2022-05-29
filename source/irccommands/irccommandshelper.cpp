@@ -3,14 +3,17 @@
 #include "irccommands/irccommandshelper.h"
 
 #include "ircclient/ircclient.h"
+#include "ircchannel/ircchannel.h"
 #include "ircserver/ircserver.h"
+#include "ircresponses/ircresponserpl_namreply.h"
 #include "ircresponses/ircresponsesfactory.h"
 #include "managers/ircclientsmanager.h"
+#include "managers/ircchannelsmanager.h"
 
 namespace ircserv
 {
 
-static void SendResponse(IRCSocket *socket, IRCResponse *response)
+void IRCCommandsHelper::SendResponse(IRCSocket *socket, IRCResponse *response)
 {
     if (response != NULL)
     {
@@ -57,6 +60,39 @@ void IRCCommandsHelper::SendMOTD(IRCSocket *socket, const std::string& server, c
     SendResponseWithParams(socket, Enum_IRCResponses_RPL_MOTDSTART, server);
     SendRPL_MOTD(socket, filename);
     SendResponseWithParams(socket, Enum_IRCResponses_RPL_ENDOFMOTD);
+}
+
+void IRCCommandsHelper::SendTopic(IRCSocket *socket, const std::string& channel, const std::string& topic)
+{
+    if (topic.empty())
+    {
+        SendResponseWithParams(socket, Enum_IRCResponses_RPL_NOTOPIC, channel);
+    }
+    else
+    {
+        SendResponseWithParams(socket, Enum_IRCResponses_RPL_TOPIC, channel, topic);
+    }
+}
+
+void IRCCommandsHelper::SendChannelNames(IRCSocket *socket, const std::string& channelName)
+{
+    IRCChannel *channel = GetIRCChannelsManager().FindChannel(channelName);
+    if (channel)
+    {
+        IRCResponseRPL_NAMREPLY* response = dynamic_cast<IRCResponseRPL_NAMREPLY*>(IRCResponsesFactory::CreateResponse(Enum_IRCResponses_RPL_NAMREPLY));
+
+        if (response != NULL)
+        {
+            response->SetChannel("= " + channelName);
+            for (std::unordered_set<IRCClient*>::iterator it = channel->GetClients().begin(); it != channel->GetClients().end(); ++it)
+            {
+                response->AddNick(channel->GetOpers().find(*it) != channel->GetOpers().end(), (*it)->GetNickname());
+            }
+            SendResponse(socket, response);
+        }
+
+        IRCResponsesFactory::DestroyResponse(response);
+    }
 }
 
 }

@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <vector>
 #include "ircclient/ircclient.h"
 #include "ircserver/ircsocket.h"
 #include "utils/singleton.h"
@@ -29,6 +30,7 @@ public:
     bool IsRegistered(IRCSocket *socket);
     bool IsOper(const std::string& user, const std::string& password);
     inline bool IsOperMapEmpty(void) const { return m_OpersMap.empty(); }
+    std::vector<IRCClient*> GetAllClients(void) const;
 
 private:
     std::unordered_map<IRCSocket*, IRCClient*> m_SocketClientsMap;

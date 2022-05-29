@@ -92,6 +92,10 @@ bool IRCJoinCommand::ProcessCommand(IRCSocket *socket)
             // add check for ban
 
             channel->JoinClient(client);
+
+            // ADD sending notification to all users
+            IRCCommandsHelper::SendTopic(socket, channelName, channel->GetTopic());
+            IRCCommandsHelper::SendChannelNames(socket, channelName);
         }
         return true;
     }
@@ -100,7 +104,6 @@ bool IRCJoinCommand::ProcessCommand(IRCSocket *socket)
 
 bool IRCJoinCommand::ValidateArgs(IRCSocket *socket)
 {
-
     if (GetArgs().empty())
     {
         IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
