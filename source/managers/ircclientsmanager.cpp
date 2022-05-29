@@ -2,6 +2,7 @@
 
 #include "managers/ircclientsmanager.h"
 
+#include "ircchannel/ircchannel.h"
 #include "utils/memory.h"
 
 namespace ircserv
@@ -31,8 +32,7 @@ void IRCClientsManager::Shutdown(void)
 {
     for (std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.begin(); it != m_SocketClientsMap.end(); )
     {
-        Delete(it->second);
-        it = m_SocketClientsMap.erase(it);
+        EraseClient(it->first);
     }
     m_SocketClientsMap.clear();
 }
@@ -79,7 +79,17 @@ void IRCClientsManager::EraseClient(IRCSocket *socket)
     std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.find(socket);
     if (it != m_SocketClientsMap.end())
     {
-        Delete(it->second);
+        IRCClient *client = it->second;
+        if (client != NULL)
+        {
+            for (std::unordered_set<IRCChannel*>::const_iterator it = client->GetJoinedChannels().begin(); it != client->GetJoinedChannels().end(); ++it)
+            {
+                IRCChannel* channel = (*it);
+                channel->RemoveClient(client);
+                client->LeaveChannel(channel);
+            }
+        }
+        Delete(client);
         m_SocketClientsMap.erase(it);
         IRC_LOGD("%s", "Client erased");
     }
