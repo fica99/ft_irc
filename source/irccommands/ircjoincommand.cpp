@@ -48,8 +48,8 @@ bool IRCJoinCommand::ProcessCommand(IRCSocket *socket)
             Enum_IRCResponses responseEnum = GetIRCChannelsManager().Join(socket, GetChannels()[i], i < GetKeys().size() ? GetKeys()[i] : "");
             if (responseEnum == Enum_IRCResponses_RPL_TOPIC)
             {
-//                IRCChannel *channel = GetIRCChannelsManager().FindChannel(GetChannels()[i]);
-  //              IRCCommandsHelper::SendResponseWithTopic(socket, GetChannels()[i], channel ? channel->GetTopic() : "");
+               IRCChannel *channel = GetIRCChannelsManager().FindChannel(GetChannels()[i]);
+               IRCCommandsHelper::SendResponseWithTopic(socket, GetChannels()[i], channel ? channel->GetTopic() : "");
             }
             else
             {

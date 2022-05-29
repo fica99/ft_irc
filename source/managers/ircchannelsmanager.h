@@ -25,6 +25,8 @@ private:
 public:
     Enum_IRCResponses Join(IRCSocket *socket, const std::string& channelName, const std::string& key);
     Enum_IRCResponses Part(IRCSocket *socket, const std::string& channelName);
+    Enum_IRCResponses Topic(IRCSocket *socket, const std::string& channelName, const std::string& topic);
+
 public:
     IRCChannel* FindChannel(const std::string& channelName) const;
     IRCChannel* CreateChannel(const std::string& channelName);

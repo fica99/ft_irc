@@ -56,7 +56,7 @@ bool IRCPartCommand::ValidateArgs(IRCSocket *socket)
     std::vector<std::string> channels;
     if (GetArgs().empty())
     {
-        IRCCommandsHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_NOTREGISTERED);
+        IRCCommandsHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS);
         return false;
     }
     else

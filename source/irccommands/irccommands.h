@@ -20,7 +20,8 @@ enum Enum_IRCCommands
     Enum_IRCCommands_Kick,
     Enum_IRCCommands_Privmsg,
     Enum_IRCCommands_Notice,
-    Enum_IRCCommands_Kill
+    Enum_IRCCommands_Kill,
+    Enum_IRCCommands_Topic
 };
 
 Begin_Enum_String(Enum_IRCCommands)
@@ -38,6 +39,7 @@ Begin_Enum_String(Enum_IRCCommands)
     Enum_String(Enum_IRCCommands_Privmsg, "PRIVMSG");
     Enum_String(Enum_IRCCommands_Notice, "NOTICE");
     Enum_String(Enum_IRCCommands_Kill, "KILL");
+    Enum_String(Enum_IRCCommands_Topic, "TOPIC");
 }
 End_Enum_String;
 

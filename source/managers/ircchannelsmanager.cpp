@@ -110,6 +110,22 @@ Enum_IRCResponses IRCChannelsManager::Part(IRCSocket *socket, const std::string&
     return Enum_IRCResponses_Unknown;
 }
 
+Enum_IRCResponses IRCChannelsManager::Topic(IRCSocket *socket, const std::string& channelName, const std::string& topic)
+{
+    if (IsInChannel(channelName, socket))
+    {
+        return Enum_IRCResponses_ERR_NOTONCHANNEL;
+    }
+    IRCChannel *channel = FindChannel(channelName);
+    if (channel)
+    {
+        channel->SetTopic(topic);
+        return Enum_IRCResponses_RPL_TOPIC;
+    }
+    return Enum_IRCResponses_Unknown;
+}
+
+
 
 IRCChannel* IRCChannelsManager::FindChannel(const std::string& channelName) const
 {
