@@ -23,7 +23,6 @@ void SendERR_UNKNOWNCOMMAND(IRCSocket *socket, const std::string& command);
 void SendResponseWithServerName(IRCSocket *socket, Enum_IRCResponses responseEnum, const std::string& channelName);
 void SendResponseWithTopic(IRCSocket *socket, const std::string& channelName, const std::string& topic);
 
-
 }
 
 }

@@ -12,6 +12,7 @@
 #include "ircresponses/ircresponseerr_nicknameinuse.h"
 #include "ircresponses/ircresponseerr_nomotd.h"
 #include "ircresponses/ircresponseerr_nosuchchannel.h"
+#include "ircresponses/ircresponseerr_notonchannel.h"
 #include "ircresponses/ircresponseerr_toomanychannels.h"
 #include "ircresponses/ircresponseerr_unknowncommand.h"
 #include "ircresponses/ircresponserpl_endofmotd.h"
@@ -177,6 +178,10 @@ void IRCCommandsHelper::SendResponseWithServerName(IRCSocket *socket, Enum_IRCRe
         else if (responseEnum == Enum_IRCResponses_ERR_BADCHANNELKEY)
         {
             dynamic_cast<IRCResponseERR_BADCHANNELKEY*>(response)->SetChannel(channelName);
+        }
+        else if (responseEnum == Enum_IRCResponses_ERR_NOTONCHANNEL)
+        {
+            dynamic_cast<IRCResponseERR_NOTONCHANNEL*>(response)->SetChannel(channelName);
         }
         response->Send(socket);
     }

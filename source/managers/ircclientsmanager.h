@@ -31,6 +31,7 @@ public:
     IRCClient *FindClient(IRCSocket *socket);
     IRCClient *FindClientByNickname(const std::string& nickname) const;
     void AddOper(const std::string& user, const std::string& password);
+    bool IsRegistered(IRCSocket *socket);
 
 private:
     std::unordered_map<IRCSocket*, IRCClient*> m_SocketClientsMap;

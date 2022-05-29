@@ -124,8 +124,9 @@ Enum_IRCResponses IRCClientsManager::Oper(IRCSocket *socket, const std::string& 
                 if (client)
                 {
                     client->SetIsOper(true);
+                    return Enum_IRCResponses_RPL_YOUREOPER;
                 }
-                return Enum_IRCResponses_RPL_YOUREOPER;
+                return Enum_IRCResponses_Unknown;
             }
         }
         return Enum_IRCResponses_ERR_PASSWDMISMATCH;
@@ -175,6 +176,16 @@ IRCClient *IRCClientsManager::FindClientByNickname(const std::string& nickname) 
 void IRCClientsManager::AddOper(const std::string& user, const std::string& password)
 {
     m_OpersMap[user] = password;
+}
+
+bool IRCClientsManager::IsRegistered(IRCSocket *socket)
+{
+    IRCClient *client = FindClient(socket);
+    if (client != NULL)
+    {
+        return client->GetIsRegistered();
+    }
+    return false;
 }
 
 

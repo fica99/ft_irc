@@ -35,12 +35,12 @@ void IRCJoinCommand::Shutdown(void)
 
 bool IRCJoinCommand::ProcessCommand(IRCSocket *socket)
 {
-    IRCClient *client = GetIRCClientsManager().FindClient(socket);
-    if (client == NULL)
+    if (!GetIRCClientsManager().IsRegistered(socket))
     {
         IRCCommandsHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_NOTREGISTERED);
         return false;
     }
+
     if (ValidateArgs(socket))
     {
         for (size_t i = 0; i < GetChannels().size(); ++i)

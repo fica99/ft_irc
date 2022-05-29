@@ -28,7 +28,8 @@ public:
     inline const std::string& GetTopic(void) const { return m_Topic; }
     inline void SetOperator(IRCSocket *oper) { m_Operator = oper; }
     inline IRCSocket* GetOperator(void) const { return m_Operator; }
-    inline bool AddUser(IRCSocket* user) { return m_Users.insert(user).second; }
+    bool AddUser(IRCSocket* user);
+    void RemoveUser(IRCSocket* user);
     inline const std::set<IRCSocket*>& GetUsers(void) const { return m_Users; }
 
 private:

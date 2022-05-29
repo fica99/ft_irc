@@ -24,11 +24,13 @@ private:
 
 public:
     Enum_IRCResponses Join(IRCSocket *socket, const std::string& channelName, const std::string& key);
-
+    Enum_IRCResponses Part(IRCSocket *socket, const std::string& channelName);
 public:
     IRCChannel* FindChannel(const std::string& channelName) const;
     IRCChannel* CreateChannel(const std::string& channelName);
+    void RemoveChannel(const std::string channelName);
     IRCChannel* FindOrCreateChannel(const std::string& channelName);
+    bool IsInChannel(const std::string& channelName, IRCSocket *socket) const;
 private:
     std::unordered_map<std::string, IRCChannel*> m_ChannelsMap;
 };

@@ -26,6 +26,9 @@ public:
     inline const std::string& GetRealname(void) const { return m_Realname; }
     inline void SetIsOper(bool isOper) { m_IsOper = isOper; }
     inline const bool GetIsOper(void) const { return m_IsOper; }
+    inline void LeaveChannel(void) { --m_NumberJoinedChannels; }
+    inline void JoinChannel(void) { ++m_NumberJoinedChannels; }
+    inline size_t GetNumberJoinedChannels(void) const { return m_NumberJoinedChannels; }
 
 private:
     std::string m_Password;
@@ -33,6 +36,7 @@ private:
     std::string m_Username;
     std::string m_Realname;
     bool m_IsOper;
+    size_t m_NumberJoinedChannels;
 };
 
 
