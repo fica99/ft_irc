@@ -2,9 +2,11 @@
 
 #include "irccommands/ircjoincommand.h"
 
+#include "ircchannel/ircchannel.h"
 #include "ircclient/ircclient.h"
 #include "irccommands/irccommands.h"
 #include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponses.h"
 #include "ircserver/ircserver.h"
 #include "managers/ircchannelsmanager.h"
 #include "managers/ircclientsmanager.h"
@@ -43,7 +45,16 @@ bool IRCJoinCommand::ProcessCommand(IRCSocket *socket)
     {
         for (size_t i = 0; i < GetChannels().size(); ++i)
         {
-            GetIRCChannelsManager().Join(socket, GetChannels()[i], i < GetKeys().size() ? GetKeys()[i] : "");
+            Enum_IRCResponses responseEnum = GetIRCChannelsManager().Join(socket, GetChannels()[i], i < GetKeys().size() ? GetKeys()[i] : "");
+            if (responseEnum == Enum_IRCResponses_RPL_TOPIC)
+            {
+//                IRCChannel *channel = GetIRCChannelsManager().FindChannel(GetChannels()[i]);
+  //              IRCCommandsHelper::SendResponseWithTopic(socket, GetChannels()[i], channel ? channel->GetTopic() : "");
+            }
+            else
+            {
+                IRCCommandsHelper::SendResponseWithServerName(socket, responseEnum, GetChannels()[i]);
+            }
         }
         return true;
     }
@@ -72,7 +83,7 @@ bool IRCJoinCommand::ValidateArgs(IRCSocket *socket)
         {
             if (!IRCParsingHelper::IsChannel(*it))
             {
-                IRCCommandsHelper::SendERR_NOSUCHCHANNEL(socket, *it);
+                IRCCommandsHelper::SendResponseWithServerName(socket, Enum_IRCResponses_ERR_NOSUCHCHANNEL, *it);
                 if (i < keys.size())
                 {
                     keys.erase(keys.begin() + i);

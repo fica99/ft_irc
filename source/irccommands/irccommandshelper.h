@@ -20,7 +20,9 @@ void SendRPL_MOTDSTART(IRCSocket *socket, const std::string server);
 void SendRPL_MOTD(IRCSocket *socket, const std::string& filename);
 void SendMOTD(IRCSocket *socket, const std::string server, const std::string& filename);
 void SendERR_UNKNOWNCOMMAND(IRCSocket *socket, const std::string& command);
-void SendERR_NOSUCHCHANNEL(IRCSocket *socket, const std::string& channelName);
+void SendResponseWithServerName(IRCSocket *socket, Enum_IRCResponses responseEnum, const std::string& channelName);
+void SendResponseWithTopic(IRCSocket *socket, const std::string& channelName, const std::string& topic);
+
 
 }
 

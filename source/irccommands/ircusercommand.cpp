@@ -43,7 +43,7 @@ bool IRCUserCommand::ProcessCommand(IRCSocket *socket)
         }
         else if (responseEnum == Enum_IRCResponses_RPL_MOTD)
         {
-            IRCCommandsHelper::SendMOTD(socket, "IRC", "./conf/IRC.motd");
+            IRCCommandsHelper::SendMOTD(socket, GetIRCServer().GetServerName(), "./conf/IRC.motd");
         }
         return true;
     }
@@ -59,10 +59,6 @@ bool IRCUserCommand::ValidateArgs(IRCSocket *socket)
     }
     else
     {
-        if (!IRCParsingHelper::IsUser(GetArgs()[0]))
-        {
-            return false;
-        }
         SetUsername(GetArgs()[0]);
         SetRealname(GetArgs()[3]);
     }

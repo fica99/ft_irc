@@ -71,7 +71,7 @@ Enum_IRCResponses IRCClientsManager::Nick(IRCSocket *socket, const std::string& 
         return Enum_IRCResponses_ERR_NICKNAMEINUSE;
     }
     IRCClient *client = FindOrCreateClient(socket);
-    const std::string& prevNickname = client->GetNickname();
+    bool wasRegistered = client->GetIsRegistered();
     client->SetNickname(nickname);
     if (client->GetIsRegistered() == true)
     {
@@ -79,7 +79,7 @@ Enum_IRCResponses IRCClientsManager::Nick(IRCSocket *socket, const std::string& 
         {
             Quit(socket, "");
         }
-        else if (prevNickname.empty() == true)
+        else if (wasRegistered == false)
         {
             return Enum_IRCResponses_RPL_MOTD;
         }
@@ -113,10 +113,6 @@ Enum_IRCResponses IRCClientsManager::User(IRCSocket *socket, const std::string& 
 Enum_IRCResponses IRCClientsManager::Oper(IRCSocket *socket, const std::string& user, const std::string& password)
 {
     IRCClient *client = FindClient(socket);
-    if (client == NULL)
-    {
-        return Enum_IRCResponses_ERR_NOTREGISTERED;
-    }
 
     if (!m_OpersMap.empty())
     {
@@ -125,7 +121,10 @@ Enum_IRCResponses IRCClientsManager::Oper(IRCSocket *socket, const std::string& 
         {
             if (password == it->second)
             {
-                client->SetIsOper(true);
+                if (client)
+                {
+                    client->SetIsOper(true);
+                }
                 return Enum_IRCResponses_RPL_YOUREOPER;
             }
         }

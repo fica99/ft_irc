@@ -5,6 +5,7 @@
 #include "utils/memory.h"
 
 #define MAX_NB_USERS_IN_CHANNEL 40
+#define MAX_NB_CHANNELS 10
 
 namespace ircserv
 {
@@ -51,6 +52,10 @@ Enum_IRCResponses IRCChannelsManager::Join(IRCSocket *socket, const std::string&
     }
     else
     {
+        if (m_ChannelsMap.size() >= MAX_NB_CHANNELS)
+        {
+            return Enum_IRCResponses_ERR_TOOMANYCHANNELS;
+        }
         channel = CreateChannel(channelName);
         if (channel != NULL)
         {
@@ -58,10 +63,23 @@ Enum_IRCResponses IRCChannelsManager::Join(IRCSocket *socket, const std::string&
             channel->SetOperator(socket);
         }
     }
-    
-    channel->AddUser(socket);
 
-    return Enum_IRCResponses_Unknown;
+    if (channel->GetIsInviteOnly())
+    {
+        return Enum_IRCResponses_ERR_INVITEONLYCHAN;
+    }
+    
+    if (channel->GetKey() != key)
+    {
+        return Enum_IRCResponses_ERR_BADCHANNELKEY;
+    }
+
+    if (channel->AddUser(socket) == false)
+    {
+        return Enum_IRCResponses_Unknown;
+    }
+    // add check mask
+    return Enum_IRCResponses_RPL_TOPIC;
 }
 
 IRCChannel* IRCChannelsManager::FindChannel(const std::string& channelName) const

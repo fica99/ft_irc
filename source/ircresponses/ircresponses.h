@@ -13,6 +13,7 @@ enum Enum_IRCResponses
     Enum_IRCResponses_RPL_LISTSTART = 321,
     Enum_IRCResponses_RPL_LIST = 322,
     Enum_IRCResponses_RPL_LISTEND = 323,
+    Enum_IRCResponses_RPL_NOTOPIC = 331,
     Enum_IRCResponses_RPL_TOPIC = 332,
     Enum_IRCResponses_RPL_NAMREPLY = 353,
     Enum_IRCResponses_RPL_ENDOFNAMES = 366,
@@ -59,6 +60,7 @@ Begin_Enum_String(Enum_IRCResponses)
     Enum_String(Enum_IRCResponses_RPL_LISTSTART, "321");
     Enum_String(Enum_IRCResponses_RPL_LIST, "322");
     Enum_String(Enum_IRCResponses_RPL_LISTEND, "323");
+    Enum_String(Enum_IRCResponses_RPL_NOTOPIC, "331");
     Enum_String(Enum_IRCResponses_RPL_TOPIC, "332");
     Enum_String(Enum_IRCResponses_RPL_NAMREPLY, "353");
     Enum_String(Enum_IRCResponses_RPL_ENDOFNAMES, "366");

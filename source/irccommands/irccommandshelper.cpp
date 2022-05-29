@@ -4,15 +4,21 @@
 
 #include "ircclient/ircclient.h"
 #include "ircresponses/ircresponse.h"
+#include "ircresponses/ircresponseerr_badchannelkey.h"
+#include "ircresponses/ircresponseerr_channelisfull.h"
 #include "ircresponses/ircresponseerr_erroneusnickname.h"
+#include "ircresponses/ircresponseerr_inviteonlychan.h"
 #include "ircresponses/ircresponseerr_needmoreparams.h"
 #include "ircresponses/ircresponseerr_nicknameinuse.h"
 #include "ircresponses/ircresponseerr_nomotd.h"
 #include "ircresponses/ircresponseerr_nosuchchannel.h"
+#include "ircresponses/ircresponseerr_toomanychannels.h"
 #include "ircresponses/ircresponseerr_unknowncommand.h"
 #include "ircresponses/ircresponserpl_endofmotd.h"
 #include "ircresponses/ircresponserpl_motd.h"
 #include "ircresponses/ircresponserpl_motdstart.h"
+#include "ircresponses/ircresponserpl_notopic.h"
+#include "ircresponses/ircresponserpl_topic.h"
 #include "ircresponses/ircresponses.h"
 #include "ircresponses/ircresponsesfactory.h"
 #include "managers/ircclientsmanager.h"
@@ -145,16 +151,65 @@ void IRCCommandsHelper::SendERR_UNKNOWNCOMMAND(IRCSocket *socket, const std::str
     IRCResponsesFactory::DestroyResponse(response);
 }
 
-void IRCCommandsHelper::SendERR_NOSUCHCHANNEL(IRCSocket *socket, const std::string& channelName)
+void IRCCommandsHelper::SendResponseWithServerName(IRCSocket *socket, Enum_IRCResponses responseEnum, const std::string& channelName)
 {
-    IRCResponseERR_NOSUCHCHANNEL *response = dynamic_cast<IRCResponseERR_NOSUCHCHANNEL*>(
-        IRCResponsesFactory::CreateResponse(Enum_IRCResponses_ERR_NOSUCHCHANNEL)
-    );
+    IRCResponse *response = IRCResponsesFactory::CreateResponse(responseEnum);
     if (response != NULL)
     {
         IRCClient* client = GetIRCClientsManager().FindClient(socket);
         response->SetNickname(client ? client->GetNickname() : "");
-        response->SetChannelName(channelName);
+        if (responseEnum == Enum_IRCResponses_ERR_NOSUCHCHANNEL)
+        {
+            dynamic_cast<IRCResponseERR_NOSUCHCHANNEL*>(response)->SetChannelName(channelName);
+        }
+        else if (responseEnum == Enum_IRCResponses_ERR_INVITEONLYCHAN)
+        {
+            dynamic_cast<IRCResponseERR_INVITEONLYCHAN*>(response)->SetChannel(channelName);
+        }
+        else if (responseEnum == Enum_IRCResponses_ERR_CHANNELISFULL)
+        {
+            dynamic_cast<IRCResponseERR_CHANNELISFULL*>(response)->SetChannel(channelName);
+        }
+        else if (responseEnum == Enum_IRCResponses_ERR_TOOMANYCHANNELS)
+        {
+            dynamic_cast<IRCResponseERR_TOOMANYCHANNELS*>(response)->SetChannelName(channelName);
+        }
+        else if (responseEnum == Enum_IRCResponses_ERR_BADCHANNELKEY)
+        {
+            dynamic_cast<IRCResponseERR_BADCHANNELKEY*>(response)->SetChannel(channelName);
+        }
+        response->Send(socket);
+    }
+    IRCResponsesFactory::DestroyResponse(response);
+}
+
+void IRCCommandsHelper::SendResponseWithTopic(IRCSocket *socket, const std::string& channelName, const std::string& topic)
+{
+    IRCResponse *response = NULL;
+
+    if (topic.empty())
+    {
+        IRCResponseRPL_NOTOPIC *responseNoTopic = dynamic_cast<IRCResponseRPL_NOTOPIC*>(IRCResponsesFactory::CreateResponse(Enum_IRCResponses_RPL_NOTOPIC));
+        if (responseNoTopic != NULL)
+        {
+            responseNoTopic->SetChannel(channelName);
+            response = responseNoTopic;
+        }
+    }
+    else
+    {
+        IRCResponseRPL_TOPIC *responseTopic = dynamic_cast<IRCResponseRPL_TOPIC*>(IRCResponsesFactory::CreateResponse(Enum_IRCResponses_RPL_TOPIC));
+        if (responseTopic != NULL)
+        {
+            responseTopic->SetTopic(topic);
+            responseTopic->SetChannel(channelName);
+            response = responseTopic;
+        }
+    }
+    if (response != NULL)
+    {
+        IRCClient* client = GetIRCClientsManager().FindClient(socket);
+        response->SetNickname(client ? client->GetNickname() : "");
         response->Send(socket);
     }
     IRCResponsesFactory::DestroyResponse(response);

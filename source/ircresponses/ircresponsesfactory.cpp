@@ -41,6 +41,7 @@
 #include "ircresponses/ircresponserpl_motd.h"
 #include "ircresponses/ircresponserpl_motdstart.h"
 #include "ircresponses/ircresponserpl_namreply.h"
+#include "ircresponses/ircresponserpl_notopic.h"
 #include "ircresponses/ircresponserpl_topic.h"
 #include "ircresponses/ircresponserpl_umodeis.h"
 #include "ircresponses/ircresponserpl_youreoper.h"
@@ -186,6 +187,9 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType)
             break;
         case Enum_IRCResponses_RPL_NAMREPLY:
             response = New(IRCResponseRPL_NAMREPLY)();
+            break;
+        case Enum_IRCResponses_RPL_NOTOPIC:
+            response = New(IRCResponseRPL_NOTOPIC)();
             break;
         case Enum_IRCResponses_RPL_TOPIC:
             response = New(IRCResponseRPL_TOPIC)();

@@ -39,7 +39,6 @@ void IRCCommandsManager::Shutdown(void)
 
 static void ProcessCommand(IRCCommand *command, IRCSocket *socket, const std::string& message)
 {
-
     if (command != NULL)
     {
         IRC_LOGD("Received command: %s", EnumString<Enum_IRCCommands>::From(command->GetCommandEnum()).c_str());

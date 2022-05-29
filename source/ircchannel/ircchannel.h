@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <set>
 
 #include "ircserver/ircsocket.h"
 
@@ -28,8 +28,8 @@ public:
     inline const std::string& GetTopic(void) const { return m_Topic; }
     inline void SetOperator(IRCSocket *oper) { m_Operator = oper; }
     inline IRCSocket* GetOperator(void) const { return m_Operator; }
-    inline void AddUser(IRCSocket* user) { m_Users.push_back(user); }
-    inline const std::vector<IRCSocket*>& GetUsers(void) const { return m_Users; }
+    inline bool AddUser(IRCSocket* user) { return m_Users.insert(user).second; }
+    inline const std::set<IRCSocket*>& GetUsers(void) const { return m_Users; }
 
 private:
     bool m_IsInviteOnly;
@@ -37,7 +37,7 @@ private:
     std::string m_Key;
     std::string m_Topic;
     IRCSocket* m_Operator;
-    std::vector<IRCSocket*> m_Users;
+    std::set<IRCSocket*> m_Users;
 };
 
 
