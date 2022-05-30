@@ -4,7 +4,7 @@
 
 #include "ircclient/ircclient.h"
 #include "irccommands/irccommands.h"
-#include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponseshelper.h"
 #include "ircresponses/ircresponses.h"
 #include "ircserver/ircsocket.h"
 #include "managers/ircclientsmanager.h"
@@ -38,7 +38,7 @@ bool IRCPassCommand::ProcessCommand(IRCSocket *socket)
 
         if (client->GetIsRegistered())
         {
-            IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_ALREADYREGISTRED);
+            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_ALREADYREGISTRED);
         }
         else
         {
@@ -53,7 +53,7 @@ bool IRCPassCommand::ValidateArgs(IRCSocket *socket)
 {
     if (GetArgs().empty())
     {
-        IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
         return false;
     }
     SetPassword(GetArgs()[0]);

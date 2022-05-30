@@ -3,7 +3,7 @@
 #include "irccommands/irctopiccommand.h"
 
 #include "irccommands/irccommands.h"
-#include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponseshelper.h"
 #include "ircresponses/ircresponses.h"
 #include "managers/ircclientsmanager.h"
 #include "managers/ircchannelsmanager.h"
@@ -34,7 +34,7 @@ bool IRCTopicCommand::ProcessCommand(IRCSocket *socket)
 {
     // if (!GetIRCClientsManager().IsRegistered(socket))
     // {
-    //     IRCCommandsHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_NOTREGISTERED);
+    //     IRCResponsesHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_NOTREGISTERED);
     //     return false;
     // }
 
@@ -44,11 +44,11 @@ bool IRCTopicCommand::ProcessCommand(IRCSocket *socket)
     //     if (responseEnum == Enum_IRCResponses_RPL_TOPIC)
     //     {
     //         IRCChannel *channel = GetIRCChannelsManager().FindChannel(GetChannel());
-    //         IRCCommandsHelper::SendResponseWithTopic(socket, GetChannel(), channel ? channel->GetTopic() : "");
+    //         IRCResponsesHelper::SendResponseWithTopic(socket, GetChannel(), channel ? channel->GetTopic() : "");
     //     }
     //     else if (responseEnum == Enum_IRCResponses_ERR_NOTONCHANNEL)
     //     {
-    //         IRCCommandsHelper::SendResponseWithServerName(socket, responseEnum, GetChannel());
+    //         IRCResponsesHelper::SendResponseWithServerName(socket, responseEnum, GetChannel());
     //     }
     //     return true;
     // }
@@ -60,7 +60,7 @@ bool IRCTopicCommand::ValidateArgs(IRCSocket *socket)
     // std::vector<std::string> channels;
     // if (GetArgs().empty())
     // {
-    //     IRCCommandsHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS);
+    //     IRCResponsesHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS);
     //     return false;
     // }
     // else

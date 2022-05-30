@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 #include <string>
-#include <vector>
+
 #include "ircclient/ircclient.h"
 #include "ircserver/ircsocket.h"
 #include "utils/singleton.h"
@@ -21,19 +21,19 @@ private:
     void Shutdown(void);
 
 public:
+    IRCClient *CreateClient(IRCSocket *socket);
+    IRCClient *FindClient(IRCSocket *socket) const;
     IRCClient *FindOrCreateClient(IRCSocket *socket);
-    IRCClient *FindClient(IRCSocket *socket);
     IRCClient *FindClientByNickname(const std::string& nickname) const;
- 
+    IRCSocket *FindSocketByClient(IRCClient *client) const;
     void EraseClient(IRCSocket *socket);
-    void AddOper(const std::string& user, const std::string& password);
-    bool IsRegistered(IRCSocket *socket);
-    bool IsOper(const std::string& user, const std::string& password);
-    inline bool IsOperMapEmpty(void) const { return m_OpersMap.empty(); }
-    std::vector<IRCClient*> GetAllClients(void) const;
+
+public:
+    inline const std::unordered_map<IRCSocket*, IRCClient*>& GetSocketsClientsMap(void) const { return m_SocketsClientsMap; }
+    inline const std::unordered_map<std::string, std::string>& GetOpersMap(void) const { return m_OpersMap; }
 
 private:
-    std::unordered_map<IRCSocket*, IRCClient*> m_SocketClientsMap;
+    std::unordered_map<IRCSocket*, IRCClient*> m_SocketsClientsMap;
     std::unordered_map<std::string, std::string> m_OpersMap;
 };
 

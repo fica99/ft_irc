@@ -6,6 +6,7 @@
 #include "ircchannel/ircchannel.h"
 #include "irccommands/irccommands.h"
 #include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponseshelper.h"
 #include "parsing/ircparsinghelper.h"
 #include "ircresponses/ircresponserpl_namreply.h"
 #include "ircresponses/ircresponsesfactory.h"
@@ -36,9 +37,9 @@ void IRCNamesCommand::Shutdown(void)
 
 bool IRCNamesCommand::ProcessCommand(IRCSocket *socket)
 {
-    if (!GetIRCClientsManager().IsRegistered(socket))
+    if (!IRCCommandsHelper::IsRegistered(socket))
     {
-        IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NOTREGISTERED);
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NOTREGISTERED);
         return false;
     }
 
@@ -46,20 +47,20 @@ bool IRCNamesCommand::ProcessCommand(IRCSocket *socket)
     {
         if (GetChannels().empty())
         {
-            std::vector<std::string> channelsNames = GetIRCChannelsManager().GetChannelsNames();
-            for (size_t i = 0; i < channelsNames.size(); ++i)
+            const std::unordered_map<std::string, IRCChannel*>& channelMap = GetIRCChannelsManager().GetChannelsMap();
+            for (std::unordered_map<std::string, IRCChannel*>::const_iterator it = channelMap.begin(); it != channelMap.end(); ++it)
             {
-                SendChannelNames(socket, channelsNames[i]);
+                SendChannelNames(socket, it->first);
             }
             SendClientsWithNoChannels(socket);
-            IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_RPL_ENDOFNAMES, "*");
+            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_RPL_ENDOFNAMES, "*");
         }
         else
         {
             for (size_t i = 0; i < GetChannels().size(); ++i)
             {
-                IRCCommandsHelper::SendChannelNames(socket, GetChannels()[i]);
-                IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_RPL_ENDOFNAMES, GetChannels()[i]);
+                IRCResponsesHelper::SendChannelNames(socket, "= " + GetChannels()[i]);
+                IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_RPL_ENDOFNAMES, GetChannels()[i]);
             }
         }
         return true;
@@ -76,7 +77,7 @@ bool IRCNamesCommand::ValidateArgs(IRCSocket *socket)
     return true;
 }
 
-void IRCNamesCommand::SendChannelNames(IRCSocket *socket, const std::string& channelName)
+void IRCNamesCommand::SendChannelNames(IRCSocket *socket, const std::string& channelName) const
 {
     IRCChannel *channel = GetIRCChannelsManager().FindChannel(channelName);
     if (channel)
@@ -84,41 +85,39 @@ void IRCNamesCommand::SendChannelNames(IRCSocket *socket, const std::string& cha
         if (channel->GetModes() & PRIVATE || channel->GetModes() & SECRET)
         {
             IRCClient *client = GetIRCClientsManager().FindClient(socket);
-            if (client)
+            if (channel->GetClients().find(client) == channel->GetClients().end())
             {
-                if (channel->GetClients().find(client) != channel->GetClients().end())
-                {
-                    IRCCommandsHelper::SendChannelNames(socket, channelName);
-                }
+                return;
             }
         }
-        else
-        {
-            IRCCommandsHelper::SendChannelNames(socket, channelName);
-        }
+        IRCResponsesHelper::SendChannelNames(socket, "= " + channelName);
     }
 }
 
-void IRCNamesCommand::SendClientsWithNoChannels(IRCSocket *socket)
+void IRCNamesCommand::SendClientsWithNoChannels(IRCSocket *socket) const
 {
-    std::vector<IRCClient*> clients = GetIRCClientsManager().GetAllClients();
     IRCResponseRPL_NAMREPLY* response = dynamic_cast<IRCResponseRPL_NAMREPLY*>(IRCResponsesFactory::CreateResponse(Enum_IRCResponses_RPL_NAMREPLY));
 
     if (response != NULL)
     {
         response->SetChannel("* *");
     }
-    for (size_t i = 0; i < clients.size(); ++i)
+    const std::unordered_map<IRCSocket*, IRCClient*> socketsClientsMap = GetIRCClientsManager().GetSocketsClientsMap();
+    for (std::unordered_map<IRCSocket*, IRCClient*>::const_iterator it = socketsClientsMap.begin(); it != socketsClientsMap.end(); ++it)
     {
-        if (clients[i]->GetJoinedChannels().empty() && clients[i]->GetIsRegistered())
+        IRCClient *client = it->second;
+        if (client && client->GetIsRegistered())
         {
-            if (response != NULL)
+            if (!client->GetJoinedChannels().empty())
             {
-                response->AddNick(false, clients[i]->GetNickname());
+                if (response != NULL)
+                {
+                    response->AddNick(false, client->GetNickname());
+                }
             }
         }
     }
-    IRCCommandsHelper::SendResponse(socket, response);
+    IRCResponsesHelper::SendResponse(socket, response);
     IRCResponsesFactory::DestroyResponse(response);
 }
 

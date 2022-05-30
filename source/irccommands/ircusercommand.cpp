@@ -4,7 +4,7 @@
 
 #include "ircclient/ircclient.h"
 #include "irccommands/irccommands.h"
-#include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponseshelper.h"
 #include "ircresponses/ircresponses.h"
 #include "ircserver/ircserver.h"
 #include "ircserver/ircsocket.h"
@@ -40,7 +40,7 @@ bool IRCUserCommand::ProcessCommand(IRCSocket *socket)
         IRCClient *client = GetIRCClientsManager().FindOrCreateClient(socket);
         if (client->GetIsRegistered())
         {
-            IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_ALREADYREGISTRED);
+            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_ALREADYREGISTRED);
             return false;
         }
         client->SetUsername(GetUsername());
@@ -53,7 +53,7 @@ bool IRCUserCommand::ProcessCommand(IRCSocket *socket)
             }
             else
             {
-                IRCCommandsHelper::SendMOTD(socket, GetIRCServer().GetServerName(), "./conf/IRC.motd");
+                IRCResponsesHelper::SendMOTD(socket, GetIRCServer().GetServerName(), "./conf/IRC.motd");
                 return true;
             }
         }
@@ -65,7 +65,7 @@ bool IRCUserCommand::ValidateArgs(IRCSocket *socket)
 {
     if (GetArgs().size() < 4)
     {
-        IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
         return false;
     }
     else

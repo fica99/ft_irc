@@ -24,7 +24,7 @@ void IRCChannel::Shutdown(void)
 {
 }
 
-bool IRCChannel::JoinClient(IRCClient* client)
+bool IRCChannel::AddClient(IRCClient* client)
 {
     bool isInserted = m_Clients.insert(client).second;
     if (isInserted)

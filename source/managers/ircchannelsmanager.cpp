@@ -32,48 +32,22 @@ void IRCChannelsManager::Shutdown(void)
 {
     for (std::unordered_map<std::string, IRCChannel*>::iterator it = m_ChannelsMap.begin(); it != m_ChannelsMap.end(); )
     {
-        RemoveChannel(it->first);
+        EraseChannel(it->first);
     }
     m_ChannelsMap.clear();
 }
 
-// Enum_IRCResponses IRCChannelsManager::Join(IRCSocket *socket, const std::string& channelName, const std::string& key)
-// {
-
-// }
-
-// Enum_IRCResponses IRCChannelsManager::Part(IRCSocket *socket, const std::string& channelName)
-// {
-//     if (IsInChannel(channelName, socket))
-//     {
-//         return Enum_IRCResponses_ERR_NOTONCHANNEL;
-//     }
-//     IRCChannel *channel = FindChannel(channelName);
-//     if (channel)
-//     {
-//         channel->RemoveUser(socket);
-//         if (channel->GetUsers().empty())
-//         {
-//             RemoveChannel(channelName);
-//         }
-//     }
-//     return Enum_IRCResponses_Unknown;
-// }
-
-// Enum_IRCResponses IRCChannelsManager::Topic(IRCSocket *socket, const std::string& channelName, const std::string& topic)
-// {
-//     if (IsInChannel(channelName, socket))
-//     {
-//         return Enum_IRCResponses_ERR_NOTONCHANNEL;
-//     }
-//     IRCChannel *channel = FindChannel(channelName);
-//     if (channel)
-//     {
-//         channel->SetTopic(topic);
-//         return Enum_IRCResponses_RPL_TOPIC;
-//     }
-//     return Enum_IRCResponses_Unknown;
-// }
+IRCChannel* IRCChannelsManager::CreateChannel(const std::string& channelName)
+{
+    IRCChannel* channel = New(IRCChannel);
+    if (channel != NULL)
+    {
+        channel->SetName(channelName);
+        m_ChannelsMap[channelName] = channel;
+        IRC_LOGI("%s", "Channel created");
+    }
+    return channel;
+}
 
 IRCChannel* IRCChannelsManager::FindChannel(const std::string& channelName) const
 {
@@ -97,49 +71,29 @@ IRCChannel* IRCChannelsManager::FindOrCreateChannel(const std::string& channelNa
     IRCChannel *channel = FindChannel(channelName);
     if (channel == NULL)
     {
-        channel = New(IRCChannel);
-        if (channel != NULL)
-        {
-            channel->SetName(channelName);
-            m_ChannelsMap[channelName] = channel;
-            IRC_LOGI("%s channel created", channelName.c_str());
-        }
+        channel = CreateChannel(channelName);
     }
     return channel;
 }
 
-
-void IRCChannelsManager::RemoveChannel(const std::string& channelName)
+void IRCChannelsManager::EraseChannel(const std::string& channelName)
 {
-    IRCChannel *channel = FindChannel(channelName);
-    if (channel)
+    std::unordered_map<std::string, IRCChannel*>::iterator it = m_ChannelsMap.find(channelName);
+    if (it != m_ChannelsMap.end())
     {
-        for (std::unordered_set<IRCClient*>::iterator it = channel->GetClients().begin(); it != channel->GetClients().end(); ++it)
+        IRCChannel *channel = it->second;
+        if (channel)
         {
-            IRCClient *client = *it;
-            if (client)
+            for (std::unordered_set<IRCClient*>::iterator it_client = channel->GetClients().begin(); it_client != channel->GetClients().end(); ++it_client)
             {
+                IRCClient *client = *it_client;
                 client->LeaveChannel(channel);
-                channel->RemoveClient(client);
-                channel->RemoveOper(client);
             }
+            Delete(channel);
+            m_ChannelsMap.erase(it);
+            IRC_LOGI("%s", "Channel removed");
         }
-        Delete(channel);
-        m_ChannelsMap.erase(m_ChannelsMap.find(channelName));
-        IRC_LOGI("%s channel removed", channelName.c_str());
     }
 }
-
-std::vector<std::string> IRCChannelsManager::GetChannelsNames(void) const
-{
-    std::vector<std::string> channels;
-
-    for (std::unordered_map<std::string, IRCChannel*>::const_iterator it = m_ChannelsMap.begin(); it != m_ChannelsMap.end(); ++it)
-    {
-        channels.push_back(it->first);
-    }
-    return channels;
-}
-
 
 }

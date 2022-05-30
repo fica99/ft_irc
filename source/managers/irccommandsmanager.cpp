@@ -5,6 +5,7 @@
 #include "irccommands/irccommand.h"
 #include "irccommands/irccommandsfactory.h"
 #include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponseshelper.h"
 #include "managers/ircclientsmanager.h"
 #include "parsing/tokens/irctoken.h"
 #include "parsing/ircparsinghelper.h"
@@ -44,9 +45,9 @@ static void ProcessCommand(IRCCommand *command, IRCSocket *socket, const std::st
     }
     else
     {
-        if (GetIRCClientsManager().IsRegistered(socket))
+        if (IRCCommandsHelper::IsRegistered(socket))
         {
-            IRCCommandsHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_UNKNOWNCOMMAND, message);
+            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_UNKNOWNCOMMAND, message);
         }
     }
 }

@@ -38,7 +38,7 @@ public:
     inline uint8_t GetModes(void) const { return m_Modes; }
 
 public:
-    bool JoinClient(IRCClient* client);
+    bool AddClient(IRCClient* client);
     void RemoveClient(IRCClient* client);
     void AddOper(IRCClient* oper);
     void RemoveOper(IRCClient* oper);

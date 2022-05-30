@@ -28,8 +28,8 @@ private:
     inline const std::vector<std::string>& GetChannels(void) const { return m_Channels; }
 
 private:
-    void SendChannelNames(IRCSocket *socket, const std::string& channelName);
-    void SendClientsWithNoChannels(IRCSocket *socket);
+    void SendChannelNames(IRCSocket *socket, const std::string& channelName) const;
+    void SendClientsWithNoChannels(IRCSocket *socket) const;
 
 private:
     std::vector<std::string> m_Channels;

@@ -8,6 +8,7 @@ namespace ircserv
 enum Enum_IRCResponses
 {
     Enum_IRCResponses_Unknown = 0,
+    Enum_IRCResponsesCustom = 1,
     Enum_IRCResponses_RPL_UMODEIS = 221,
     Enum_IRCResponses_RPL_AWAY = 301,
     Enum_IRCResponses_RPL_LISTSTART = 321,

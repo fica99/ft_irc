@@ -38,7 +38,6 @@ static void ServerLoop()
     serv.SetPort(GetCommandLineOptions().GetPort());
     serv.SetPassword(GetCommandLineOptions().GetPassword());
     serv.SetServerName("IRC");
-    GetIRCClientsManager().AddOper("aashara", "070599");
     serv.Start();
 }
 
