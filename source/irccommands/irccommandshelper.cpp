@@ -4,6 +4,7 @@
 
 #include "ircclient/ircclient.h"
 #include "managers/ircclientsmanager.h"
+#include "managers/ircchannelsmanager.h"
 
 namespace ircserv
 {
@@ -37,6 +38,18 @@ bool IRCCommandsHelper::IsBannedByChannel(IRCClient *client, IRCChannel *channel
         }
     }
     return false;
+}
+
+void IRCCommandsHelper::EraseClientFromChannel(IRCClient *client, IRCChannel *channel)
+{
+    if (channel)
+    {
+        channel->RemoveClient(client);
+        if (channel->GetClients().empty())
+        {
+            GetIRCChannelsManager().EraseChannel(channel->GetName());
+        }
+    }
 }
 
 
