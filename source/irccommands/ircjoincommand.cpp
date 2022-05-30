@@ -47,58 +47,13 @@ bool IRCJoinCommand::ProcessCommand(IRCSocket *socket)
 
     if (ValidateArgs(socket))
     {
-        // for (size_t i = 0; i < GetChannels().size(); ++i)
-        // {
-        //     const std::string& channelName = GetChannels()[i];
-        //     const std::string key = (i < GetKeys().size()) ? GetKeys()[i] : "";
-        //     IRCChannel *channel = GetIRCChannelsManager().FindChannel(channelName);
-        //     IRCClient *client = GetIRCClientsManager().FindClient(socket);
-
-        //     if (client != NULL)
-        //     {
-        //         if (client->GetJoinedChannels().size() >= MAX_NB_JOINED_CHANNELS)
-        //         {
-        //             IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_TOOMANYCHANNELS, channelName);
-        //             continue;
-        //         }
-        //     }
-
-        //     if (channel == NULL)
-        //     {
-        //         channel = GetIRCChannelsManager().FindOrCreateChannel(channelName);
-        //         if (channel != NULL)
-        //         {
-        //             channel->AddOper(client);
-        //             channel->SetKey(key);
-        //         }
-        //     }
-
-        //     if (channel->GetClients().size() >= MAX_NB_USERS_IN_CHANNEL)
-        //     {
-        //         IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_CHANNELISFULL, channelName);
-        //         continue;
-        //     }
-
-        //     if (channel->GetModes() & INVITEONLY)
-        //     {
-        //         IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_INVITEONLYCHAN, channelName);
-        //         continue;
-        //     }
-
-        //     if (channel->GetKey() != key)
-        //     {
-        //         IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_BADCHANNELKEY, channelName);
-        //         continue;
-        //     }
-        //     // add check for ban
-
-        //     channel->JoinClient(client);
-
-        //     // ADD sending notification to all users
-        //     IRCResponsesHelper::SendTopic(socket, channelName, channel->GetTopic());
-        //     IRCResponsesHelper::SendChannelNames(socket, "= " + channelName);
-        // }
-        // return true;
+        for (size_t i = 0; i < GetChannels().size(); ++i)
+        {
+            const std::string& channelName = GetChannels()[i];
+            const std::string key = (i < GetKeys().size()) ? GetKeys()[i] : "";
+            ProcessJoiningChannel(socket, channelName, key);
+        }
+        return true;
     }
     return false;
 }
@@ -141,6 +96,62 @@ bool IRCJoinCommand::ValidateArgs(IRCSocket *socket)
         SetKeys(keys);
     }
     return true;
+}
+
+void IRCJoinCommand::ProcessJoiningChannel(IRCSocket *socket, const std::string& channelName, const std::string& key) const
+{
+    IRCClient *client = GetIRCClientsManager().FindClient(socket);
+
+    if (client != NULL)
+    {
+        if (client->GetJoinedChannels().size() >= MAX_NB_JOINED_CHANNELS)
+        {
+            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_TOOMANYCHANNELS, channelName);
+            return;
+        }
+    }
+
+    IRCChannel *channel = GetIRCChannelsManager().FindChannel(channelName);
+
+    if (channel == NULL)
+    {
+        channel = GetIRCChannelsManager().FindOrCreateChannel(channelName);
+        if (channel != NULL)
+        {
+            channel->AddOper(client);
+            channel->SetKey(key);
+        }
+    }
+
+    if (channel->GetClients().size() >= MAX_NB_USERS_IN_CHANNEL)
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_CHANNELISFULL, channelName);
+        return;
+    }
+
+    if (channel->GetModes() & INVITEONLY)
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_INVITEONLYCHAN, channelName);
+        return;
+    }
+
+    if (channel->GetKey() != key)
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_BADCHANNELKEY, channelName);
+        return;
+    }
+    
+    if (IRCCommandsHelper::IsBannedByChannel(client, channel))
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_BANNEDFROMCHAN, channelName);
+        return;
+    }
+
+    channel->AddClient(client);
+
+    // ADD sending notification to all users
+    IRCResponsesHelper::SendTopic(socket, channelName, channel->GetTopic());
+    IRCResponsesHelper::SendChannelNames(socket, "= " + channelName);
 }
 
 

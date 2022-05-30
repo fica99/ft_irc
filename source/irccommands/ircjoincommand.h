@@ -30,6 +30,9 @@ private:
     const std::vector<std::string>& GetKeys(void) const { return m_Keys; }
 
 private:
+    void ProcessJoiningChannel(IRCSocket *socket, const std::string& channelName, const std::string& key) const;
+
+private:
     std::vector<std::string> m_Channels;
     std::vector<std::string> m_Keys;
 };

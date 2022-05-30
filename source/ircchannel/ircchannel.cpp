@@ -58,9 +58,23 @@ void IRCChannel::AddOper(IRCClient* oper)
 void IRCChannel::RemoveOper(IRCClient* oper)
 {
     std::unordered_set<IRCClient*>::iterator it = m_Opers.find(oper);
-    if (it != m_Clients.end())
+    if (it != m_Opers.end())
     {
-        m_Clients.erase(it);
+        m_Opers.erase(it);
+    }
+}
+
+void IRCChannel::BanClient(IRCClient* client)
+{
+    m_Banned.insert(client);
+}
+
+void IRCChannel::UnbanClient(IRCClient* client)
+{
+    std::unordered_set<IRCClient*>::iterator it = m_Banned.find(client);
+    if (it != m_Banned.end())
+    {
+        m_Banned.erase(it);
     }
 }
 

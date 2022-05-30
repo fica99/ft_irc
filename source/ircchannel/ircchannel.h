@@ -33,6 +33,7 @@ public:
     inline const std::string& GetTopic(void) const { return m_Topic; }
     inline const std::unordered_set<IRCClient*>& GetClients(void) const { return m_Clients; }
     inline const std::unordered_set<IRCClient*>& GetOpers(void) const { return m_Opers; }
+    inline const std::unordered_set<IRCClient*>& GetBanned(void) const { return m_Banned; }
     inline void SetModes(uint8_t modes) { m_Modes |= modes; }
     inline void UnsetModes(uint8_t modes) { m_Modes &= ~modes; }
     inline uint8_t GetModes(void) const { return m_Modes; }
@@ -42,6 +43,8 @@ public:
     void RemoveClient(IRCClient* client);
     void AddOper(IRCClient* oper);
     void RemoveOper(IRCClient* oper);
+    void BanClient(IRCClient* client);
+    void UnbanClient(IRCClient* client);
 
 private:
     std::string m_Name;
@@ -49,6 +52,7 @@ private:
     std::string m_Topic;
     std::unordered_set<IRCClient*> m_Clients;
     std::unordered_set<IRCClient*> m_Opers;
+    std::unordered_set<IRCClient*> m_Banned;
     uint8_t m_Modes;
 };
 
