@@ -3,10 +3,12 @@
 #include "irccommands/ircnickcommand.h"
 
 #include "irccommands/irccommands.h"
-#include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponseshelper.h"
 #include "ircresponses/ircresponses.h"
+#include "ircserver/ircserver.h"
 #include "ircserver/ircsocket.h"
 #include "managers/ircclientsmanager.h"
+#include "managers/irccommandsmanager.h"
 #include "parsing/ircparsinghelper.h"
 
 namespace ircserv
@@ -34,18 +36,26 @@ bool IRCNickCommand::ProcessCommand(IRCSocket* socket)
 {
     if (ValidateArgs(socket))
     {
-        Enum_IRCResponses enumResponse = GetIRCClientsManager().Nick(socket, GetNickname());
-
-        if (enumResponse == Enum_IRCResponses_ERR_NICKNAMEINUSE)
+        if (GetIRCClientsManager().FindClientByNickname(GetNickname()) != NULL)
         {
-            IRCCommandsHelper::SendERR_NICKNAMEINUSE(socket, GetNickname());
+            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NICKNAMEINUSE);
             return false;
         }
-        else if (enumResponse == Enum_IRCResponses_RPL_MOTD)
+        IRCClient *client = GetIRCClientsManager().FindOrCreateClient(socket);
+        bool wasRegistered = client->GetIsRegistered();
+        client->SetNickname(GetNickname());
+        if (client->GetIsRegistered() == true)
         {
-            IRCCommandsHelper::SendMOTD(socket, "IRC", "./conf/IRC.motd");
+            if (client->GetPassword() != GetIRCServer().GetPassword())
+            {
+                GetIRCCommandsManager().ProcessCommands("QUIT\n\r", socket);
+            }
+            else if (wasRegistered == false)
+            {
+                IRCResponsesHelper::SendMOTD(socket, GetIRCServer().GetServerName(), "./conf/IRC.motd");
+                return true;
+            }
         }
-        return true;
     }
     return false;
 }
@@ -54,14 +64,14 @@ bool IRCNickCommand::ValidateArgs(IRCSocket* socket)
 {
     if (GetArgs().empty())
     {
-        IRCCommandsHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_NONICKNAMEGIVEN);
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NONICKNAMEGIVEN);
         return false;
     }
     else
     {
         if (!IRCParsingHelper::IsNick(GetArgs()[0]))
         {
-            IRCCommandsHelper::SendERR_ERRONEUSNICKNAME(socket, GetArgs()[0]);
+            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_ERRONEUSNICKNAME, GetArgs()[0]);
             return false;
         }
         SetNickname(GetArgs()[0]);

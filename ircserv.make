@@ -159,6 +159,7 @@ all: prebuild prelink $(TARGET)
 endif
 
 OBJECTS := \
+	$(OBJDIR)/ircchannel.o \
 	$(OBJDIR)/ircclient.o \
 	$(OBJDIR)/irccommand.o \
 	$(OBJDIR)/irccommandsfactory.o \
@@ -175,6 +176,7 @@ OBJECTS := \
 	$(OBJDIR)/ircpasscommand.o \
 	$(OBJDIR)/ircprivmsgcommand.o \
 	$(OBJDIR)/ircquitcommand.o \
+	$(OBJDIR)/irctopiccommand.o \
 	$(OBJDIR)/ircusercommand.o \
 	$(OBJDIR)/ircresponse.o \
 	$(OBJDIR)/ircresponseerr_alreadyregistered.o \
@@ -200,6 +202,7 @@ OBJECTS := \
 	$(OBJDIR)/ircresponseerr_notexttosend.o \
 	$(OBJDIR)/ircresponseerr_notonchannel.o \
 	$(OBJDIR)/ircresponseerr_notoplevel.o \
+	$(OBJDIR)/ircresponseerr_notregistered.o \
 	$(OBJDIR)/ircresponseerr_passwdmismatch.o \
 	$(OBJDIR)/ircresponseerr_toomanychannels.o \
 	$(OBJDIR)/ircresponseerr_toomanytargets.o \
@@ -214,14 +217,17 @@ OBJECTS := \
 	$(OBJDIR)/ircresponserpl_motd.o \
 	$(OBJDIR)/ircresponserpl_motdstart.o \
 	$(OBJDIR)/ircresponserpl_namreply.o \
+	$(OBJDIR)/ircresponserpl_notopic.o \
 	$(OBJDIR)/ircresponserpl_topic.o \
 	$(OBJDIR)/ircresponserpl_umodeis.o \
 	$(OBJDIR)/ircresponserpl_youreoper.o \
 	$(OBJDIR)/ircresponsesfactory.o \
+	$(OBJDIR)/ircresponseshelper.o \
 	$(OBJDIR)/ircserver.o \
 	$(OBJDIR)/ircsocket.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/precomp.o \
+	$(OBJDIR)/ircchannelsmanager.o \
 	$(OBJDIR)/ircclientsmanager.o \
 	$(OBJDIR)/irccommandsmanager.o \
 	$(OBJDIR)/ircparsinghelper.o \
@@ -296,6 +302,9 @@ else
 $(OBJECTS): | $(OBJDIR)
 endif
 
+$(OBJDIR)/ircchannel.o: source/ircchannel/ircchannel.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircclient.o: source/ircclient/ircclient.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -342,6 +351,9 @@ $(OBJDIR)/ircprivmsgcommand.o: source/irccommands/ircprivmsgcommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircquitcommand.o: source/irccommands/ircquitcommand.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/irctopiccommand.o: source/irccommands/irctopiccommand.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircusercommand.o: source/irccommands/ircusercommand.cpp
@@ -419,6 +431,9 @@ $(OBJDIR)/ircresponseerr_notonchannel.o: source/ircresponses/ircresponseerr_noto
 $(OBJDIR)/ircresponseerr_notoplevel.o: source/ircresponses/ircresponseerr_notoplevel.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseerr_notregistered.o: source/ircresponses/ircresponseerr_notregistered.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponseerr_passwdmismatch.o: source/ircresponses/ircresponseerr_passwdmismatch.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -461,6 +476,9 @@ $(OBJDIR)/ircresponserpl_motdstart.o: source/ircresponses/ircresponserpl_motdsta
 $(OBJDIR)/ircresponserpl_namreply.o: source/ircresponses/ircresponserpl_namreply.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponserpl_notopic.o: source/ircresponses/ircresponserpl_notopic.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircresponserpl_topic.o: source/ircresponses/ircresponserpl_topic.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -473,6 +491,9 @@ $(OBJDIR)/ircresponserpl_youreoper.o: source/ircresponses/ircresponserpl_youreop
 $(OBJDIR)/ircresponsesfactory.o: source/ircresponses/ircresponsesfactory.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircresponseshelper.o: source/ircresponses/ircresponseshelper.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircserver.o: source/ircserver/ircserver.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
@@ -483,6 +504,9 @@ $(OBJDIR)/main.o: source/main/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/precomp.o: source/main/precomp.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/ircchannelsmanager.o: source/managers/ircchannelsmanager.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/ircclientsmanager.o: source/managers/ircclientsmanager.cpp

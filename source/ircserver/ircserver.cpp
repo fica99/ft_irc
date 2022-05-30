@@ -144,7 +144,6 @@ void IRCServer::ServerLoop(void)
         {
             ProcessSelectedSockets(sockets);
         }
-        IRC_LOGI("Total number of connections: %d", m_AcceptedSockets.size());
         sockets.clear();
     }
 }

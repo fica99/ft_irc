@@ -1,16 +1,20 @@
 #include "main/precomp.h"
 
 #include "irccommands/ircjoincommand.h"
-#include "irccommands/irccommands.h"
 
+#include "ircchannel/ircchannel.h"
+#include "ircclient/ircclient.h"
+#include "irccommands/irccommands.h"
+#include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponseshelper.h"
+#include "ircresponses/ircresponses.h"
+#include "ircserver/ircsocket.h"
+#include "managers/ircchannelsmanager.h"
+#include "managers/ircclientsmanager.h"
 #include "parsing/ircparsinghelper.h"
-#include "ircresponses/ircresponseerr_bannedfromchan.h"
-#include "ircresponses/ircresponseerr_channelisfull.h"
-#include "ircresponses/ircresponseerr_inviteonlychan.h"
-#include "ircresponses/ircresponseerr_needmoreparams.h"
-#include "ircresponses/ircresponseerr_toomanychannels.h"
-#include "ircresponses/ircresponserpl_topic.h"
-#include "ircresponses/ircresponsesfactory.h"
+
+#define MAX_NB_USERS_IN_CHANNEL 40
+#define MAX_NB_JOINED_CHANNELS 10
 
 namespace ircserv
 {
@@ -35,84 +39,120 @@ void IRCJoinCommand::Shutdown(void)
 
 bool IRCJoinCommand::ProcessCommand(IRCSocket *socket)
 {
-    // if (ValidateArgs(serv))
-    // {
-    //     for (size_t i = 0; i < GetChannels().size(); ++i)
-    //     {
+    if (!IRCCommandsHelper::IsRegistered(socket))
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NOTREGISTERED);
+        return false;
+    }
 
-    //         IRCResponse* response = GetIRCResponsesFactory().CreateResponse(serv->joinCommand(GetChannels()[i]));
-
-    //         if (response)
-    //         {
-    //             IRCResponseERR_TOOMANYCHANNELS *responseTooManyChannels = dynamic_cast<IRCResponseERR_TOOMANYCHANNELS*>(response);
-    //             IRCResponseERR_INVITEONLYCHAN *responseInviteOnlyChannel = dynamic_cast<IRCResponseERR_INVITEONLYCHAN*>(response);
-    //             IRCResponseERR_CHANNELISFULL *responseChannelIsFull = dynamic_cast<IRCResponseERR_CHANNELISFULL*>(response);
-    //             IRCResponseERR_BANNEDFROMCHAN *responseBannedFromChan = dynamic_cast<IRCResponseERR_BANNEDFROMCHAN*>(response);
-    //             IRCResponseRPL_TOPIC *responseTopic = dynamic_cast<IRCResponseRPL_TOPIC*>(response);
-
-    //             if (responseTooManyChannels != NULL)
-    //             {
-    //                 responseTooManyChannels->SetChannelName(GetChannels()[i]);
-    //                 serv->sendResponse(responseTooManyChannels->GetResponse());
-    //             }
-    //             else if (responseInviteOnlyChannel != NULL)
-    //             {
-    //                 responseInviteOnlyChannel->SetChannel(GetChannels()[i]);
-    //                 serv->sendResponse(responseInviteOnlyChannel->GetResponse());
-    //             }
-    //             else if (responseChannelIsFull != NULL)
-    //             {
-    //                 responseChannelIsFull->SetChannel(GetChannels()[i]);
-    //                 serv->sendResponse(responseChannelIsFull->GetResponse());
-    //             }
-    //             else if (responseBannedFromChan != NULL)
-    //             {
-    //                 responseBannedFromChan->SetChannel(GetChannels()[i]);
-    //                 serv->sendResponse(responseBannedFromChan->GetResponse());
-    //             }
-    //             else if (responseTopic != NULL)
-    //             {
-    //                 responseTopic->SetChannel(GetChannels()[i]);
-    //                 responseTopic->SetTopic(serv->getTopic(GetChannels()[i]));
-    //                 serv->sendResponse(responseTopic->GetResponse());
-    //             }
-
-    //             GetIRCResponsesFactory().DestroyResponse(response);
-    //         }
-    //     }
-    //     return true;
-    // }
+    if (ValidateArgs(socket))
+    {
+        for (size_t i = 0; i < GetChannels().size(); ++i)
+        {
+            const std::string& channelName = GetChannels()[i];
+            const std::string key = (i < GetKeys().size()) ? GetKeys()[i] : "";
+            ProcessJoiningChannel(socket, channelName, key);
+        }
+        return true;
+    }
     return false;
 }
 
 bool IRCJoinCommand::ValidateArgs(IRCSocket *socket)
 {
-    // if (m_Args.empty())
-    // {
-    //     IRCResponseERR_NEEDMOREPARAMS* response = dynamic_cast<IRCResponseERR_NEEDMOREPARAMS*>(
-    //         GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_ERR_NEEDMOREPARAMS)
-    //     );
-    //     if (response != NULL)
-    //     {
-    //         response->SetCommand(EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
-    //         serv->sendResponse(response->GetResponse());
-    //     }
-    //     GetIRCResponsesFactory().DestroyResponse(response);
-    //     return false;
-    // }
-    // else
-    // {
-    //     if (!IRCParsingHelper::IsChannels(m_Args[0]))
-    //     {
-    //         return false;
-    //     }
-    //     SetChannels(IRCParsingHelper::Split(m_Args[0], ","));
-    //     if (m_Args.size() > 1)
-    //     {
-    //         SetKeys(IRCParsingHelper::Split(m_Args[1], ","));
-    //     }
-    // }
+    if (GetArgs().empty())
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+        return false;
+    }
+    else
+    {
+        std::vector<std::string> channels;
+        std::vector<std::string> keys;
+
+        channels = IRCParsingHelper::Split(GetArgs()[0], ",");
+        if (GetArgs().size() > 1)
+        {
+            keys = IRCParsingHelper::Split(GetArgs()[1], ",");
+        }
+
+        for (size_t i = 0; i < channels.size(); )
+        {
+            if (!IRCParsingHelper::IsChannel(channels[i]))
+            {
+                IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NOSUCHCHANNEL, channels[i]);
+                if (i < keys.size())
+                {
+                    keys.erase(keys.begin() + i);
+                }
+                channels.erase(channels.begin() + i);
+            }
+            else
+            {
+                ++i;
+            }
+        }
+        SetChannels(channels);
+        SetKeys(keys);
+    }
     return true;
+}
+
+void IRCJoinCommand::ProcessJoiningChannel(IRCSocket *socket, const std::string& channelName, const std::string& key) const
+{
+    IRCClient *client = GetIRCClientsManager().FindClient(socket);
+
+    if (client != NULL)
+    {
+        if (client->GetJoinedChannels().size() >= MAX_NB_JOINED_CHANNELS)
+        {
+            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_TOOMANYCHANNELS, channelName);
+            return;
+        }
+    }
+
+    IRCChannel *channel = GetIRCChannelsManager().FindChannel(channelName);
+
+    if (channel == NULL)
+    {
+        channel = GetIRCChannelsManager().FindOrCreateChannel(channelName);
+        if (channel != NULL)
+        {
+            channel->AddOper(client);
+            channel->SetKey(key);
+        }
+    }
+
+    if (channel->GetClients().size() >= MAX_NB_USERS_IN_CHANNEL)
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_CHANNELISFULL, channelName);
+        return;
+    }
+
+    if (channel->GetModes() & INVITEONLY)
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_INVITEONLYCHAN, channelName);
+        return;
+    }
+
+    if (channel->GetKey() != key)
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_BADCHANNELKEY, channelName);
+        return;
+    }
+    
+    if (IRCCommandsHelper::IsBannedByChannel(client, channel))
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_BANNEDFROMCHAN, channelName);
+        return;
+    }
+
+    channel->AddClient(client);
+
+    std::string message = ":" + client->GetNickname() + "!" + client->GetUsername() + "@" + client->GetHostname() + " " + EnumString<Enum_IRCCommands>::From(GetCommandEnum()) + " :" + channelName + "\n";
+    IRCResponsesHelper::SendMessageToAllChannelNames(channelName, message);
+    IRCResponsesHelper::SendTopic(socket, channelName, channel->GetTopic());
+    IRCResponsesHelper::SendChannelNames(socket, channelName);
 }
 
 

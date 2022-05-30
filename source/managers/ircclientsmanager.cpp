@@ -1,7 +1,8 @@
 #include "main/precomp.h"
 
-#include "ircserver/ircserver.h"
 #include "managers/ircclientsmanager.h"
+
+#include "ircchannel/ircchannel.h"
 #include "utils/memory.h"
 
 namespace ircserv
@@ -18,6 +19,7 @@ IRCClientsManager::IRCClientsManager()
 
 void IRCClientsManager::Initialize(void)
 {
+    m_OpersMap["aashara"] = "070599";
 }
 
 IRCClientsManager::~IRCClientsManager()
@@ -29,87 +31,37 @@ IRCClientsManager::~IRCClientsManager()
 
 void IRCClientsManager::Shutdown(void)
 {
-    for (std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.begin(); it != m_SocketClientsMap.end(); )
+    for (std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketsClientsMap.begin(); it != m_SocketsClientsMap.end(); )
     {
-        Delete(it->second);
-        it = m_SocketClientsMap.erase(it);
+        EraseClient(it->first);
     }
-    m_SocketClientsMap.clear();
+    m_SocketsClientsMap.clear();
 }
 
-void IRCClientsManager::Quit(IRCSocket *socket, const std::string& quitMessage)
+IRCClient *IRCClientsManager::CreateClient(IRCSocket *socket)
 {
-    std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.find(socket);
-    if (it != m_SocketClientsMap.end())
+    IRCClient *client;
+
+    client = New(IRCClient);
+    if (client != NULL)
     {
-        Delete(it->second);
-        m_SocketClientsMap.erase(it);
-        IRC_LOGD("%s", "Client disconnected");
+        m_SocketsClientsMap[socket] = client;
+        IRC_LOGD("%s", "Client created");
     }
-    GetIRCServer().CloseConnection(socket);
+    return client;
 }
 
-bool IRCClientsManager::Pass(IRCSocket *socket, const std::string& password)
+IRCClient *IRCClientsManager::FindClient(IRCSocket *socket) const
 {
-    IRCClient *client = FindOrCreateClient(socket);
-
-    if (client->GetIsRegistered())
+    IRCClient *client = NULL;
+    std::unordered_map<IRCSocket*, IRCClient*>::const_iterator it = m_SocketsClientsMap.find(socket);
+    
+    if (it != m_SocketsClientsMap.end())
     {
-        return false;
+        client = it->second;
     }
-    else
-    {
-        client->SetPassword(password);
-    }
-    return true;
+    return client;
 }
-
-Enum_IRCResponses IRCClientsManager::Nick(IRCSocket *socket, const std::string& nickname)
-{
-    if (FindClientByNickname(nickname) != NULL)
-    {
-        return Enum_IRCResponses_ERR_NICKNAMEINUSE;
-    }
-    IRCClient *client = FindOrCreateClient(socket);
-    const std::string& prevNickname = client->GetNickname();
-    client->SetNickname(nickname);
-    if (client->GetIsRegistered() == true)
-    {
-        if (client->GetPassword() != GetIRCServer().GetPassword())
-        {
-            Quit(socket, "");
-        }
-        else if (prevNickname.empty() == true)
-        {
-            return Enum_IRCResponses_RPL_MOTD;
-        }
-    }
-    return Enum_IRCResponses_Unknown;
-}
-
-Enum_IRCResponses IRCClientsManager::User(IRCSocket *socket, const std::string& username, const std::string& realname)
-{
-    IRCClient *client = FindOrCreateClient(socket);
-    if (client->GetIsRegistered())
-    {
-        return Enum_IRCResponses_ERR_ALREADYREGISTRED;
-    }
-    client->SetUsername(username);
-    client->SetRealname(realname);
-    if (client->GetIsRegistered() == true)
-    {
-        if (client->GetPassword() != GetIRCServer().GetPassword())
-        {
-            Quit(socket, "");
-        }
-        else
-        {
-            return Enum_IRCResponses_RPL_MOTD;
-        }
-    }
-    return Enum_IRCResponses_Unknown;
-}
-
 
 IRCClient *IRCClientsManager::FindOrCreateClient(IRCSocket *socket)
 {
@@ -117,29 +69,14 @@ IRCClient *IRCClientsManager::FindOrCreateClient(IRCSocket *socket)
 
     if (client == NULL)
     {
-        client = New(IRCClient);
-        m_SocketClientsMap[socket] = client;
-        IRC_LOGD("%s", "Client created");
+        client = CreateClient(socket);
     }
     return client;
 }
-
-IRCClient *IRCClientsManager::FindClient(IRCSocket *socket)
-{
-    IRCClient *client = NULL;
-    std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketClientsMap.find(socket);
-    
-    if (it != m_SocketClientsMap.end())
-    {
-        client = it->second;
-    }
-    return client;
-}
-
 
 IRCClient *IRCClientsManager::FindClientByNickname(const std::string& nickname) const
 {
-    for ( std::unordered_map<IRCSocket*, IRCClient*>::const_iterator it = m_SocketClientsMap.begin(); it != m_SocketClientsMap.end(); ++it)
+    for ( std::unordered_map<IRCSocket*, IRCClient*>::const_iterator it = m_SocketsClientsMap.begin(); it != m_SocketsClientsMap.end(); ++it)
     {
         if (it->second->GetNickname() == nickname)
         {
@@ -147,6 +84,38 @@ IRCClient *IRCClientsManager::FindClientByNickname(const std::string& nickname) 
         }
     }
     return NULL;
+}
+
+IRCSocket *IRCClientsManager::FindSocketByClient(IRCClient *client) const
+{
+    for ( std::unordered_map<IRCSocket*, IRCClient*>::const_iterator it = m_SocketsClientsMap.begin(); it != m_SocketsClientsMap.end(); ++it)
+    {
+        if (it->second == client)
+        {
+            return it->first;
+        }
+    }
+    return NULL;
+}
+
+void IRCClientsManager::EraseClient(IRCSocket *socket)
+{
+    std::unordered_map<IRCSocket*, IRCClient*>::iterator it = m_SocketsClientsMap.find(socket);
+    if (it != m_SocketsClientsMap.end())
+    {
+        IRCClient *client = it->second;
+        if (client != NULL)
+        {
+            for (std::unordered_set<IRCChannel*>::const_iterator it = client->GetJoinedChannels().begin(); it != client->GetJoinedChannels().end(); ++it)
+            {
+                IRCChannel* channel = (*it);
+                channel->RemoveClient(client);
+            }
+        }
+        Delete(client);
+        m_SocketsClientsMap.erase(it);
+        IRC_LOGD("%s", "Client erased");
+    }
 }
 
 }

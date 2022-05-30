@@ -8,11 +8,13 @@ namespace ircserv
 enum Enum_IRCResponses
 {
     Enum_IRCResponses_Unknown = 0,
+    Enum_IRCResponsesCustom = 1,
     Enum_IRCResponses_RPL_UMODEIS = 221,
     Enum_IRCResponses_RPL_AWAY = 301,
     Enum_IRCResponses_RPL_LISTSTART = 321,
     Enum_IRCResponses_RPL_LIST = 322,
     Enum_IRCResponses_RPL_LISTEND = 323,
+    Enum_IRCResponses_RPL_NOTOPIC = 331,
     Enum_IRCResponses_RPL_TOPIC = 332,
     Enum_IRCResponses_RPL_NAMREPLY = 353,
     Enum_IRCResponses_RPL_ENDOFNAMES = 366,
@@ -37,6 +39,7 @@ enum Enum_IRCResponses
     Enum_IRCResponses_ERR_NICKNAMEINUSE = 433,
     Enum_IRCResponses_ERR_NICKCOLLISION = 436,
     Enum_IRCResponses_ERR_NOTONCHANNEL = 442,
+    Enum_IRCResponses_ERR_NOTREGISTERED = 451,
     Enum_IRCResponses_ERR_NEEDMOREPARAMS = 461,
     Enum_IRCResponses_ERR_ALREADYREGISTRED = 462,
     Enum_IRCResponses_ERR_PASSWDMISMATCH = 464,
@@ -58,6 +61,7 @@ Begin_Enum_String(Enum_IRCResponses)
     Enum_String(Enum_IRCResponses_RPL_LISTSTART, "321");
     Enum_String(Enum_IRCResponses_RPL_LIST, "322");
     Enum_String(Enum_IRCResponses_RPL_LISTEND, "323");
+    Enum_String(Enum_IRCResponses_RPL_NOTOPIC, "331");
     Enum_String(Enum_IRCResponses_RPL_TOPIC, "332");
     Enum_String(Enum_IRCResponses_RPL_NAMREPLY, "353");
     Enum_String(Enum_IRCResponses_RPL_ENDOFNAMES, "366");
@@ -82,6 +86,7 @@ Begin_Enum_String(Enum_IRCResponses)
     Enum_String(Enum_IRCResponses_ERR_NICKNAMEINUSE, "433");
     Enum_String(Enum_IRCResponses_ERR_NICKCOLLISION, "436");
     Enum_String(Enum_IRCResponses_ERR_NOTONCHANNEL, "442");
+    Enum_String(Enum_IRCResponses_ERR_NOTREGISTERED, "451");
     Enum_String(Enum_IRCResponses_ERR_NEEDMOREPARAMS, "461");
     Enum_String(Enum_IRCResponses_ERR_ALREADYREGISTRED, "462");
     Enum_String(Enum_IRCResponses_ERR_PASSWDMISMATCH, "464");

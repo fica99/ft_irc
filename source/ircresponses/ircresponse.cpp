@@ -23,13 +23,4 @@ void IRCResponse::Shutdown(void)
 {
 }
 
-void IRCResponse::Send(IRCSocket *socket)
-{
-    if (socket != NULL)
-    {
-        socket->Send(GetResponse());
-        IRC_LOGD("Sent response: %s", GetResponse().c_str());
-    }
-}
-
 }

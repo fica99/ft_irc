@@ -21,10 +21,15 @@ public:
 
 private:
     bool ValidateArgs(IRCSocket *socket);
+private:
+    bool IsOpersData(const std::string& user, const std::string& password) const;
+
 
 private:
     inline void SetUser(const std::string& user) { m_User = user; }
+    inline const std::string& GetUser(void) const { return m_User; }
     inline void SetPassword(const std::string& password) { m_Password = password; }
+    inline const std::string& GetPassword(void) const { return m_Password; }
 
 private:
     std::string m_User;

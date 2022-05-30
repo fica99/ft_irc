@@ -43,11 +43,14 @@ public:
     inline const std::string& GetPassword(void) const { return m_Password; }
     inline void SetIsRunning(bool isRunning) { SetIsRunning_Callback(isRunning); }
     inline bool GetIsRunning(void) const { return m_IsRunning; }
+    inline void SetServerName(const std::string& serverName) { m_ServerName = serverName; }
+    inline const std::string GetServerName(void) const { return m_ServerName; }
 
 private:
     bool m_IsRunning;
     uint16_t m_Port;
     std::string m_Password;
+    std::string m_ServerName;
     IRCSocket m_ListenSocket;
     std::vector<IRCSocket*> m_AcceptedSockets;
 };

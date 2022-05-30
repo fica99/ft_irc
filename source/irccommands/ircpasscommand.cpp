@@ -2,8 +2,9 @@
 
 #include "irccommands/ircpasscommand.h"
 
+#include "ircclient/ircclient.h"
 #include "irccommands/irccommands.h"
-#include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponseshelper.h"
 #include "ircresponses/ircresponses.h"
 #include "ircserver/ircsocket.h"
 #include "managers/ircclientsmanager.h"
@@ -33,12 +34,17 @@ bool IRCPassCommand::ProcessCommand(IRCSocket *socket)
 {
     if (ValidateArgs(socket))
     {
-        if (GetIRCClientsManager().Pass(socket, GetPassword()) == false)
+        IRCClient *client = GetIRCClientsManager().FindOrCreateClient(socket);
+
+        if (client->GetIsRegistered())
         {
-            IRCCommandsHelper::SendResponseWithoutParams(socket, Enum_IRCResponses_ERR_ALREADYREGISTRED);
-            return false;
+            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_ALREADYREGISTRED);
         }
-        return true;
+        else
+        {
+            client->SetPassword(GetPassword());
+            return true;
+        }
     }
     return false;
 }
@@ -47,7 +53,7 @@ bool IRCPassCommand::ValidateArgs(IRCSocket *socket)
 {
     if (GetArgs().empty())
     {
-        IRCCommandsHelper::SendERR_NEEDMOREPARAMS(socket, GetCommandEnum());
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NEEDMOREPARAMS, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
         return false;
     }
     SetPassword(GetArgs()[0]);

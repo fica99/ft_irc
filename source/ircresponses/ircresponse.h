@@ -18,7 +18,6 @@ private:
     void Shutdown(void);
 
 public:
-    void Send(IRCSocket *socket);
     virtual std::string GetResponse(void) const = 0;
 
 public:
