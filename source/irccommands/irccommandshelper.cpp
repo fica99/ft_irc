@@ -51,6 +51,4 @@ void IRCCommandsHelper::EraseClientFromChannel(IRCClient *client, IRCChannel *ch
         }
     }
 }
-
-
 }

@@ -2,7 +2,6 @@
 
 #include "irccommands/ircusercommand.h"
 
-#include "ircclient/ircclient.h"
 #include "irccommands/irccommands.h"
 #include "ircresponses/ircresponseshelper.h"
 #include "ircresponses/ircresponses.h"
