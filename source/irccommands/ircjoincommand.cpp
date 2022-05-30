@@ -149,9 +149,10 @@ void IRCJoinCommand::ProcessJoiningChannel(IRCSocket *socket, const std::string&
 
     channel->AddClient(client);
 
-    // ADD sending notification to all users
+    std::string message = ":" + client->GetNickname() + "!" + client->GetUsername() + "@" + client->GetHostname() + " " + EnumString<Enum_IRCCommands>::From(GetCommandEnum()) + " :" + channelName + "\n";
+    IRCResponsesHelper::SendMessageToAllChannelNames(channelName, message);
     IRCResponsesHelper::SendTopic(socket, channelName, channel->GetTopic());
-    IRCResponsesHelper::SendChannelNames(socket, "= " + channelName);
+    IRCResponsesHelper::SendChannelNames(socket, channelName);
 }
 
 

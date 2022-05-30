@@ -92,7 +92,7 @@ void IRCResponsesHelper::SendChannelNames(IRCSocket *socket, const std::string& 
 
         if (response != NULL)
         {
-            response->SetChannel(channelName);
+            response->SetChannel("= " + channelName);
             for (std::unordered_set<IRCClient*>::iterator it = channel->GetClients().begin(); it != channel->GetClients().end(); ++it)
             {
                 response->AddNick(channel->GetOpers().find(*it) != channel->GetOpers().end(), (*it)->GetNickname());
@@ -101,6 +101,22 @@ void IRCResponsesHelper::SendChannelNames(IRCSocket *socket, const std::string& 
         }
 
         IRCResponsesFactory::DestroyResponse(response);
+    }
+}
+
+void IRCResponsesHelper::SendMessageToAllChannelNames(const std::string& channelName, const std::string& message)
+{
+    IRCChannel *channel = GetIRCChannelsManager().FindChannel(channelName);
+    if (channel)
+    {
+        for (std::unordered_set<IRCClient*>::iterator it = channel->GetClients().begin(); it != channel->GetClients().end(); ++it)
+        {
+            IRCSocket *socket = GetIRCClientsManager().FindSocketByClient(*it);
+            if (socket)
+            {
+                Send(socket, message);
+            }
+        }
     }
 }
 

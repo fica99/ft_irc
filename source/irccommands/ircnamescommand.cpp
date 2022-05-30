@@ -59,7 +59,7 @@ bool IRCNamesCommand::ProcessCommand(IRCSocket *socket)
         {
             for (size_t i = 0; i < GetChannels().size(); ++i)
             {
-                IRCResponsesHelper::SendChannelNames(socket, "= " + GetChannels()[i]);
+                IRCResponsesHelper::SendChannelNames(socket, GetChannels()[i]);
                 IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_RPL_ENDOFNAMES, GetChannels()[i]);
             }
         }
@@ -90,7 +90,7 @@ void IRCNamesCommand::SendChannelNames(IRCSocket *socket, const std::string& cha
                 return;
             }
         }
-        IRCResponsesHelper::SendChannelNames(socket, "= " + channelName);
+        IRCResponsesHelper::SendChannelNames(socket, channelName);
     }
 }
 
@@ -108,7 +108,7 @@ void IRCNamesCommand::SendClientsWithNoChannels(IRCSocket *socket) const
         IRCClient *client = it->second;
         if (client && client->GetIsRegistered())
         {
-            if (!client->GetJoinedChannels().empty())
+            if (client->GetJoinedChannels().empty())
             {
                 if (response != NULL)
                 {

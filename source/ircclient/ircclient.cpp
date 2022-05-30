@@ -13,6 +13,7 @@ IRCClient::IRCClient()
 void IRCClient::Initialize(void)
 {
     m_Modes = 0;
+    m_Hostname = "127.0.0.1";
 }
 
 IRCClient::~IRCClient()

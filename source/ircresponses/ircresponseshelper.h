@@ -18,6 +18,7 @@ void SendResponseWithParams(IRCSocket *socket, Enum_IRCResponses responseEnum, c
 void SendMOTD(IRCSocket *socket, const std::string& server, const std::string& filename);
 void SendTopic(IRCSocket *socket, const std::string& channel, const std::string& topic);
 void SendChannelNames(IRCSocket *socket, const std::string& channelName);
+void SendMessageToAllChannelNames(const std::string& channelName, const std::string& message);
 
 }
 

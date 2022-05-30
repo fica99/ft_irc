@@ -32,6 +32,8 @@ public:
     inline const std::string& GetUsername(void) const { return m_Username; }
     inline void SetRealname(const std::string& realname) { m_Realname = realname; }
     inline const std::string& GetRealname(void) const { return m_Realname; }
+    inline void SetHostname(const std::string& hostname) { m_Hostname = hostname; }
+    inline const std::string& GetHostname(void) const { return m_Hostname; }
     inline void SetModes(uint8_t modes) { m_Modes |= modes; }
     inline void UnsetModes(uint8_t modes) { m_Modes &= ~modes; }
     inline uint8_t GetModes(void) const { return m_Modes; }
@@ -46,6 +48,7 @@ private:
     std::string m_Nickname;
     std::string m_Username;
     std::string m_Realname;
+    std::string m_Hostname;
     uint8_t m_Modes;
     std::unordered_set<IRCChannel*> m_JoinedChannels;
 
