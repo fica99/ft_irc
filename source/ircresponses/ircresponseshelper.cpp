@@ -34,9 +34,9 @@ void IRCResponsesHelper::SendResponse(IRCSocket *socket, IRCResponse *response)
     }
 }
 
-void IRCResponsesHelper::SendResponseWithParams(IRCSocket *socket, Enum_IRCResponses responseEnum, const std::string& arg1, const std::string& arg2)
+void IRCResponsesHelper::SendResponseWithParams(IRCSocket *socket, Enum_IRCResponses responseEnum, const std::string& arg1, const std::string& arg2, const std::string& arg3)
 {
-    IRCResponse* response = IRCResponsesFactory::CreateResponse(responseEnum, arg1, arg2);
+    IRCResponse* response = IRCResponsesFactory::CreateResponse(responseEnum, arg1, arg2, arg3);
 
     if (response != NULL)
     {

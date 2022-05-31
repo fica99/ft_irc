@@ -39,7 +39,7 @@ std::string IRCResponseRPL_LIST::GetResponse(void) const
     {
         response += " " + GetNickname();
     }
-    response += " " + m_Channel + " :" + m_Topic + "\n";
+    response += " " + m_Channel + " " + m_NbVisible + " :" + m_Topic + "\n";
     return response;
 }
 

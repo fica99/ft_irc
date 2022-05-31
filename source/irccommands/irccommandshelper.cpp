@@ -67,6 +67,19 @@ bool IRCCommandsHelper::IsAnyChannelVisiable(const std::unordered_set<IRCChannel
     return false;
 }
 
+size_t IRCCommandsHelper::GetNbVisibleClients(const std::unordered_set<IRCClient*>& clients)
+{
+    size_t nb = 0;
+    for (std::unordered_set<IRCClient*>::const_iterator it = clients.begin(); it != clients.end(); ++it )
+    {
+        if (IsClientVisible(*it))
+        {
+            ++nb;
+        }
+    }
+    return nb;
+}
+
 bool IRCCommandsHelper::IsClientVisible(IRCClient *client)
 {
     if (client)

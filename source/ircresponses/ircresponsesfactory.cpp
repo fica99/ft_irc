@@ -68,7 +68,7 @@ void IRCResponsesFactory::Shutdown(void)
 {
 }
 
-IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType, const std::string& arg1, const std::string& arg2)
+IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType, const std::string& arg1, const std::string& arg2, const std::string& arg3)
 {
     IRCResponse* response = NULL;
     switch (responseType)
@@ -357,6 +357,12 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType,
         case Enum_IRCResponses_RPL_LIST:
         {
             IRCResponseRPL_LIST* dynamicResponse = New(IRCResponseRPL_LIST)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+                dynamicResponse->SetNbVisible(arg2);
+                dynamicResponse->SetTopic(arg3);
+            }
             response = dynamicResponse;
             break;
         }

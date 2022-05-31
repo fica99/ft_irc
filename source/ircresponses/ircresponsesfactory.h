@@ -16,7 +16,7 @@ private:
     void Shutdown(void);
 
 public:
-    static IRCResponse* CreateResponse(Enum_IRCResponses responseType, const std::string& arg1 = "", const std::string& arg2 = "");
+    static IRCResponse* CreateResponse(Enum_IRCResponses responseType, const std::string& arg1 = "", const std::string& arg2 = "", const std::string& arg3 = "");
     static void DestroyResponse(IRCResponse* response);
 };
 
