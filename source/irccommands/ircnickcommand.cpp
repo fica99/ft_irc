@@ -38,7 +38,7 @@ bool IRCNickCommand::ProcessCommand(IRCSocket* socket)
     {
         if (GetIRCClientsManager().FindClientByNickname(GetNickname()) != NULL)
         {
-            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NICKNAMEINUSE);
+            IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NICKNAMEINUSE, GetNickname());
             return false;
         }
         IRCClient *client = GetIRCClientsManager().FindOrCreateClient(socket);

@@ -31,6 +31,8 @@ public:
     inline const std::string& GetKey(void) const { return m_Key; }
     inline void SetTopic(const std::string& topic) { m_Topic = topic; }
     inline const std::string& GetTopic(void) const { return m_Topic; }
+    inline void SetMaxUsersInChannel(size_t maxUsersInChannel) { m_MaxUsersInChannel = maxUsersInChannel; }
+    inline size_t GetMaxUsersInChannel(void) const { return m_MaxUsersInChannel; }
     inline const std::unordered_set<IRCClient*>& GetClients(void) const { return m_Clients; }
     inline const std::unordered_set<IRCClient*>& GetOpers(void) const { return m_Opers; }
     inline const std::unordered_set<IRCClient*>& GetBanned(void) const { return m_Banned; }
@@ -50,6 +52,7 @@ private:
     std::string m_Name;
     std::string m_Key;
     std::string m_Topic;
+    size_t m_MaxUsersInChannel;
     std::unordered_set<IRCClient*> m_Clients;
     std::unordered_set<IRCClient*> m_Opers;
     std::unordered_set<IRCClient*> m_Banned;

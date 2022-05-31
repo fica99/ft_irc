@@ -59,7 +59,7 @@ bool IRCNamesCommand::ProcessCommand(IRCSocket *socket)
         {
             for (size_t i = 0; i < GetChannels().size(); ++i)
             {
-                IRCResponsesHelper::SendChannelNames(socket, GetChannels()[i]);
+                SendChannelNames(socket, GetChannels()[i]);
                 IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_RPL_ENDOFNAMES, GetChannels()[i]);
             }
         }
@@ -85,7 +85,7 @@ void IRCNamesCommand::SendChannelNames(IRCSocket *socket, const std::string& cha
         if (channel->GetModes() & PRIVATE || channel->GetModes() & SECRET)
         {
             IRCClient *client = GetIRCClientsManager().FindClient(socket);
-            if (channel->GetClients().find(client) == channel->GetClients().end())
+            if (!IRCCommandsHelper::IsInContainer(channel->GetClients(), client))
             {
                 return;
             }
@@ -112,7 +112,10 @@ void IRCNamesCommand::SendClientsWithNoChannels(IRCSocket *socket) const
             {
                 if (response != NULL)
                 {
-                    response->AddNick(false, client->GetNickname());
+                    if (!(client->GetModes() & INVISIBLE))
+                    {
+                        response->AddNick(false, client->GetNickname());
+                    }
                 }
             }
         }
