@@ -53,11 +53,6 @@ void IRCChannel::RemoveClient(IRCClient* client)
     }
 }
 
-void IRCChannel::AddOper(IRCClient* oper)
-{
-    m_Opers.insert(oper);
-}
-
 void IRCChannel::RemoveOper(IRCClient* oper)
 {
     std::unordered_set<IRCClient*>::iterator it = m_Opers.find(oper);
@@ -67,17 +62,12 @@ void IRCChannel::RemoveOper(IRCClient* oper)
     }
 }
 
-void IRCChannel::BanClient(IRCClient* client)
+void IRCChannel::UnbanNick(const std::string& nick)
 {
-    m_Banned.insert(client);
-}
-
-void IRCChannel::UnbanClient(IRCClient* client)
-{
-    std::unordered_set<IRCClient*>::iterator it = m_Banned.find(client);
-    if (it != m_Banned.end())
+    std::unordered_set<std::string>::iterator it = m_BannedNicks.find(nick);
+    if (it != m_BannedNicks.end())
     {
-        m_Banned.erase(it);
+        m_BannedNicks.erase(it);
     }
 }
 

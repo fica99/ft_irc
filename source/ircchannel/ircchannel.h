@@ -35,7 +35,7 @@ public:
     inline size_t GetMaxUsersInChannel(void) const { return m_MaxUsersInChannel; }
     inline const std::unordered_set<IRCClient*>& GetClients(void) const { return m_Clients; }
     inline const std::unordered_set<IRCClient*>& GetOpers(void) const { return m_Opers; }
-    inline const std::unordered_set<IRCClient*>& GetBanned(void) const { return m_Banned; }
+    inline const std::unordered_set<std::string>& GetBannedNicks(void) const { return m_BannedNicks; }
     inline void SetModes(uint8_t modes) { m_Modes |= modes; }
     inline void UnsetModes(uint8_t modes) { m_Modes &= ~modes; }
     inline uint8_t GetModes(void) const { return m_Modes; }
@@ -43,10 +43,10 @@ public:
 public:
     bool AddClient(IRCClient* client);
     void RemoveClient(IRCClient* client);
-    void AddOper(IRCClient* oper);
+    inline void AddOper(IRCClient* oper) { m_Opers.insert(oper); }
     void RemoveOper(IRCClient* oper);
-    void BanClient(IRCClient* client);
-    void UnbanClient(IRCClient* client);
+    inline void BanNick(const std::string& nick) { m_BannedNicks.insert(nick); }
+    inline void UnbanNick(const std::string& nick);
 
 private:
     std::string m_Name;
@@ -55,7 +55,7 @@ private:
     size_t m_MaxUsersInChannel;
     std::unordered_set<IRCClient*> m_Clients;
     std::unordered_set<IRCClient*> m_Opers;
-    std::unordered_set<IRCClient*> m_Banned;
+    std::unordered_set<std::string> m_BannedNicks;
     uint8_t m_Modes;
 };
 
