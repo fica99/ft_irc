@@ -39,11 +39,11 @@ bool IRCTopicCommand::ProcessCommand(IRCSocket *socket)
         return false;
     }
 
-
     if (ValidateArgs(socket))
     {
+        IRCClient *client = GetIRCClientsManager().FindClient(socket);
         IRCChannel *channel = GetIRCChannelsManager().FindChannel(GetChannel());
-        if (!channel)
+        if (!channel || !IRCCommandsHelper::IsInContainer(channel->GetClients(), client))
         {
             IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NOTONCHANNEL, GetChannel());
             return false;
@@ -52,16 +52,27 @@ bool IRCTopicCommand::ProcessCommand(IRCSocket *socket)
         {
             if (channel->GetModes() & TOPICSET)
             {
-                IRCClient *client = GetIRCClientsManager().FindClient(socket);
-                if (channel->GetOpers().find(client) == channel->GetOpers().end())
+                if (!IRCCommandsHelper::IsInContainer(channel->GetOpers(), client))
                 {
                     IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_CHANOPRIVSNEEDED, GetChannel());
                     return false;
                 }
             }
             channel->SetTopic(GetTopic());
+            if (client)
+            {
+                std::string message = ":" + client->GetNickname() + "!" + client->GetUsername() + "@" + client->GetHostname() + " " + EnumString<Enum_IRCCommands>::From(GetCommandEnum()) + " :" + GetTopic() + "\n";
+                if (IRCCommandsHelper::IsClientVisible(client))
+                {
+                    IRCResponsesHelper::SendMessageToAllChannelNames(GetChannel(), message);
+                }
+            }
         }
-        IRCResponsesHelper::SendTopic(socket, GetChannel(), GetTopic());
+        else
+        {
+            IRCResponsesHelper::SendTopic(socket, GetChannel(), channel->GetTopic());
+        }
+        
         return true;
     }
     return false;
