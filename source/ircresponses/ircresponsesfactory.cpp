@@ -357,12 +357,6 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType,
         case Enum_IRCResponses_RPL_LIST:
         {
             IRCResponseRPL_LIST* dynamicResponse = New(IRCResponseRPL_LIST)();
-            if (dynamicResponse)
-            {
-                dynamicResponse->SetChannel(arg1);
-                dynamicResponse->SetTopic(arg2);
-                // FIX this
-            }
             response = dynamicResponse;
             break;
         }
