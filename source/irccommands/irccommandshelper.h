@@ -14,6 +14,7 @@ bool IsRegistered(IRCSocket *socket);
 void EraseClientFromChannel(IRCClient *client, IRCChannel *channel);
 bool IsChannelVisible(IRCChannel *channel);
 bool IsAnyChannelVisiable(const std::unordered_set<IRCChannel*>& channels);
+size_t GetNbVisibleClients(const std::unordered_set<IRCClient*>& clients);
 bool IsClientVisible(IRCClient *client);
 
 template <class T, typename Container>

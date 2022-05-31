@@ -23,12 +23,12 @@ public:
 
 public:
     inline void SetChannel(const std::string& channel) { m_Channel = channel; }
-// add visiable flag
+    inline void SetNbVisible(const std::string nbVisible) { m_NbVisible = nbVisible; }
     inline void SetTopic(const std::string& topic) { m_Topic = topic; }
 
 private:
     std::string m_Channel;
-    // add visiable flag
+    std::string m_NbVisible;
     std::string m_Topic;
 };
 
