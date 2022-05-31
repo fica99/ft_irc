@@ -29,4 +29,15 @@ void IRCClient::Shutdown(void)
 {
 }
 
+void IRCClient::LeaveChannel(IRCChannel *channel)
+{
+    std::unordered_set<IRCChannel*>::iterator it = m_JoinedChannels.find(channel);
+    if (it != m_JoinedChannels.end())
+    {
+        m_JoinedChannels.erase(it);
+    }
+
+} 
+
+
 }

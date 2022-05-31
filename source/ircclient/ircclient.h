@@ -43,7 +43,7 @@ public:
 
 public:
     inline bool JoinChannel(IRCChannel *channel) { return m_JoinedChannels.insert(channel).second; }
-    inline void LeaveChannel(IRCChannel *channel) { m_JoinedChannels.erase(m_JoinedChannels.find(channel)); } 
+    void LeaveChannel(IRCChannel *channel);
 
 private:
     std::string m_Password;
