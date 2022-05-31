@@ -28,6 +28,7 @@ public:
 
 public:
     inline const std::unordered_map<std::string, IRCChannel*>& GetChannelsMap(void) const { return m_ChannelsMap; }
+
 private:
     std::unordered_map<std::string, IRCChannel*> m_ChannelsMap;
 };

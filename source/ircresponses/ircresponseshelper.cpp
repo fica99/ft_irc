@@ -4,6 +4,7 @@
 
 #include "ircclient/ircclient.h"
 #include "ircchannel/ircchannel.h"
+#include "irccommands/irccommandshelper.h"
 #include "ircresponses/ircresponserpl_namreply.h"
 #include "ircresponses/ircresponsesfactory.h"
 #include "ircserver/ircserver.h"
@@ -95,7 +96,11 @@ void IRCResponsesHelper::SendChannelNames(IRCSocket *socket, const std::string& 
             response->SetChannel("= " + channelName);
             for (std::unordered_set<IRCClient*>::iterator it = channel->GetClients().begin(); it != channel->GetClients().end(); ++it)
             {
-                response->AddNick(channel->GetOpers().find(*it) != channel->GetOpers().end(), (*it)->GetNickname());
+                if ((*it)->GetModes() & INVISIBLE)
+                {
+                    continue;
+                }
+                response->AddNick(IRCCommandsHelper::IsInContainer(channel->GetOpers(), *it), (*it)->GetNickname());
             }
             SendResponse(socket, response);
         }

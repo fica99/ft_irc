@@ -2,6 +2,8 @@
 
 #include "ircchannel/ircchannel.h"
 
+#define MAX_NB_USERS_IN_CHANNEL 40
+
 namespace ircserv
 {
 
@@ -13,6 +15,7 @@ IRCChannel::IRCChannel()
 void IRCChannel::Initialize(void)
 {
     m_Modes = 0;
+    m_MaxUsersInChannel = MAX_NB_USERS_IN_CHANNEL;
 }
 
 IRCChannel::~IRCChannel()

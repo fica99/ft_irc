@@ -34,6 +34,8 @@ public:
     inline const std::string& GetRealname(void) const { return m_Realname; }
     inline void SetHostname(const std::string& hostname) { m_Hostname = hostname; }
     inline const std::string& GetHostname(void) const { return m_Hostname; }
+    inline void SetMaxNbJoinedChannels(size_t maxNbJoinedChannels) { m_MaxNbJoinedChannels = maxNbJoinedChannels; }
+    inline size_t GetMaxNbJoinedChannels(void) const { return m_MaxNbJoinedChannels; }
     inline void SetModes(uint8_t modes) { m_Modes |= modes; }
     inline void UnsetModes(uint8_t modes) { m_Modes &= ~modes; }
     inline uint8_t GetModes(void) const { return m_Modes; }
@@ -49,6 +51,7 @@ private:
     std::string m_Username;
     std::string m_Realname;
     std::string m_Hostname;
+    size_t m_MaxNbJoinedChannels;
     uint8_t m_Modes;
     std::unordered_set<IRCChannel*> m_JoinedChannels;
 

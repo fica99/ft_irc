@@ -27,19 +27,6 @@ bool IRCCommandsHelper::IsRegistered(IRCSocket *socket)
     return false;
 }
 
-bool IRCCommandsHelper::IsBannedByChannel(IRCClient *client, IRCChannel *channel)
-{
-    if (channel)
-    {
-        std::unordered_set<IRCClient*>::const_iterator it = channel->GetBanned().find(client);
-        if (it != channel->GetBanned().end())
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 void IRCCommandsHelper::EraseClientFromChannel(IRCClient *client, IRCChannel *channel)
 {
     if (channel)

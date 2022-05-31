@@ -11,8 +11,13 @@ namespace IRCCommandsHelper
 {
 
 bool IsRegistered(IRCSocket *socket);
-bool IsBannedByChannel(IRCClient *client, IRCChannel *channel);
 void EraseClientFromChannel(IRCClient *client, IRCChannel *channel);
+
+template <class T, typename Container>
+bool IsInContainer(const Container& container, const T& el)
+{
+    return container.find(el) != container.end();
+}
 
 }
 

@@ -13,9 +13,6 @@
 #include "managers/ircclientsmanager.h"
 #include "parsing/ircparsinghelper.h"
 
-#define MAX_NB_USERS_IN_CHANNEL 40
-#define MAX_NB_JOINED_CHANNELS 10
-
 namespace ircserv
 {
 
@@ -104,7 +101,7 @@ void IRCJoinCommand::ProcessJoiningChannel(IRCSocket *socket, const std::string&
 
     if (client != NULL)
     {
-        if (client->GetJoinedChannels().size() >= MAX_NB_JOINED_CHANNELS)
+        if (client->GetJoinedChannels().size() >= client->GetMaxNbJoinedChannels())
         {
             IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_TOOMANYCHANNELS, channelName);
             return;
@@ -115,15 +112,19 @@ void IRCJoinCommand::ProcessJoiningChannel(IRCSocket *socket, const std::string&
 
     if (channel == NULL)
     {
-        channel = GetIRCChannelsManager().FindOrCreateChannel(channelName);
+        channel = GetIRCChannelsManager().CreateChannel(channelName);
         if (channel != NULL)
         {
             channel->AddOper(client);
             channel->SetKey(key);
         }
+        else
+        {
+            return;
+        }
     }
 
-    if (channel->GetClients().size() >= MAX_NB_USERS_IN_CHANNEL)
+    if (channel->GetClients().size() >= channel->GetMaxUsersInChannel())
     {
         IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_CHANNELISFULL, channelName);
         return;
@@ -141,16 +142,22 @@ void IRCJoinCommand::ProcessJoiningChannel(IRCSocket *socket, const std::string&
         return;
     }
     
-    if (IRCCommandsHelper::IsBannedByChannel(client, channel))
+    if (IRCCommandsHelper::IsInContainer(channel->GetBanned(), client))
     {
         IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_BANNEDFROMCHAN, channelName);
         return;
     }
 
-    channel->AddClient(client);
+    if (!channel->AddClient(client))
+    {
+        return;
+    }
 
     std::string message = ":" + client->GetNickname() + "!" + client->GetUsername() + "@" + client->GetHostname() + " " + EnumString<Enum_IRCCommands>::From(GetCommandEnum()) + " :" + channelName + "\n";
-    IRCResponsesHelper::SendMessageToAllChannelNames(channelName, message);
+    if (!(client->GetModes() & INVISIBLE))
+    {
+        IRCResponsesHelper::SendMessageToAllChannelNames(channelName, message);
+    }
     IRCResponsesHelper::SendTopic(socket, channelName, channel->GetTopic());
     IRCResponsesHelper::SendChannelNames(socket, channelName);
 }
