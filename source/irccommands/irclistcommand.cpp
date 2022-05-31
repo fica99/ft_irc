@@ -1,10 +1,11 @@
 #include "main/precomp.h"
 
 #include "irccommands/irclistcommand.h"
-#include "irccommands/irccommands.h"
 
+#include "irccommands/irccommands.h"
+#include "irccommands/irccommandshelper.h"
+#include "ircresponses/ircresponseshelper.h"
 #include "parsing/ircparsinghelper.h"
-#include "ircresponses/ircresponsesfactory.h"
 
 namespace ircserv
 {
@@ -29,8 +30,17 @@ void IRCListCommand::Shutdown(void)
 
 bool IRCListCommand::ProcessCommand(IRCSocket *socket)
 {
+    if (!IRCCommandsHelper::IsRegistered(socket))
+    {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NOTREGISTERED);
+        return false;
+    }
+
     if (ValidateArgs(socket))
     {
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_RPL_LISTSTART);
+
+        IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_RPL_LISTEND);
         return true;
     }
     return false;
@@ -38,14 +48,10 @@ bool IRCListCommand::ProcessCommand(IRCSocket *socket)
 
 bool IRCListCommand::ValidateArgs(IRCSocket *socket)
 {
-    // if (!m_Args.empty())
-    // {
-    //     if (!IRCParsingHelper::IsChannels(m_Args[0]))
-    //     {
-    //         return false;
-    //     }
-    //     SetChannels(IRCParsingHelper::Split(m_Args[0], ","));
-    // }
+    if (!GetArgs().empty())
+    {
+        SetChannels(IRCParsingHelper::Split(GetArgs()[0], ","));
+    }
     return true;
 }
 }
