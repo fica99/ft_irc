@@ -82,7 +82,7 @@ void IRCNamesCommand::SendChannelNames(IRCSocket *socket, const std::string& cha
     IRCChannel *channel = GetIRCChannelsManager().FindChannel(channelName);
     if (channel)
     {
-        if (channel->GetModes() & PRIVATE || channel->GetModes() & SECRET)
+        if (!IRCCommandsHelper::IsChannelVisible(channel))
         {
             IRCClient *client = GetIRCClientsManager().FindClient(socket);
             if (!IRCCommandsHelper::IsInContainer(channel->GetClients(), client))
@@ -108,11 +108,11 @@ void IRCNamesCommand::SendClientsWithNoChannels(IRCSocket *socket) const
         IRCClient *client = it->second;
         if (client && client->GetIsRegistered())
         {
-            if (client->GetJoinedChannels().empty())
+            if (!IRCCommandsHelper::IsAnyChannelVisiable(client->GetJoinedChannels()))
             {
                 if (response != NULL)
                 {
-                    if (!(client->GetModes() & INVISIBLE))
+                    if (IRCCommandsHelper::IsClientVisible(client))
                     {
                         response->AddNick(false, client->GetNickname());
                     }

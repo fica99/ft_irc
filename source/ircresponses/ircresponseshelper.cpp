@@ -96,7 +96,7 @@ void IRCResponsesHelper::SendChannelNames(IRCSocket *socket, const std::string& 
             response->SetChannel("= " + channelName);
             for (std::unordered_set<IRCClient*>::iterator it = channel->GetClients().begin(); it != channel->GetClients().end(); ++it)
             {
-                if ((*it)->GetModes() & INVISIBLE)
+                if (!IRCCommandsHelper::IsClientVisible(*it))
                 {
                     continue;
                 }

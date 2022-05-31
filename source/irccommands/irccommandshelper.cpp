@@ -38,4 +38,42 @@ void IRCCommandsHelper::EraseClientFromChannel(IRCClient *client, IRCChannel *ch
         }
     }
 }
+
+bool IRCCommandsHelper::IsChannelVisible(IRCChannel *channel)
+{
+    if (channel)
+    {
+        if (channel->GetModes() & PRIVATE || channel->GetModes() & SECRET)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool IRCCommandsHelper::IsAnyChannelVisiable(const std::unordered_set<IRCChannel*>& channels)
+{
+    for (std::unordered_set<IRCChannel*>::const_iterator it = channels.begin(); it != channels.end(); ++it )
+    {
+        if (IsChannelVisible(*it))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool IRCCommandsHelper::IsClientVisible(IRCClient *client)
+{
+    if (client)
+    {
+        return (!(client->GetModes() & INVISIBLE));
+    }
+    return false;
+}
+
 }
