@@ -18,6 +18,7 @@
 #include "irccommands/ircquitcommand.h"
 #include "irccommands/irctopiccommand.h"
 #include "irccommands/ircusercommand.h"
+#include "irccommands/ircinvitecommand.h"
 
 namespace ircserv
 {
@@ -86,6 +87,9 @@ IRCCommand* IRCCommandsFactory::CreateCommand(Enum_IRCCommands commandType)
             break;
         case Enum_IRCCommands_Topic:
             command = New(IRCTopicCommand)();
+            break;
+        case Enum_IRCCommands_Invite:
+            command = New(IRCInviteCommand)();
             break;
         default:
             command = NULL;
