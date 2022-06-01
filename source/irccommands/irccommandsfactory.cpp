@@ -6,7 +6,6 @@
 #include "irccommands/irccommand.h"
 #include "irccommands/ircjoincommand.h"
 #include "irccommands/irckickcommand.h"
-#include "irccommands/irckillcommand.h"
 #include "irccommands/irclistcommand.h"
 #include "irccommands/ircnamescommand.h"
 #include "irccommands/ircnickcommand.h"
@@ -81,9 +80,6 @@ IRCCommand* IRCCommandsFactory::CreateCommand(Enum_IRCCommands commandType)
             break;
         case Enum_IRCCommands_Notice:
             command = New(IRCNoticeCommand)();
-            break;
-        case Enum_IRCCommands_Kill:
-            command = New(IRCKillCommand)();
             break;
         case Enum_IRCCommands_Topic:
             command = New(IRCTopicCommand)();
