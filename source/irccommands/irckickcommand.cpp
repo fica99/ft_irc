@@ -64,6 +64,17 @@ bool IRCKickCommand::ProcessCommand(IRCSocket *socket)
 
         channel->RemoveClient(client);
         channel->RemoveOper(client);
+        if (channel->GetOpers().empty())
+        {
+            if (channel->GetClients().empty())
+            {
+                GetIRCChannelsManager().EraseChannel(GetChannel());
+            }
+            else
+            {
+                channel->AddOper(*(channel->GetClients().begin()));
+            }
+        }
 
         return true;
     }
