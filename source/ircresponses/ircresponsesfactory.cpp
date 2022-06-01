@@ -30,10 +30,12 @@
 #include "ircresponses/ircresponseerr_toomanychannels.h"
 #include "ircresponses/ircresponseerr_toomanytargets.h"
 #include "ircresponses/ircresponseerr_unknowncommand.h"
+#include "ircresponses/ircresponseerr_useronchannel.h"
 #include "ircresponses/ircresponseerr_wildtoplevel.h"
 #include "ircresponses/ircresponserpl_away.h"
 #include "ircresponses/ircresponserpl_endofmotd.h"
 #include "ircresponses/ircresponserpl_endofnames.h"
+#include "ircresponses/ircresponserpl_inviting.h"
 #include "ircresponses/ircresponserpl_list.h"
 #include "ircresponses/ircresponserpl_listend.h"
 #include "ircresponses/ircresponserpl_liststart.h"
@@ -307,22 +309,33 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType,
             response = dynamicResponse;
             break;
         }
-        case Enum_IRCResponses_ERR_WILDTOPLEVEL:
-        {
-            IRCResponseERR_WILDTOPLEVEL* dynamicResponse = New(IRCResponseERR_WILDTOPLEVEL)();
-            if (dynamicResponse)
-            {
-                dynamicResponse->SetMask(arg1);
-            }
-            response = dynamicResponse;
-            break;
-        }
         case Enum_IRCResponses_ERR_UNKNOWNCOMMAND:
         {
             IRCResponseERR_UNKNOWNCOMMAND* dynamicResponse = New(IRCResponseERR_UNKNOWNCOMMAND)();
             if (dynamicResponse)
             {
                 dynamicResponse->SetCommand(arg1);
+            }
+            response = dynamicResponse;
+            break;
+        }
+        case Enum_IRCResponses_ERR_USERONCHANNEL:
+        {
+            IRCResponseERR_USERONCHANNEL* dynamicResponse = New(IRCResponseERR_USERONCHANNEL)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetUser(arg1);
+                dynamicResponse->SetChannel(arg2);
+            }
+            response = dynamicResponse;
+            break;
+        }
+        case Enum_IRCResponses_ERR_WILDTOPLEVEL:
+        {
+            IRCResponseERR_WILDTOPLEVEL* dynamicResponse = New(IRCResponseERR_WILDTOPLEVEL)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetMask(arg1);
             }
             response = dynamicResponse;
             break;
@@ -350,6 +363,17 @@ IRCResponse* IRCResponsesFactory::CreateResponse(Enum_IRCResponses responseType,
             if (dynamicResponse)
             {
                 dynamicResponse->SetChannel(arg1);
+            }
+            response = dynamicResponse;
+            break;
+        }
+        case Enum_IRCResponses_RPL_INVITING:
+        {
+            IRCResponseRPL_INVITING* dynamicResponse = New(IRCResponseRPL_INVITING)();
+            if (dynamicResponse)
+            {
+                dynamicResponse->SetChannel(arg1);
+                dynamicResponse->SetNick(arg2);
             }
             response = dynamicResponse;
             break;
