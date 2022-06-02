@@ -65,13 +65,13 @@ void CommandLineOptionsChecker::SetUsage(void)
 
 void CommandLineOptionsChecker::Check(int argc, const char *argv[])
 {
-    if (argc - 1 != m_ParamsCallbacks.size())
+    if (argc - 1 != static_cast<int>(m_ParamsCallbacks.size()))
     {
         IRC_LOGD("Number of commandline arguments: %d. Expected number of commandline arguments: %d", argc - 1, m_ParamsCallbacks.size());
 
         throw std::invalid_argument("Expected other number of commandline arguments");
     }
-    for (size_t i = 1; i < argc; ++i)
+    for (int i = 1; i < argc; ++i)
     {
         ParamsCallback& paramsCallback = m_ParamsCallbacks[i - 1];
         CommandLineOptionParams* params = paramsCallback.first;

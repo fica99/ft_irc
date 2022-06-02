@@ -65,6 +65,7 @@ bool IRCListCommand::ProcessCommand(IRCSocket *socket)
 
 bool IRCListCommand::ValidateArgs(IRCSocket *socket)
 {
+    (void)(socket);
     if (!GetArgs().empty())
     {
         SetChannels(IRCParsingHelper::Split(GetArgs()[0], ","));

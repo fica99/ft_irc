@@ -42,7 +42,7 @@ protected:
 public:
     static const std::string &From(const EnumType e);
 
-    static const bool To(EnumType &e, const std::string &str);
+    static bool To(EnumType &e, const std::string &str);
 };
 
 template <class EnumType>
@@ -104,7 +104,7 @@ const std::string &EnumStringBase<D,E>::From(const E e)
 }
 
 template <class D, class E>
-const bool EnumStringBase<D,E>::To(E &e, const std::string &str)
+bool EnumStringBase<D,E>::To(E &e, const std::string &str)
 {
     const typename AssocMap::const_iterator itr( GetMap().find( str ) );
 

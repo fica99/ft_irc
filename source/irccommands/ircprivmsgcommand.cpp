@@ -40,6 +40,7 @@ bool IRCPrivmsgCommand::ProcessCommand(IRCSocket *socket)
 
 bool IRCPrivmsgCommand::ValidateArgs(IRCSocket *socket)
 {
+    (void)(socket);
     // if (m_Args.empty())
     // {
     //     SendERR_NORECIPIENT();

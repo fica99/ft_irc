@@ -33,7 +33,6 @@ std::vector<IRCToken*> IRCLexer::Tokenize(std::string msg)
 {
     std::vector<IRCToken*> tokens;
     IRCToken* token;
-    static const size_t crlfLength = IRCParsingHelper::IRCSymbolsDefinition::CRLF_ASCII.size();
 
     if (msg.empty())
     {

@@ -38,6 +38,7 @@ bool IRCNoticeCommand::ProcessCommand(IRCSocket *socket)
 
 bool IRCNoticeCommand::ValidateArgs(IRCSocket *socket)
 {
+    (void)(socket);
     // if (m_Args.size() < 2)
     // {
     //     return false;

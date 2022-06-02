@@ -177,7 +177,6 @@ IRCSocket *IRCSocket::Accept(void)
 {
     struct sockaddr_storage acceptAddrInfo;
     static socklen_t addrInfoSize = sizeof(acceptAddrInfo);
-    IRCSocket *acceptedSocket = NULL;
 
     int acceptedSockFd = accept(GetSockFd(), (struct sockaddr *)&acceptAddrInfo, &addrInfoSize);
     if (acceptedSockFd < 0)

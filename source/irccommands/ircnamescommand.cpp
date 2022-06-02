@@ -70,6 +70,7 @@ bool IRCNamesCommand::ProcessCommand(IRCSocket *socket)
 
 bool IRCNamesCommand::ValidateArgs(IRCSocket *socket)
 {
+    (void)(socket);
     if (!GetArgs().empty())
     {
         SetChannels(IRCParsingHelper::Split(GetArgs()[0], ","));
