@@ -1,10 +1,10 @@
 #include "main/precomp.h"
 
 #include "irccommands/ircnoticecommand.h"
-#include "irccommands/irccommands.h"
 
+#include "irccommands/irccommands.h"
+#include "irccommands/irccommandshelper.h"
 #include "parsing/ircparsinghelper.h"
-#include "ircresponses/ircresponsesfactory.h"
 #include "ircresponses/ircresponseshelper.h"
 #include "managers/ircclientsmanager.h"
 
@@ -28,37 +28,50 @@ IRCNoticeCommand::~IRCNoticeCommand()
 void IRCNoticeCommand::Shutdown(void)
 {
 }
-//
+
 bool IRCNoticeCommand::ValidateArgs(IRCSocket *socket)
 {
-	if (GetArgs().empty())
-	{
-		IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NORECIPIENT, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
-		return false;
-	}
-	else if (GetArgs().size() < 2)
-	{
-		IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NOTEXTTOSEND, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
-		return false;
-	}
-	return true;
+    if (GetArgs().empty())
+    {
+        return false;
+    }
+    else if (GetArgs().size() < 2 || GetArgs()[1].empty())
+    {
+        return false;
+    }
+    SetNickname(GetArgs()[0]);
+    SetText(GetArgs()[1]);
+    return true;
 }
 bool IRCNoticeCommand::ProcessCommand(IRCSocket *socket)
 {
-	if (ValidateArgs(socket))
-	{
-		IRCClient *cl = GetIRCClientsManager().FindClientByNickname(GetArgs()[0]);
-		if (cl)
-		{
-			GetIRCClientsManager().FindSocketByClient(cl)->Send(GetArgs()[1]);
-		}
-		else
-		{
-			IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NORECIPIENT, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
-		}
-		return true;
-	}
-	return false;
+    if (!IRCCommandsHelper::IsRegistered(socket))
+    {
+        return false;
+    }
+
+    if (ValidateArgs(socket))
+    {
+        IRCClient *client = GetIRCClientsManager().FindClient(socket);
+        if (client == NULL)
+        {
+            return false;
+        }
+        std::string message = ":" + client->GetNickname() + "!" + client->GetUsername() + "@" + client->GetHostname() + " " + EnumString<Enum_IRCCommands>::From(GetCommandEnum()) + " " + GetNickname() + " :" + GetText() + "\n";
+
+        IRCClient *receiverClient = GetIRCClientsManager().FindClientByNickname(GetNickname());
+        if (receiverClient == NULL)
+        {
+            return false;
+        }
+        IRCSocket *receiverSocket = GetIRCClientsManager().FindSocketByClient(receiverClient);
+        if (receiverSocket)
+        {
+            IRCResponsesHelper::Send(receiverSocket, message);
+        }
+        return true;
+    }
+    return false;
 }
 
 }
