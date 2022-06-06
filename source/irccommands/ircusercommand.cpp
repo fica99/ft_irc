@@ -46,15 +46,15 @@ bool IRCUserCommand::ProcessCommand(IRCSocket *socket)
         client->SetRealname(GetRealname());
         if (client->GetIsRegistered() == true)
         {
-            if (client->GetPassword() != GetIRCServer().GetPassword())
-            {
-                GetIRCCommandsManager().ProcessCommands("QUIT\n\r", socket);
-            }
-            else
-            {
+//            if (client->GetPassword() != GetIRCServer().GetPassword())
+//            {
+//                GetIRCCommandsManager().ProcessCommands("QUIT\n\r", socket);
+//            }
+//            else
+//            {
                 IRCResponsesHelper::SendMOTD(socket, GetIRCServer().GetServerName(), "./conf/IRC.motd");
                 return true;
-            }
+            //}
         }
     }
     return false;

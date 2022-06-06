@@ -2,7 +2,7 @@
 
 #include "ircserver/ircsocket.h"
 #include "utils/memory.h"
-
+#include <fcntl.h>
 #define LISTEN_QUEUE 128
 #define RECV_BUF 512
 
@@ -151,7 +151,7 @@ bool IRCSocket::CreateListenSocket(uint16_t port)
     }
 
     Freeaddrinfo(servInfo);
-
+	fcntl(GetSockFd(), F_SETFL, fcntl(GetSockFd(), F_GETFL, 0) | O_NONBLOCK);
     if (listen(GetSockFd(), LISTEN_QUEUE) != 0)
     {
         IRC_LOGE("listen error: %s", strerror(errno));
