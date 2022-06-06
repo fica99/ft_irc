@@ -5,6 +5,8 @@
 
 #include "parsing/ircparsinghelper.h"
 #include "ircresponses/ircresponsesfactory.h"
+#include "ircresponses/ircresponseshelper.h"
+#include "managers/ircclientsmanager.h"
 
 namespace ircserv
 {
@@ -26,31 +28,37 @@ IRCNoticeCommand::~IRCNoticeCommand()
 void IRCNoticeCommand::Shutdown(void)
 {
 }
-
-bool IRCNoticeCommand::ProcessCommand(IRCSocket *socket)
-{
-    if (ValidateArgs(socket))
-    {
-        return true;
-    }
-    return false;
-}
-
+//
 bool IRCNoticeCommand::ValidateArgs(IRCSocket *socket)
 {
-    // if (m_Args.size() < 2)
-    // {
-    //     return false;
-    // }
-    // else
-    // {
-    //     if (!IRCParsingHelper::IsNick(m_Args[0]))
-    //     {
-    //         return false;
-    //     }
-    //     SetNickname(m_Args[0]);
-    //     SetText(m_Args[1]);
-    // }
-    return true;
+	if (GetArgs().empty())
+	{
+		IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NORECIPIENT, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+		return false;
+	}
+	else if (GetArgs().size() < 2)
+	{
+		IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NOTEXTTOSEND, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+		return false;
+	}
+	return true;
 }
+bool IRCNoticeCommand::ProcessCommand(IRCSocket *socket)
+{
+	if (ValidateArgs(socket))
+	{
+		IRCClient *cl = GetIRCClientsManager().FindClientByNickname(GetArgs()[0]);
+		if (cl)
+		{
+			GetIRCClientsManager().FindSocketByClient(cl)->Send(GetArgs()[1]);
+		}
+		else
+		{
+			IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NORECIPIENT, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+		}
+		return true;
+	}
+	return false;
+}
+
 }

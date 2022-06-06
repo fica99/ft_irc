@@ -3,11 +3,10 @@
 #include "irccommands/ircprivmsgcommand.h"
 #include "irccommands/irccommands.h"
 
-#include "parsing/ircparsinghelper.h"
 #include "ircresponses/ircresponseerr_norecipient.h"
-#include "ircresponses/ircresponseerr_notexttosend.h"
-#include "ircresponses/ircresponsesfactory.h"
-
+#include "ircresponses/ircresponseshelper.h"
+#include "managers/ircclientsmanager.h"
+#include "managers/ircchannelsmanager.h"
 namespace ircserv
 {
 
@@ -31,75 +30,48 @@ void IRCPrivmsgCommand::Shutdown(void)
 
 bool IRCPrivmsgCommand::ProcessCommand(IRCSocket *socket)
 {
-    if (ValidateArgs(socket))
-    {
-        return true;
-    }
-    return false;
+	if (ValidateArgs(socket))
+	{
+		IRCClient *cl = GetIRCClientsManager().FindClientByNickname(GetArgs()[0]);
+		if (cl)
+		{
+			GetIRCClientsManager().FindSocketByClient(cl)->Send(GetArgs()[1]);
+		}
+		else
+		{
+			IRCChannel *ch = GetIRCChannelsManager().FindChannel(GetArgs()[0]);
+			if (!ch)
+			{
+				IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NORECIPIENT, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+			}
+			else
+			{
+				std::unordered_set<IRCClient *> s = ch->GetClients();
+				std::unordered_set<IRCClient *>::iterator it;
+				for (it = s.begin(); it != s.end(); it++) {
+					GetIRCClientsManager().FindSocketByClient(*it)->Send(GetArgs()[1]);
+				}
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
 bool IRCPrivmsgCommand::ValidateArgs(IRCSocket *socket)
 {
-    // if (m_Args.empty())
-    // {
-    //     SendERR_NORECIPIENT();
-    //     return false;
-    // }
-    // else if (m_Args.size() < 2)
-    // {
-    //     SendERR_NOTEXTTOSEND();
-    //     return false;
-    // }
-    // else
-    // {
-    //     std::vector<std::string> receivers = IRCParsingHelper::Split(m_Args[0], ",");
-    //     if (receivers.empty())
-    //     {
-    //         SendERR_NORECIPIENT();
-    //         return false;
-    //     }
-    //     for (size_t i = 0; i < receivers.size(); ++i)
-    //     {
-    //         if (!IRCParsingHelper::IsNick(receivers[i]) && !!IRCParsingHelper::IsChannel(receivers[i]))
-    //         {
-    //             return false;
-    //         }
-    //     }
-    //     if (m_Args[1].empty())
-    //     {
-    //         SendERR_NOTEXTTOSEND();
-    //         return false;
-    //     }
-    //     SetReceivers(receivers);
-    //     SetTextToBeSent(m_Args[1]);
-
-    // }
-
-    return true;
+	if (GetArgs().empty())
+	{
+		IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NORECIPIENT, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+		return false;
+	}
+	else if (GetArgs().size() < 2)
+	{
+		IRCResponsesHelper::SendResponseWithParams(socket, Enum_IRCResponses_ERR_NOTEXTTOSEND, EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
+		return false;
+	}
+	return true;
 }
-
-void IRCPrivmsgCommand::SendERR_NORECIPIENT(/*serverclass */)
-{
-    // IRCResponseERR_NORECIPIENT* response = dynamic_cast<IRCResponseERR_NORECIPIENT*>(
-    //     GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_ERR_NORECIPIENT)
-    // );
-    // if (response != NULL)
-    // {
-    //     response->SetCommand(EnumString<Enum_IRCCommands>::From(GetCommandEnum()));
-    // }
-    // // send response
-    // GetIRCResponsesFactory().DestroyResponse(response);
-}
-
-void IRCPrivmsgCommand::SendERR_NOTEXTTOSEND(/*serverclass */)
-{
-    // IRCResponseERR_NOTEXTTOSEND* response = dynamic_cast<IRCResponseERR_NOTEXTTOSEND*>(
-    //     GetIRCResponsesFactory().CreateResponse(Enum_IRCResponses_ERR_NOTEXTTOSEND)
-    // );
-    // // send response
-    // GetIRCResponsesFactory().DestroyResponse(response);
-}
-
 
 
 }
