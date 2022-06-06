@@ -109,13 +109,17 @@ void IRCResponsesHelper::SendChannelNames(IRCSocket *socket, const std::string& 
     }
 }
 
-void IRCResponsesHelper::SendMessageToAllChannelNames(const std::string& channelName, const std::string& message)
+void IRCResponsesHelper::SendMessageToAllChannelNames(const std::string& channelName, const std::string& message, const std::string& exceptName)
 {
     IRCChannel *channel = GetIRCChannelsManager().FindChannel(channelName);
     if (channel)
     {
         for (std::unordered_set<IRCClient*>::iterator it = channel->GetClients().begin(); it != channel->GetClients().end(); ++it)
         {
+            if (*it && (*it)->GetNickname() == exceptName)
+            {
+                continue;
+            }
             IRCSocket *socket = GetIRCClientsManager().FindSocketByClient(*it);
             if (socket)
             {
