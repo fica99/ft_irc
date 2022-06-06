@@ -151,7 +151,7 @@ bool IRCSocket::CreateListenSocket(uint16_t port)
     }
 
     Freeaddrinfo(servInfo);
-	fcntl(GetSockFd(), F_SETFL, fcntl(GetSockFd(), F_GETFL, 0) | O_NONBLOCK);
+    fcntl(GetSockFd(), F_SETFL, O_NONBLOCK);
     if (listen(GetSockFd(), LISTEN_QUEUE) != 0)
     {
         IRC_LOGE("listen error: %s", strerror(errno));
@@ -185,6 +185,7 @@ IRCSocket *IRCSocket::Accept(void)
         IRC_LOGE("accept error: %s", strerror(errno));
         return NULL;
     }
+    fcntl(acceptedSockFd, F_SETFL, O_NONBLOCK);
     IRC_LOGI("%s", "Accepted new connection");
     return New(IRCSocket)(acceptedSockFd);
 }
